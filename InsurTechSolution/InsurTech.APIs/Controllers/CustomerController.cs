@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace InsurTech.APIs.Controllers
 {
@@ -309,37 +310,32 @@ namespace InsurTech.APIs.Controllers
 
 			return Ok(new ApiResponse(200, "Customer Registered Successfully"));
 		}
-		#endregion
-        
-		#region UpdateCustomer
-		[HttpPut("UpdateCustomer")]
-		public async Task<ActionResult> UpdateCustomer(UpdateCustomerDTO model)
+        #endregion
+
+        #region UpdateCustomer
+        [HttpPut("UpdateCustomer/{id}")]
+        public async Task<ActionResult> UpdateCustomer([FromRoute] string id,[FromBody] UpdateCustomerDTO model)
         {
-			dynamic existingCustomer = await _userManager.FindByIdAsync(model.Id);
+			if (id != model.Id)
+			{
+				return BadRequest("ID in the route does not match the ID in the request body");
+			}
+
+			var existingCustomer = await _userManager.FindByIdAsync(id);
 			if (existingCustomer == null)
 			{
-				return BadRequest(new ApiResponse(400, "Customer Not Found"));
+				return NotFound("Customer not found");
 			}
-			if (await _userManager.FindByEmailAsync(model.Email) != null) return BadRequest(new ApiResponse(400, "Email is already taken"));
-
-			if (await _userManager.FindByNameAsync(model.UserName) != null) return BadRequest(new ApiResponse(400, "UserName is already taken"));
-
-            existingCustomer.Email = model.Email;
-            existingCustomer.UserName = model.UserName;
-            existingCustomer.Name = model.Name;
-            existingCustomer.PhoneNumber = model.PhoneNumber;
-            existingCustomer.NationalID = model.NationalId;
-            existingCustomer.BirthDate = DateOnly.Parse(model.BirthDate);   
-
-
-            await _userManager.UpdateAsync(existingCustomer);
-            return Ok(new ApiResponse(200, "Customer Updated Successfully"));
+            
+            Customer customer = (Customer)existingCustomer;
+            _mapper.Map(model, customer);
+            await _userManager.UpdateAsync(customer);
+            return Ok();            
 		}
-		#endregion
-		
+        #endregion
 
-        #region DeleteCustomer
-        [HttpDelete("DeleteCustomer/{customerId}")]
+		#region DeleteCustomer
+		[HttpDelete("DeleteCustomer/{customerId}")]
 		public async Task<ActionResult> DeleteCustomer([FromRoute] string customerId)
         {
 			var user = await _userManager.FindByIdAsync(customerId);

@@ -118,9 +118,20 @@ namespace InsurTech.APIs
 			builder.Services.AddScoped<ITokenService, TokenService>();
 			builder.Services.AddScoped<IEmailService, EmailService>();
 			builder.Services.AddScoped<IRequestService, RequestService>();
+			// Add CardValidationService
+			builder.Services.AddHttpClient<CardValidationService>();
+            // Add GooglePayService
+            //builder.Services.AddScoped<StripeService>();
+            // Add StripeService
+            //builder.Services.AddScoped<CardValidatorService>();
+            // add card  CardValidationService
+            builder.Services.AddHttpClient<CardValidationService>();
 
-			#region Validation Error Handling
-			builder.Services.Configure<ApiBehaviorOptions>(options =>
+
+
+
+            #region Validation Error Handling
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
 			{
 				options.InvalidModelStateResponseFactory = actionContext =>
 				{

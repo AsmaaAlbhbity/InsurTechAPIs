@@ -67,6 +67,7 @@ namespace InsurTech.Service
         {
             var subject = "Reset your password";
             var message = TemplateManager.GetPasswordResetEmailTemplate(resetUrl);
+
             await SendEmailAsync(toEmail, subject, message);
         }
 
@@ -74,6 +75,7 @@ namespace InsurTech.Service
         {
             var subject = "Confirm your email";
             var message = TemplateManager.GetConfirmationEmailTemplate(confirmationUrl);
+
             await SendEmailAsync(toEmail, subject, message);
         }
     }

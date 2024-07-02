@@ -173,10 +173,29 @@ namespace InsurTech.APIs.Controllers
 
 			return Ok(customerRequestsDto);
 		}
-        #endregion
+		#endregion
 
-        #region GetRequestQuestions
-        [HttpGet("GetRequestQuestions/{requestId}")]
+		#region checkCustomerHasInsurancePlans 
+		[HttpGet("checkCustomerHasInsurancePlans/{catId}")]
+		public async Task<ActionResult> checkCustomerHasInsurancePlans([FromRoute] int catId)
+		{
+			var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			//var customerId = "b7f9468b-6f42-4d61-b100-6461ffeba8dd";
+			//return array of true or false for all insurance plan based on user requested it before or not
+			var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
+			var insurancePlans = await _unitOfWork.Repository<InsurancePlan>().GetAllAsync();
+			var userRequestsIds = userRequests.Where(r => r.CustomerId == customerId).Select(r => r.InsurancePlanId).ToList();
+			var insurancePlansIds = insurancePlans.Where(i => i.CategoryId == catId).Select(i => i.Id).ToList();
+			var result = insurancePlansIds.Select(i => userRequestsIds.Contains(i)).ToList();
+			return Ok(result);
+		}
+
+
+
+		#endregion
+
+		#region GetRequestQuestions
+		[HttpGet("GetRequestQuestions/{requestId}")]
 		public async Task<ActionResult> GetRequestQuestionsAndAnswers([FromRoute] int requestId)
         {
 			var requestQuestions = await _unitOfWork.Repository<RequestQuestion>().GetAllAsync();

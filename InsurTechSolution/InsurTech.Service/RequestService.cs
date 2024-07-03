@@ -58,6 +58,11 @@ namespace InsurTech.Service
             _context.Entry(request).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
+        public Task<List<UserRequest>> GetRequestsByUserId(string userId)
+        {
+            return _context.Requests.Where(r=>r.CustomerId == userId).ToListAsync();
+        }
+
 
     }
 }

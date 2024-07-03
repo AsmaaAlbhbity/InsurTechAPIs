@@ -10,11 +10,14 @@ using InsurTech.Core.Entities.Identity;
 using InsurTech.Core.Repositories;
 using InsurTech.Core.Service;
 using InsurTech.Repository;
+using InsurTech.Repository.Data.Migrations;
 using InsurTech.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using PdfSharpCore.Drawing;
+using PdfSharpCore.Pdf;
 
 namespace InsurTech.APIs.Controllers
 {
@@ -227,7 +230,7 @@ namespace InsurTech.APIs.Controllers
         {
             IEnumerable<UserRequest> requestList = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
             List<UserRequest> result = requestList
-                .Where(r => r.InsurancePlan.CompanyId == id)
+                .Where(r => r.InsurancePlan.CompanyId == id & r.Status == RequestStatus.Approved)
                 .ToList();
 
             if (result.Count == 0)
@@ -246,5 +249,68 @@ namespace InsurTech.APIs.Controllers
         }
         #endregion
 
+        #region DownloadUserData
+        [HttpGet("UserPdf")]
+        public async Task<IActionResult> GetUserDataAsPdf(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            //if (user is null) return NotFound(new ApiResponse(404, "User not found"));
+            //if (user.UserType != UserType.Customer) return BadRequest(new ApiResponse(400, "User is not a Customer"));
+
+            var userRequests = await _requestService.GetRequestsByUserId(id);
+            //if (userRequests == null || !userRequests.Any()) return NotFound(new ApiResponse(404, "No Requests yet"));
+
+            using (var stream = new MemoryStream())
+            {
+                var document = new PdfDocument();
+                var page = document.AddPage();
+                var gfx = XGraphics.FromPdfPage(page);
+
+                var fontBold = new XFont("Verdana", 12, XFontStyle.Bold);
+                var fontRegular = new XFont("Verdana", 10, XFontStyle.Regular);
+                gfx.DrawString("Insure", fontBold, XBrushes.Aqua, new XRect(0, 0, page.Width, page.Height), XStringFormats.Center);
+                gfx.DrawString("Tech", fontBold, XBrushes.Black, new XRect(0, 0, page.Width+1, page.Height+1), XStringFormats.Center);
+
+                // Add User Details
+                gfx.DrawString("User Details:", fontBold, XBrushes.Black, new XRect(20, 20, page.Width, 20), XStringFormats.TopLeft);
+                gfx.DrawString($"Name: we", fontRegular, XBrushes.Black, new XRect(20, 40, page.Width, 20), XStringFormats.TopLeft);
+                gfx.DrawString($"Email:we@email.com", fontRegular, XBrushes.Black, new XRect(20, 60, page.Width, 20), XStringFormats.TopLeft);
+                gfx.DrawString($"Phone: 012345678", fontRegular, XBrushes.Black, new XRect(20, 80, page.Width, 20), XStringFormats.TopLeft);
+
+                // Add Table Header
+                gfx.DrawString("Insurance Plans:", fontBold, XBrushes.Black, new XRect(20, 120, page.Width, 20), XStringFormats.TopLeft);
+                gfx.DrawLine(XPens.Black, 20, 140, page.Width - 20, 140);
+
+                gfx.DrawString("Request ID", fontBold, XBrushes.Black, new XRect(20, 150, 100, 20), XStringFormats.TopLeft);
+                gfx.DrawString("Date", fontBold, XBrushes.Black, new XRect(120, 150, 100, 20), XStringFormats.TopLeft);
+                gfx.DrawString("Plan ID", fontBold, XBrushes.Black, new XRect(220, 150, 100, 20), XStringFormats.TopLeft);
+                gfx.DrawString("Plan Name", fontBold, XBrushes.Black, new XRect(320, 150, 200, 20), XStringFormats.TopLeft);
+                gfx.DrawString("Coverage", fontBold, XBrushes.Black, new XRect(520, 150, 100, 20), XStringFormats.TopLeft);
+                gfx.DrawString("Premium", fontBold, XBrushes.Black, new XRect(620, 150, 100, 20), XStringFormats.TopLeft);
+
+                gfx.DrawLine(XPens.Black, 20, 170, page.Width - 20, 170);
+
+                // Add Table Rows
+                int yPoint = 190;
+                foreach (var request in userRequests)
+                {
+                  
+                        gfx.DrawString("1", fontRegular, XBrushes.Black, new XRect(20, yPoint, 100, 20), XStringFormats.TopLeft);
+                        gfx.DrawString("1", fontRegular, XBrushes.Black, new XRect(220, yPoint, 100, 20), XStringFormats.TopLeft);
+                        gfx.DrawString("1", fontRegular, XBrushes.Black, new XRect(320, yPoint, 200, 20), XStringFormats.TopLeft);
+                        gfx.DrawString("1", fontRegular, XBrushes.Black, new XRect(520, yPoint, 100, 20), XStringFormats.TopLeft);
+                        gfx.DrawString("1", fontRegular, XBrushes.Black, new XRect(620, yPoint, 100, 20), XStringFormats.TopLeft);
+                        yPoint += 20;
+                    
+                }
+
+                // Save the document into the stream
+                document.Save(stream, false);
+
+                return File(stream.ToArray(), "application/pdf", "user_data.pdf");
+            }
     }
+    #endregion
+
+}
 }

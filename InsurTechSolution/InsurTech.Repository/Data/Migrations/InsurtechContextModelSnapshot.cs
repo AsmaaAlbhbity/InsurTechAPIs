@@ -263,7 +263,7 @@ namespace InsurTech.Repository.Data.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c55b530b-c146-4a19-bbf4-971d4bb69da6",
+                            ConcurrencyStamp = "9327b97e-313a-4464-870a-3aeae85e93e1",
                             Email = "asmaa_ash@gmail.com",
                             EmailConfirmed = true,
                             IsApprove = 1,
@@ -272,10 +272,10 @@ namespace InsurTech.Repository.Data.Migrations
                             Name = "Asmaa Ashraf",
                             NormalizedEmail = "ASMAA_ASH@GMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ3tLsrw4LbvEAJwJB5ntm+G1qyl7kGiL0YlmrGoMiDEaVjn/bIxrPCMG+v+BEQCpA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPpADZqbUK676tm5MjcSypsMj5TvcUnG+mw/e6oWXZAv71M055/RoarAIzrt7BEp8Q==",
                             PhoneNumber = "01211236779",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5efe9d96-2580-425e-bdb4-d37d9fa99e42",
+                            SecurityStamp = "bfe9bd2b-7e30-482a-84f4-161c1ae50b33",
                             TwoFactorEnabled = false,
                             UserName = "Admin",
                             UserType = 2
@@ -719,6 +719,28 @@ namespace InsurTech.Repository.Data.Migrations
                     b.ToTable("HealthPlanRequests");
                 });
 
+            modelBuilder.Entity("InsurTech.Core.Entities.HomePlanRequest", b =>
+                {
+                    b.HasBaseType("InsurTech.Core.Entities.UserRequest");
+
+                    b.Property<decimal>("AttemptedTheft")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("FiresAndExplosion")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("GlassBreakage")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("NaturalHazard")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("WaterDamage")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.ToTable("HomePlanRequests");
+                });
+
             modelBuilder.Entity("InsurTech.Core.Entities.Article", b =>
                 {
                     b.HasOne("InsurTech.Core.Entities.Identity.AppUser", "User")
@@ -922,6 +944,15 @@ namespace InsurTech.Repository.Data.Migrations
                     b.HasOne("InsurTech.Core.Entities.UserRequest", null)
                         .WithOne()
                         .HasForeignKey("InsurTech.Core.Entities.HealthPlanRequest", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("InsurTech.Core.Entities.HomePlanRequest", b =>
+                {
+                    b.HasOne("InsurTech.Core.Entities.UserRequest", null)
+                        .WithOne()
+                        .HasForeignKey("InsurTech.Core.Entities.HomePlanRequest", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

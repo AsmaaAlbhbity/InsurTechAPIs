@@ -252,6 +252,7 @@ namespace InsurTech.APIs.Controllers
         }
         #endregion
 
+
         #region DownloadUserData
         [HttpGet("UserPdf")]
         public async Task<IActionResult> GetUserDataAsPdf(string id)
@@ -260,7 +261,6 @@ namespace InsurTech.APIs.Controllers
             if (user is null) return NotFound(new ApiResponse(404, "User not found"));
 
             var userRequests = await _requestService.GetRequestsByUserId(id);
-            //if (userRequests == null || !userRequests.Any()) return NotFound(new ApiResponse(404, "No Requests yet"));
 
             using (var stream = new MemoryStream())
             {
@@ -275,41 +275,151 @@ namespace InsurTech.APIs.Controllers
                 XImage image = XImage.FromFile(imagePath);
                 gfx.DrawImage(image, 520, 20, 50, 50);
 
-                gfx.DrawString("Insure Tech", fontBold, XBrushes.DarkGreen,
-                    new XRect(0, 20, page.Width, 20),
-                    XStringFormats.TopCenter);
+                gfx.DrawString("Insure Tech", fontBold, XBrushes.DarkGreen, new XRect(0, 20, page.Width, 20), XStringFormats.TopCenter);
+                gfx.DrawString("User Details:", fontBold, XBrushes.Black, new XRect(20, 80, page.Width, 20), XStringFormats.TopLeft); // Adjusted Y coordinate
+                gfx.DrawString($"Name: {user.Name}", fontRegular, XBrushes.Black, new XRect(20, 100, page.Width, 20), XStringFormats.TopLeft); // Adjusted Y coordinate
+                gfx.DrawString($"Email: {user.Email}", fontRegular, XBrushes.Black, new XRect(20, 120, page.Width, 20), XStringFormats.TopLeft); // Adjusted Y coordinate
+                gfx.DrawString($"Phone: {user.PhoneNumber}", fontRegular, XBrushes.Black, new XRect(20, 140, page.Width, 20), XStringFormats.TopLeft); // Adjusted Y coordinate
 
-                gfx.DrawString("User Details:", fontBold, XBrushes.Black, new XRect(20, 140, page.Width, 20), XStringFormats.TopLeft);
-                gfx.DrawString($"Name: {user.Name}", fontRegular, XBrushes.Black, new XRect(20, 160, page.Width, 20), XStringFormats.TopLeft);
-                gfx.DrawString($"Email: {user.Email}", fontRegular, XBrushes.Black, new XRect(20, 180, page.Width, 20), XStringFormats.TopLeft);
-                gfx.DrawString($"Phone: {user.PhoneNumber}", fontRegular, XBrushes.Black, new XRect(20, 200, page.Width, 20), XStringFormats.TopLeft);
-                gfx.DrawString("Insurance Plans:", fontBold, XBrushes.Black, new XRect(20, 240, page.Width, 20), XStringFormats.TopLeft);
-                gfx.DrawLine(XPens.Black, 20, 260, page.Width - 20, 260);
+                gfx.DrawString("Insurance Plans:", fontBold, XBrushes.Black, new XRect(20, 180, page.Width, 20), XStringFormats.TopLeft); // Adjusted Y coordinate
+                gfx.DrawLine(XPens.Black, 20, 200, page.Width - 20, 200); 
 
-                gfx.DrawString("Request ID", fontBold, XBrushes.Black, new XRect(20, 280, 100, 20), XStringFormats.TopLeft);
-                gfx.DrawString("Plan Name", fontBold, XBrushes.Black, new XRect(120, 280, 200, 20), XStringFormats.TopLeft);
-                gfx.DrawString("Plan Level", fontBold, XBrushes.Black, new XRect(220, 280, 200, 20), XStringFormats.TopLeft);
-                gfx.DrawString("Coverage", fontBold, XBrushes.Black, new XRect(320, 280, 100, 20), XStringFormats.TopLeft);
-                gfx.DrawString("Quotation", fontBold, XBrushes.Black, new XRect(420, 280, 100, 20), XStringFormats.TopLeft);
-
-                gfx.DrawLine(XPens.Black, 20, 300, page.Width - 20, 300);
-
-                int yPoint = 320;
+                int yPoint = 220; 
                 foreach (var request in userRequests)
                 {
-                    gfx.DrawString(request.Id.ToString(), fontRegular, XBrushes.Black, new XRect(20, yPoint, 100, 20), XStringFormats.TopLeft);
-                    gfx.DrawString(request.InsurancePlan.Category.Name, fontRegular, XBrushes.Black, new XRect(120, yPoint, 100, 20), XStringFormats.TopLeft);
-                    gfx.DrawString(request.InsurancePlan.Level.ToString(), fontRegular, XBrushes.Black, new XRect(220, yPoint, 100, 20), XStringFormats.TopLeft);
-                    gfx.DrawString(request.InsurancePlan.YearlyCoverage.ToString(), fontRegular, XBrushes.Black, new XRect(320, yPoint, 200, 20), XStringFormats.TopLeft);
-                    gfx.DrawString(request.InsurancePlan.Quotation.ToString(), fontRegular, XBrushes.Black, new XRect(420, yPoint, 100, 20), XStringFormats.TopLeft);
-                    yPoint += 20;
+                    if (yPoint + 220 > page.Height - 40)
+                    {
+                        page = document.AddPage();
+                        gfx = XGraphics.FromPdfPage(page);
+                        yPoint = 40;
+                    }
+
+                    string categoryName = GetCategoryName(request.CategoryId);
+                    XBrush planNameBrush = GetPlanNameBrush(request.CategoryId);
+                    XBrush levelBrush = GetLevelBrush((int)request.Level);
+
+                    gfx.DrawRectangle(XPens.Black, 20, yPoint, page.Width - 40, 220); 
+                    gfx.DrawString("Plan Name:", fontBold, XBrushes.Black, new XRect(30, yPoint + 10, 100, 20), XStringFormats.TopLeft);
+                    gfx.DrawString(categoryName, fontRegular, planNameBrush, new XRect(130, yPoint + 10, 200, 20), XStringFormats.TopLeft);
+
+                    gfx.DrawString("Plan Level:", fontBold, XBrushes.Black, new XRect(30, yPoint + 30, 100, 20), XStringFormats.TopLeft);
+                    gfx.DrawString(request.Level.ToString(), fontRegular, levelBrush, new XRect(130, yPoint + 30, 100, 20), XStringFormats.TopLeft);
+
+                    gfx.DrawString("Date:", fontBold, XBrushes.Black, new XRect(30, yPoint + 50, 100, 20), XStringFormats.TopLeft);
+                    gfx.DrawString(request.Date.ToString(), fontRegular, XBrushes.Black, new XRect(130, yPoint + 50, 100, 20), XStringFormats.TopLeft);
+
+                    gfx.DrawString("Coverage:", fontBold, XBrushes.Black, new XRect(30, yPoint + 70, 100, 20), XStringFormats.TopLeft);
+                    gfx.DrawString(request.YearlyCoverage.ToString(), fontRegular, XBrushes.Black, new XRect(130, yPoint + 70, 100, 20), XStringFormats.TopLeft);
+
+                    gfx.DrawString("Quotation:", fontBold, XBrushes.Black, new XRect(30, yPoint + 90, 100, 20), XStringFormats.TopLeft);
+                    gfx.DrawString(request.Quotation.ToString(), fontRegular, XBrushes.Black, new XRect(130, yPoint + 90, 100, 20), XStringFormats.TopLeft);
+
+                    if (categoryName == "Home Insurance")
+                    {
+                        var homeinsurancerequest = await _unitOfWork.Repository<HomePlanRequest>().GetByIdAsync(request.Id);
+                        gfx.DrawString("Natural Hazard:", fontBold, XBrushes.Black, new XRect(30, yPoint + 110, 100, 20), XStringFormats.TopLeft);
+                        gfx.DrawString(homeinsurancerequest.NaturalHazard.ToString(), fontRegular, XBrushes.Black, new XRect(180, yPoint + 110, 100, 20), XStringFormats.TopLeft);
+
+                        gfx.DrawString("Water Damage:", fontBold, XBrushes.Black, new XRect(30, yPoint + 130, 100, 20), XStringFormats.TopLeft);
+                        gfx.DrawString(homeinsurancerequest.WaterDamage.ToString(), fontRegular, XBrushes.Black, new XRect(180, yPoint + 130, 100, 20), XStringFormats.TopLeft);
+
+                        gfx.DrawString("Attempted Theft:", fontBold, XBrushes.Black, new XRect(30, yPoint + 150, 100, 20), XStringFormats.TopLeft);
+                        gfx.DrawString(homeinsurancerequest.AttemptedTheft.ToString(), fontRegular, XBrushes.Black, new XRect(180, yPoint + 150, 100, 20), XStringFormats.TopLeft);
+
+                        gfx.DrawString("Fires And Explosion:", fontBold, XBrushes.Black, new XRect(30, yPoint + 170, 100, 20), XStringFormats.TopLeft);
+                        gfx.DrawString(homeinsurancerequest.FiresAndExplosion.ToString(), fontRegular, XBrushes.Black, new XRect(180, yPoint + 170, 100, 20), XStringFormats.TopLeft);
+                    }
+                    else if (categoryName == "Health Insurance")
+                    {
+                        var healthinsurancerequest = await _unitOfWork.Repository<HealthPlanRequest>().GetByIdAsync(request.Id);
+
+                        gfx.DrawString("Clinics Coverage:", fontBold, XBrushes.Black, new XRect(30, yPoint + 110, 100, 20), XStringFormats.TopLeft);
+                        gfx.DrawString(healthinsurancerequest.ClinicsCoverage.ToString(), fontRegular, XBrushes.Black, new XRect(180, yPoint + 110, 100, 20), XStringFormats.TopLeft);
+
+                        gfx.DrawString("Dental Coverage:", fontBold, XBrushes.Black, new XRect(30, yPoint + 130, 100, 20), XStringFormats.TopLeft);
+                        gfx.DrawString(healthinsurancerequest.DentalCoverage.ToString(), fontRegular, XBrushes.Black, new XRect(180, yPoint + 130, 100, 20), XStringFormats.TopLeft);
+
+                        gfx.DrawString("Hospitalization And Surgery:", fontBold, XBrushes.Black, new XRect(30, yPoint + 150, 100, 20), XStringFormats.TopLeft);
+                        gfx.DrawString(healthinsurancerequest.HospitalizationAndSurgery.ToString(), fontRegular, XBrushes.Black, new XRect(240, yPoint + 150, 100, 20), XStringFormats.TopLeft);
+
+                        gfx.DrawString("Medical Network:", fontBold, XBrushes.Black, new XRect(30, yPoint + 170, 100, 20), XStringFormats.TopLeft);
+                        gfx.DrawString(healthinsurancerequest.MedicalNetwork.ToString(), fontRegular, XBrushes.Black, new XRect(180, yPoint + 170, 100, 20), XStringFormats.TopLeft);
+
+                        gfx.DrawString("Optical Coverage:", fontBold, XBrushes.Black, new XRect(30, yPoint + 190, 100, 20), XStringFormats.TopLeft);
+                        gfx.DrawString(healthinsurancerequest.OpticalCoverage.ToString(), fontRegular, XBrushes.Black, new XRect(180, yPoint + 190, 100, 20), XStringFormats.TopLeft);
+                    }
+                    else
+                    {
+                        var motorinsurancerequest = await _unitOfWork.Repository<MotorPlanRequest>().GetByIdAsync(request.Id);
+
+                        gfx.DrawString("Legal Expenses:", fontBold, XBrushes.Black, new XRect(30, yPoint + 110, 100, 20), XStringFormats.TopLeft);
+                        gfx.DrawString(motorinsurancerequest.LegalExpenses.ToString(), fontRegular, XBrushes.Black, new XRect(180, yPoint + 110, 100, 20), XStringFormats.TopLeft);
+
+                        gfx.DrawString("Own Damage:", fontBold, XBrushes.Black, new XRect(30, yPoint + 130, 100, 20), XStringFormats.TopLeft);
+                        gfx.DrawString(motorinsurancerequest.OwnDamage.ToString(), fontRegular, XBrushes.Black, new XRect(180, yPoint + 130, 100, 20), XStringFormats.TopLeft);
+
+                        gfx.DrawString("Personal Accident:", fontBold, XBrushes.Black, new XRect(30, yPoint + 150, 100, 20), XStringFormats.TopLeft);
+                        gfx.DrawString(motorinsurancerequest.PersonalAccident.ToString(), fontRegular, XBrushes.Black, new XRect(180, yPoint + 150, 100, 20), XStringFormats.TopLeft);
+
+                        gfx.DrawString("Theft:", fontBold, XBrushes.Black, new XRect(30, yPoint + 170, 100, 20), XStringFormats.TopLeft);
+                        gfx.DrawString(motorinsurancerequest.Theft.ToString(), fontRegular, XBrushes.Black, new XRect(180, yPoint + 170, 100, 20), XStringFormats.TopLeft);
+
+                        gfx.DrawString("Third Party Liability:", fontBold, XBrushes.Black, new XRect(30, yPoint + 190, 100, 20), XStringFormats.TopLeft);
+                        gfx.DrawString(motorinsurancerequest.ThirdPartyLiability.ToString(), fontRegular, XBrushes.Black, new XRect(180, yPoint + 190, 100, 20), XStringFormats.TopLeft);
+                    }
+                    yPoint += 240; 
                 }
                 document.Save(stream, false);
 
                 return File(stream.ToArray(), "application/pdf", "user_data.pdf");
             }
         }
-        #endregion
 
+        #endregion
+        private string GetCategoryName(int categoryId)
+        {
+            switch (categoryId)
+            {
+                case 1:
+                    return "Health Insurance";
+                case 2:
+                    return "Home Insurance";
+                case 3:
+                    return "Motor Insurance";
+                default:
+                    return "Unknown Category";
+            }
+        }
+
+        private XBrush GetPlanNameBrush(int categoryId)
+        {
+            switch (categoryId)
+            {
+                case 1:
+                    return XBrushes.DarkGreen;
+                case 2:
+                    return XBrushes.DarkSeaGreen;
+                case 3:
+                    return XBrushes.DarkGoldenrod;
+                default:
+                    return XBrushes.Black;
+            }
+        }
+
+        private XBrush GetLevelBrush(int level)
+        {
+            if (level >= 80)
+            {
+                return XBrushes.Green;
+            }
+            else if (level >= 50)
+            {
+                return XBrushes.Orange;
+            }
+            else
+            {
+                return XBrushes.Red;
+            }
+        }
     }
 }

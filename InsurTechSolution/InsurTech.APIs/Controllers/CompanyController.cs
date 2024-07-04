@@ -32,7 +32,7 @@ namespace InsurTech.APIs.Controllers
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-      public CompanyController(UserManager<AppUser> userManager,IUnitOfWork unitOfWork, IEmailService emailService, IMapper mapper, IRequestService requestService)
+        public CompanyController(UserManager<AppUser> userManager, IUnitOfWork unitOfWork, IEmailService emailService, IMapper mapper, IRequestService requestService)
 
         {
             _userManager = userManager;
@@ -44,8 +44,8 @@ namespace InsurTech.APIs.Controllers
         }
 
 
-		#region ApproveCompany
-		[HttpPost("ApproveCompany/{id}")]
+        #region ApproveCompany
+        [HttpPost("ApproveCompany/{id}")]
         public async Task<ActionResult> ApproveCompany([FromRoute] string id)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -82,9 +82,9 @@ namespace InsurTech.APIs.Controllers
 
             if (user is null) return NotFound(new ApiResponse(404, "User not found"));
 
-			if (user.IsDeleted == true) return NotFound(new ApiResponse(404, "User is deleted"));
+            if (user.IsDeleted == true) return NotFound(new ApiResponse(404, "User is deleted"));
 
-			if (user.UserType != UserType.Company) return BadRequest(new ApiResponse(400, "User is not a company"));
+            if (user.UserType != UserType.Company) return BadRequest(new ApiResponse(400, "User is not a company"));
 
             var company = _mapper.Map<CompanyByIdOutputDto>(user);
             if (company == null) return NotFound(new ApiResponse(404, "Company not found"));
@@ -119,7 +119,7 @@ namespace InsurTech.APIs.Controllers
         public async Task<IActionResult> GetAllCompaniesByStatus([FromRoute] string status)
         {
             var users = await _userManager.GetUsersInRoleAsync("Company");
-            users=users.Where(c => c.IsDeleted==false).ToList();
+            users = users.Where(c => c.IsDeleted == false).ToList();
             var companies = _mapper.Map<List<CompanyByIdOutputDto>>(users);
 
             if (!Enum.TryParse<IsApprove>(status.ToString(), true, out var isApprove))
@@ -127,7 +127,7 @@ namespace InsurTech.APIs.Controllers
                 return BadRequest(new ApiResponse(400, $"Invalid status, status must be one of {string.Join(", ", Enum.GetNames(typeof(IsApprove)))}"));
             }
 
-            companies = companies.Where(c => c.IsApprove == isApprove ).ToList();
+            companies = companies.Where(c => c.IsApprove == isApprove).ToList();
 
             return Ok(companies);
         }
@@ -135,38 +135,38 @@ namespace InsurTech.APIs.Controllers
 
         #region Delete Company
         [HttpDelete("{id}")]
-		public async Task<IActionResult> DeleteCompany(string id)
+        public async Task<IActionResult> DeleteCompany(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-			if (user is null) return NotFound(new ApiResponse(404, "User not found"));
-			if (user.UserType != UserType.Company) return BadRequest(new ApiResponse(400, "User is not a company"));
-			user.IsDeleted = true;
-			await _userManager.UpdateAsync(user);
-			return Ok();
-		}
+            if (user is null) return NotFound(new ApiResponse(404, "User not found"));
+            if (user.UserType != UserType.Company) return BadRequest(new ApiResponse(400, "User is not a company"));
+            user.IsDeleted = true;
+            await _userManager.UpdateAsync(user);
+            return Ok();
+        }
         #endregion
 
         #region Update Company
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCompany([FromRoute] string id, [FromBody] CompanyUpdateDto company)
         {
-			if (id != company.Id)
+            if (id != company.Id)
             {
-				return BadRequest("ID in the route does not match the ID in the request body");
-			}
+                return BadRequest("ID in the route does not match the ID in the request body");
+            }
 
-			var existingCompany = await _userManager.FindByIdAsync(id);
-			if (existingCompany == null)
+            var existingCompany = await _userManager.FindByIdAsync(id);
+            if (existingCompany == null)
             {
-				return NotFound("Company not found");
-			}
+                return NotFound("Company not found");
+            }
 
-			_mapper.Map(company, existingCompany);
+            _mapper.Map(company, existingCompany);
 
-			await _userManager.UpdateAsync(existingCompany);
+            await _userManager.UpdateAsync(existingCompany);
 
-			return Ok();
-		}
+            return Ok();
+        }
         #endregion
 
         #region Get All Requests By Company Id
@@ -178,7 +178,7 @@ namespace InsurTech.APIs.Controllers
             if (user.UserType != UserType.Company) return BadRequest(new ApiResponse(400, "User is not a company"));
 
             var requests = await _requestService.GetRequestsByCompanyId(id);
-            if (requests == null )
+            if (requests == null)
             {
                 return NotFound(new ApiResponse(404, "No requests found for the company"));
             }
@@ -214,9 +214,9 @@ namespace InsurTech.APIs.Controllers
 
             await _unitOfWork.Repository<UserRequest>().Update(existingRequest);
 
-            string ResaultOfRequest = (existingRequest.Status==RequestStatus.Approved && existingRequest.Status != RequestStatus.Pending) ? "congratulations ..! Your request has been approved " : "Oops..! Your request has been Rejected";
+            string ResaultOfRequest = (existingRequest.Status == RequestStatus.Approved && existingRequest.Status != RequestStatus.Pending) ? "congratulations ..! Your request has been approved " : "Oops..! Your request has been Rejected";
 
-            await _unitOfWork.Repository<Notification>().AddAsync( new Notification() { UserId= existingRequest .CustomerId,Body= ResaultOfRequest});
+            await _unitOfWork.Repository<Notification>().AddAsync(new Notification() { UserId = existingRequest.CustomerId, Body = ResaultOfRequest });
             await _unitOfWork.CompleteAsync();
 
 
@@ -230,12 +230,15 @@ namespace InsurTech.APIs.Controllers
         {
             IEnumerable<UserRequest> requestList = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
             List<UserRequest> result = requestList
-                .Where(r => r.InsurancePlan.CompanyId == id & r.Status == RequestStatus.Approved)
-                .ToList();
+             .Where(r => r.InsurancePlan.CompanyId == id && r.Status == RequestStatus.Approved)
+             .GroupBy(r => r.Customer.Email)
+             .Select(g => g.First())
+             .ToList();
+
 
             if (result.Count == 0)
             {
-                return NotFound(new ApiResponse(404, "No requests yet"));
+                return NotFound(new ApiResponse(404, "No Users yet"));
             }
 
             List<CompanyUsersDTO> users = result.Select(user => new CompanyUsersDTO
@@ -306,7 +309,7 @@ namespace InsurTech.APIs.Controllers
                 return File(stream.ToArray(), "application/pdf", "user_data.pdf");
             }
         }
-    #endregion
+        #endregion
 
-}
+    }
 }

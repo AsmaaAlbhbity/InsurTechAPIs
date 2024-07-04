@@ -68,7 +68,7 @@ namespace InsurTech.APIs.Controllers
             {
                 //var customerId = applyForInsurancePlanInput.CustomerId; //we could get current user id from token and remove this line + remove from ApplyForInsurancePlanInput + add [Authorize] attribute to the method
 
-                var customerId = "b569884f-0c52-48d4-b145-9603543efae7";
+                var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
                 var insurancePlanId = applyForInsurancePlanInput.InsurancePlanId;
                 var CheckInsuranceCategoury = await _unitOfWork.Repository<InsurancePlan>().GetByIdAsync(insurancePlanId);

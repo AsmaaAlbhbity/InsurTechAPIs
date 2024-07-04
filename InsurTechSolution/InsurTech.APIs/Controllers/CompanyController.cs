@@ -243,6 +243,7 @@ namespace InsurTech.APIs.Controllers
 
             List<CompanyUsersDTO> users = result.Select(user => new CompanyUsersDTO
             {
+                Id=user.Customer?.Id,
                 name = user.Customer?.Name,
                 email = user.Customer?.Email,
                 phone = user.Customer?.PhoneNumber

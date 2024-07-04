@@ -8,9 +8,7 @@ namespace InsurTech.APIs.DTOs.RequestDTO
         //public string CustomerId { get; set; }
         [Required]
         public int InsurancePlanId { get; set; }
-        [Required]
-        public string PlanType { get; set; }
-
+     
         [Required]
         public List<RequestAnswersDto> Answers { get; set; }
 

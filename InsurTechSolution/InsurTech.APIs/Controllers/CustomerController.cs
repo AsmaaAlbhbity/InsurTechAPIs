@@ -71,7 +71,29 @@ namespace InsurTech.APIs.Controllers
                 var customerId = "b569884f-0c52-48d4-b145-9603543efae7";
 
                 var insurancePlanId = applyForInsurancePlanInput.InsurancePlanId;
-                HealthInsurancePlan insurance = await _unitOfWork.Repository<HealthInsurancePlan>().GetByIdAsync(insurancePlanId);
+                var CheckInsuranceCategoury = await _unitOfWork.Repository<InsurancePlan>().GetByIdAsync(insurancePlanId);
+
+                InsurancePlan insurance;
+
+                switch (CheckInsuranceCategoury.Category.Name)
+                {
+                    case "HealthInsurance":
+                        insurance = await _unitOfWork.Repository<HealthInsurancePlan>().GetByIdAsync(insurancePlanId);
+                        break;
+                    case "HomeInsurance":
+                        insurance = await _unitOfWork.Repository<HomeInsurancePlan>().GetByIdAsync(insurancePlanId);
+                        break;
+                    case "MotorInsurance":
+                        insurance = await _unitOfWork.Repository<MotorInsurancePlan>().GetByIdAsync(insurancePlanId);
+                        break;
+                    default:
+                        throw new ArgumentException("Invalid Plan Type");
+                }
+
+                if (insurance == null)
+                {
+                    return NotFound(new ApiResponse(404, "Insurance Plan not found"));
+                }
 
                 var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
 
@@ -82,22 +104,55 @@ namespace InsurTech.APIs.Controllers
                     return BadRequest(new ApiResponse(400, "Request Already Exists"));
                 }
 
-                await _unitOfWork.Repository<UserRequest>().AddAsync(new HealthPlanRequest
+                UserRequest newRequest = CheckInsuranceCategoury.Category.Name switch
                 {
-                    CustomerId = customerId,
-                    InsurancePlanId = insurancePlanId,
-                    YearlyCoverage = insurance.YearlyCoverage,
-                    Quotation = insurance.Quotation,
-                    CategoryId = insurance.CategoryId,
-                    ClinicsCoverage = insurance.ClinicsCoverage,
-                    DentalCoverage = insurance.DentalCoverage,
-                    HospitalizationAndSurgery = insurance.HospitalizationAndSurgery,
-                    OpticalCoverage= insurance.OpticalCoverage,
-                    MedicalNetwork= insurance.MedicalNetwork,
-                    Level= insurance.Level
-                });
+                    "HealthInsurance" => new HealthPlanRequest
+                    {
+                        CustomerId = customerId,
+                        InsurancePlanId = insurancePlanId,
+                        YearlyCoverage = ((HealthInsurancePlan)insurance).YearlyCoverage,
+                        Quotation = insurance.Quotation,
+                        CategoryId = insurance.CategoryId,
+                        ClinicsCoverage = ((HealthInsurancePlan)insurance).ClinicsCoverage,
+                        DentalCoverage = ((HealthInsurancePlan)insurance).DentalCoverage,
+                        HospitalizationAndSurgery = ((HealthInsurancePlan)insurance).HospitalizationAndSurgery,
+                        OpticalCoverage = ((HealthInsurancePlan)insurance).OpticalCoverage,
+                        MedicalNetwork = ((HealthInsurancePlan)insurance).MedicalNetwork,
+                        Level = ((HealthInsurancePlan)insurance).Level
+                    },
+                    "HomeInsurance" => new HomePlanRequest
+                    {
+                        CustomerId = customerId,
+                        InsurancePlanId = insurancePlanId,
+                        YearlyCoverage = ((HomeInsurancePlan)insurance).YearlyCoverage,
+                        Quotation = insurance.Quotation,
+                        CategoryId = insurance.CategoryId,
+                        WaterDamage = ((HomeInsurancePlan)insurance).WaterDamage,
+                        AttemptedTheft = ((HomeInsurancePlan)insurance).AttemptedTheft,
+                        FiresAndExplosion = ((HomeInsurancePlan)insurance).FiresAndExplosion,
+                        GlassBreakage = ((HomeInsurancePlan)insurance).GlassBreakage,
+                        NaturalHazard = ((HomeInsurancePlan)insurance).NaturalHazard,
+                        Level = ((HomeInsurancePlan)insurance).Level
+                    },
+                    "MotorInsurance" => new MotorPlanRequest
+                    {
+                        CustomerId = customerId,
+                        InsurancePlanId = insurancePlanId,
+                        YearlyCoverage = ((MotorInsurancePlan)insurance).YearlyCoverage,
+                        Quotation = insurance.Quotation,
+                        CategoryId = insurance.CategoryId,
+                        OwnDamage = ((MotorInsurancePlan)insurance).OwnDamage,
+                        LegalExpenses = ((MotorInsurancePlan)insurance).LegalExpenses,
+                        PersonalAccident = ((MotorInsurancePlan)insurance).PersonalAccident,
+                        ThirdPartyLiability = ((MotorInsurancePlan)insurance).ThirdPartyLiability,
+                        Theft = ((MotorInsurancePlan)insurance).Theft,
+                        Level = ((MotorInsurancePlan)insurance).Level
+                    },
+                    _ => throw new ArgumentException("Invalid Plan Type")
+                };
 
 
+                await _unitOfWork.Repository<UserRequest>().AddAsync(newRequest);
                 await _unitOfWork.CompleteAsync();
 
                 var allRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();

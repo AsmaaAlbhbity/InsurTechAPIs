@@ -26,7 +26,7 @@ namespace InsurTech.APIs.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
-        public CustomerController(IUnitOfWork unitOfWork, IMapper mapper , UserManager<AppUser> userManager)
+        public CustomerController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -62,15 +62,16 @@ namespace InsurTech.APIs.Controllers
         #region Request Insurance Plan
         [HttpPost("requestInsurancePlan")]
         //[Authorize]
-        public async Task<ActionResult> RequestAnswersWithInsurancePlan(ApplyForInsurancePlanInput applyForInsurancePlanInput)
+        public async Task<ActionResult> RequestAnswersWithInsurancePlan(ApplyForPlanInput applyForInsurancePlanInput)
         {
             try
             {
                 //var customerId = applyForInsurancePlanInput.CustomerId; //we could get current user id from token and remove this line + remove from ApplyForInsurancePlanInput + add [Authorize] attribute to the method
 
-                var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var customerId = "b569884f-0c52-48d4-b145-9603543efae7";
 
                 var insurancePlanId = applyForInsurancePlanInput.InsurancePlanId;
+                HealthInsurancePlan insurance = await _unitOfWork.Repository<HealthInsurancePlan>().GetByIdAsync(insurancePlanId);
 
                 var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
 
@@ -81,8 +82,21 @@ namespace InsurTech.APIs.Controllers
                     return BadRequest(new ApiResponse(400, "Request Already Exists"));
                 }
 
-                await _unitOfWork.Repository<UserRequest>().AddAsync(new UserRequest { CustomerId = customerId, InsurancePlanId = insurancePlanId });
-                
+                await _unitOfWork.Repository<UserRequest>().AddAsync(new HealthPlanRequest
+                {
+                    CustomerId = customerId,
+                    InsurancePlanId = insurancePlanId,
+                    YearlyCoverage = insurance.YearlyCoverage,
+                    Quotation = insurance.Quotation,
+                    CategoryId = insurance.CategoryId,
+                    ClinicsCoverage = insurance.ClinicsCoverage,
+                    DentalCoverage = insurance.DentalCoverage,
+                    HospitalizationAndSurgery = insurance.HospitalizationAndSurgery,
+                    OpticalCoverage= insurance.OpticalCoverage,
+                    MedicalNetwork= insurance.MedicalNetwork,
+                    Level= insurance.Level
+                });
+
 
                 await _unitOfWork.CompleteAsync();
 
@@ -93,7 +107,7 @@ namespace InsurTech.APIs.Controllers
 
                 if (userRequest == null)
                 {
-                   throw new Exception("Request Not Created");
+                    throw new Exception("Request Not Created");
                 }
 
                 var UserRequestAnswers = applyForInsurancePlanInput.Answers.Select(a => new RequestQuestion
@@ -121,7 +135,7 @@ namespace InsurTech.APIs.Controllers
                 var adminNotification = new Notification
                 {
                     Body = $"A new insurance request has been created .",
-                    UserId = "1" 
+                    UserId = "1"
                 };
 
                 var companyNotification = new Notification
@@ -143,52 +157,52 @@ namespace InsurTech.APIs.Controllers
 
         #region GetCustomerRequests
         [HttpGet("GetCustomerRequests/{customerId}")]
-		public async Task<ActionResult> GetCustomerRequests([FromRoute] string customerId)
+        public async Task<ActionResult> GetCustomerRequests([FromRoute] string customerId)
         {
-			var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
+            var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
 
-			var customerRequests = userRequests.Where(r => r.CustomerId == customerId).ToList();
-            List<UserRequest> requests=[];
+            var customerRequests = userRequests.Where(r => r.CustomerId == customerId).ToList();
+            List<UserRequest> requests = [];
 
-			foreach (UserRequest req in customerRequests)
+            foreach (UserRequest req in customerRequests)
             {
-				req.InsurancePlan = await _unitOfWork.Repository<InsurancePlan>().GetByIdAsync(req.InsurancePlanId);
-				requests.Add(req);
-			}
-            List<UserRequestDTO> customerRequestsDto=[];
+                req.InsurancePlan = await _unitOfWork.Repository<InsurancePlan>().GetByIdAsync(req.InsurancePlanId);
+                requests.Add(req);
+            }
+            List<UserRequestDTO> customerRequestsDto = [];
             foreach (UserRequest req in requests)
             {
                 customerRequestsDto.Add(
                     new UserRequestDTO
-                        {
-                    		CustomerName = req.CustomerId,
-							InsurancePlanLevel = req.InsurancePlan.Level.ToString(),
-							YearlyCoverage = req.InsurancePlan.YearlyCoverage,
-							Quotation = req.InsurancePlan.Quotation,
-							Status = req.Status.ToString()
-                         }
+                    {
+                        CustomerName = req.CustomerId,
+                        InsurancePlanLevel = req.InsurancePlan.Level.ToString(),
+                        YearlyCoverage = req.InsurancePlan.YearlyCoverage,
+                        Quotation = req.InsurancePlan.Quotation,
+                        Status = req.Status.ToString()
+                    }
                     );
 
             }
 
-			return Ok(customerRequestsDto);
-		}
+            return Ok(customerRequestsDto);
+        }
         #endregion
 
         #region GetRequestQuestions
         [HttpGet("GetRequestQuestions/{requestId}")]
-		public async Task<ActionResult> GetRequestQuestionsAndAnswers([FromRoute] int requestId)
+        public async Task<ActionResult> GetRequestQuestionsAndAnswers([FromRoute] int requestId)
         {
-			var requestQuestions = await _unitOfWork.Repository<RequestQuestion>().GetAllAsync();
+            var requestQuestions = await _unitOfWork.Repository<RequestQuestion>().GetAllAsync();
 
             var questions = requestQuestions.Where(r => r.UserRequestId == requestId).ToList();
 
-             
+
             foreach (RequestQuestion req in questions)
             {
-				req.Question = await _unitOfWork.Repository<Question>().GetByIdAsync(req.QuestionId);
+                req.Question = await _unitOfWork.Repository<Question>().GetByIdAsync(req.QuestionId);
 
-			}
+            }
             List<RequestQuestionDTO> requestQuestionsDto = [];
             foreach (RequestQuestion req in questions)
             {
@@ -201,9 +215,9 @@ namespace InsurTech.APIs.Controllers
                                             Answer = req.Answer
                                         });
             }
-            
-			return Ok(requestQuestionsDto);
-		}
+
+            return Ok(requestQuestionsDto);
+        }
         #endregion
 
         #region GetRequestStatus
@@ -212,14 +226,14 @@ namespace InsurTech.APIs.Controllers
         {
             var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
 
-			var userRequest = userRequests.FirstOrDefault(r => r.Id == requestId);
+            var userRequest = userRequests.FirstOrDefault(r => r.Id == requestId);
 
-			if (userRequest == null)
+            if (userRequest == null)
             {
-				return BadRequest(new ApiResponse(400, "Request Not Found"));
-			}
+                return BadRequest(new ApiResponse(400, "Request Not Found"));
+            }
 
-			return Ok(userRequest.Status.ToString());
+            return Ok(userRequest.Status.ToString());
         }
         #endregion
 
@@ -227,28 +241,28 @@ namespace InsurTech.APIs.Controllers
         [HttpGet("GetCustomersWithPagination")]
         public async Task<ActionResult> GetCustomersWithPagination([FromQuery] PaginationDTO pagination)
         {
-			var customers = await _userManager.Users.Where(u => u.UserType == UserType.Customer && u.IsDeleted==false).Skip((pagination.Page - 1) * pagination.ItemsPerPage).Take(pagination.ItemsPerPage).ToListAsync();
-            if(customers.Count == 0) return NotFound(new ApiResponse(404, "No Customers Found"));
-			var customersDto = _mapper.Map<List<GetCustomerDTO>>(customers);
-			return Ok(customersDto);
-		}
+            var customers = await _userManager.Users.Where(u => u.UserType == UserType.Customer && u.IsDeleted == false).Skip((pagination.Page - 1) * pagination.ItemsPerPage).Take(pagination.ItemsPerPage).ToListAsync();
+            if (customers.Count == 0) return NotFound(new ApiResponse(404, "No Customers Found"));
+            var customersDto = _mapper.Map<List<GetCustomerDTO>>(customers);
+            return Ok(customersDto);
+        }
         #endregion
 
         #region GetCustomerByEmail
         [HttpGet("GetCustomerByEmail/{email}")]
-		public async Task<ActionResult> GetCustomerByEmail([FromRoute] string email)
+        public async Task<ActionResult> GetCustomerByEmail([FromRoute] string email)
         {
-			var user = await _userManager.FindByEmailAsync(email);
-			if (user is null) return NotFound(new ApiResponse(404, "User not found"));
-			if (user.IsDeleted == true) return BadRequest(new ApiResponse(400, "User is deleted"));
-			if (user.UserType != UserType.Customer) return BadRequest(new ApiResponse(400, "User is not a Customer"));
-			var customer = _mapper.Map<GetCustomerDTO>(user);
-			return Ok(customer);
-		}
-		#endregion
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user is null) return NotFound(new ApiResponse(404, "User not found"));
+            if (user.IsDeleted == true) return BadRequest(new ApiResponse(400, "User is deleted"));
+            if (user.UserType != UserType.Customer) return BadRequest(new ApiResponse(400, "User is not a Customer"));
+            var customer = _mapper.Map<GetCustomerDTO>(user);
+            return Ok(customer);
+        }
+        #endregion
 
-		#region GetCustomerByUserName
-		[HttpGet("GetCustomerByUserName/{userName}")]
+        #region GetCustomerByUserName
+        [HttpGet("GetCustomerByUserName/{userName}")]
         public async Task<ActionResult> GetCustomerByUserName([FromRoute] string userName)
         {
             var user = await _userManager.FindByNameAsync(userName);
@@ -260,95 +274,95 @@ namespace InsurTech.APIs.Controllers
         }
         #endregion
 
-		#region GetCustomerById
-		[HttpGet("GetCustomerById/{customerId}")]
+        #region GetCustomerById
+        [HttpGet("GetCustomerById/{customerId}")]
         public async Task<ActionResult> GetCustomerById([FromRoute] string customerId)
         {
             var user = await _userManager.FindByIdAsync(customerId);
 
-			if (user is null) return NotFound(new ApiResponse(404, "User not found"));
+            if (user is null) return NotFound(new ApiResponse(404, "User not found"));
 
             if (user.IsDeleted == true) return BadRequest(new ApiResponse(400, "User is deleted"));
 
-			if (user.UserType != UserType.Customer) return BadRequest(new ApiResponse(400, "User is not a Customer"));
+            if (user.UserType != UserType.Customer) return BadRequest(new ApiResponse(400, "User is not a Customer"));
 
-			if (user == null) return NotFound(new ApiResponse(404, "Customer not found"));
+            if (user == null) return NotFound(new ApiResponse(404, "Customer not found"));
             var customer = _mapper.Map<GetCustomerDTO>(user);
-            
 
-			return Ok(customer);
+
+            return Ok(customer);
         }
 
-		#endregion
-		
-		#region CreateCustomer
-		[HttpPost("CreateCustomer")]
+        #endregion
+
+        #region CreateCustomer
+        [HttpPost("CreateCustomer")]
         public async Task<ActionResult> CreateCustomer(RegisterCustomerInput model)
-		{
-			if (await _userManager.FindByEmailAsync(model.EmailAddress) != null) return BadRequest(new ApiResponse(400, "Email is already taken"));
-			if (await _userManager.FindByNameAsync(model.UserName) != null) return BadRequest(new ApiResponse(400, "UserName is already taken"));
-
-			var User = new Customer
-			{
-				Email = model.EmailAddress,
-				UserName = model.UserName,
-				Name = model.Name,
-				PhoneNumber = model.PhoneNumber,
-				IsApprove = IsApprove.approved,
-				NationalID = model.NationalId,
-				BirthDate = DateOnly.Parse(model.BirthDate),
-				UserType = UserType.Customer
-			};
-
-			var Result = await _userManager.CreateAsync(User, model.Password);
-
-			if (!Result.Succeeded) return BadRequest(new ApiResponse(400, "Error in creating user"));
-
-			await _userManager.AddToRoleAsync(User, Roles.Customer);
-
-
-			return Ok(new ApiResponse(200, "Customer Registered Successfully"));
-		}
-		#endregion
-        
-		#region UpdateCustomer
-		[HttpPut("UpdateCustomer")]
-		public async Task<ActionResult> UpdateCustomer(UpdateCustomerDTO model)
         {
-			dynamic existingCustomer = await _userManager.FindByIdAsync(model.Id);
-			if (existingCustomer == null)
-			{
-				return BadRequest(new ApiResponse(400, "Customer Not Found"));
-			}
-			if (await _userManager.FindByEmailAsync(model.Email) != null) return BadRequest(new ApiResponse(400, "Email is already taken"));
+            if (await _userManager.FindByEmailAsync(model.EmailAddress) != null) return BadRequest(new ApiResponse(400, "Email is already taken"));
+            if (await _userManager.FindByNameAsync(model.UserName) != null) return BadRequest(new ApiResponse(400, "UserName is already taken"));
 
-			if (await _userManager.FindByNameAsync(model.UserName) != null) return BadRequest(new ApiResponse(400, "UserName is already taken"));
+            var User = new Customer
+            {
+                Email = model.EmailAddress,
+                UserName = model.UserName,
+                Name = model.Name,
+                PhoneNumber = model.PhoneNumber,
+                IsApprove = IsApprove.approved,
+                NationalID = model.NationalId,
+                BirthDate = DateOnly.Parse(model.BirthDate),
+                UserType = UserType.Customer
+            };
+
+            var Result = await _userManager.CreateAsync(User, model.Password);
+
+            if (!Result.Succeeded) return BadRequest(new ApiResponse(400, "Error in creating user"));
+
+            await _userManager.AddToRoleAsync(User, Roles.Customer);
+
+
+            return Ok(new ApiResponse(200, "Customer Registered Successfully"));
+        }
+        #endregion
+
+        #region UpdateCustomer
+        [HttpPut("UpdateCustomer")]
+        public async Task<ActionResult> UpdateCustomer(UpdateCustomerDTO model)
+        {
+            dynamic existingCustomer = await _userManager.FindByIdAsync(model.Id);
+            if (existingCustomer == null)
+            {
+                return BadRequest(new ApiResponse(400, "Customer Not Found"));
+            }
+            if (await _userManager.FindByEmailAsync(model.Email) != null) return BadRequest(new ApiResponse(400, "Email is already taken"));
+
+            if (await _userManager.FindByNameAsync(model.UserName) != null) return BadRequest(new ApiResponse(400, "UserName is already taken"));
 
             existingCustomer.Email = model.Email;
             existingCustomer.UserName = model.UserName;
             existingCustomer.Name = model.Name;
             existingCustomer.PhoneNumber = model.PhoneNumber;
             existingCustomer.NationalID = model.NationalId;
-            existingCustomer.BirthDate = DateOnly.Parse(model.BirthDate);   
+            existingCustomer.BirthDate = DateOnly.Parse(model.BirthDate);
 
 
             await _userManager.UpdateAsync(existingCustomer);
             return Ok(new ApiResponse(200, "Customer Updated Successfully"));
-		}
-		#endregion
-		
+        }
+        #endregion
+
 
         #region DeleteCustomer
         [HttpDelete("DeleteCustomer/{customerId}")]
-		public async Task<ActionResult> DeleteCustomer([FromRoute] string customerId)
+        public async Task<ActionResult> DeleteCustomer([FromRoute] string customerId)
         {
-			var user = await _userManager.FindByIdAsync(customerId);
-			if (user is null) return NotFound(new ApiResponse(404, "User not found"));
-			if (user.UserType != UserType.Customer) return BadRequest(new ApiResponse(400, "User is not a Customer"));
-			user.IsDeleted = true;
-			await _userManager.UpdateAsync(user);
-			return Ok();
-		}
-		#endregion
-	}
+            var user = await _userManager.FindByIdAsync(customerId);
+            if (user is null) return NotFound(new ApiResponse(404, "User not found"));
+            if (user.UserType != UserType.Customer) return BadRequest(new ApiResponse(400, "User is not a Customer"));
+            user.IsDeleted = true;
+            await _userManager.UpdateAsync(user);
+            return Ok();
+        }
+        #endregion
+    }
 }

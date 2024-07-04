@@ -29,4 +29,8 @@
     <ProjectReference Include="..\InsurTech.Service\InsurTech.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

@@ -254,8 +254,7 @@ namespace InsurTech.APIs.Controllers
         public async Task<IActionResult> GetUserDataAsPdf(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
-            //if (user is null) return NotFound(new ApiResponse(404, "User not found"));
-            //if (user.UserType != UserType.Customer) return BadRequest(new ApiResponse(400, "User is not a Customer"));
+            if (user is null) return NotFound(new ApiResponse(404, "User not found"));
 
             var userRequests = await _requestService.GetRequestsByUserId(id);
             //if (userRequests == null || !userRequests.Any()) return NotFound(new ApiResponse(404, "No Requests yet"));
@@ -268,48 +267,45 @@ namespace InsurTech.APIs.Controllers
 
                 var fontBold = new XFont("Verdana", 12, XFontStyle.Bold);
                 var fontRegular = new XFont("Verdana", 10, XFontStyle.Regular);
-                gfx.DrawString("Insure", fontBold, XBrushes.Aqua, new XRect(0, 0, page.Width, page.Height), XStringFormats.Center);
-                gfx.DrawString("Tech", fontBold, XBrushes.Black, new XRect(0, 0, page.Width+1, page.Height+1), XStringFormats.Center);
 
-                // Add User Details
-                gfx.DrawString("User Details:", fontBold, XBrushes.Black, new XRect(20, 20, page.Width, 20), XStringFormats.TopLeft);
-                gfx.DrawString($"Name: we", fontRegular, XBrushes.Black, new XRect(20, 40, page.Width, 20), XStringFormats.TopLeft);
-                gfx.DrawString($"Email:we@email.com", fontRegular, XBrushes.Black, new XRect(20, 60, page.Width, 20), XStringFormats.TopLeft);
-                gfx.DrawString($"Phone: 012345678", fontRegular, XBrushes.Black, new XRect(20, 80, page.Width, 20), XStringFormats.TopLeft);
+                string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "image", "logo.png");
+                XImage image = XImage.FromFile(imagePath);
+                gfx.DrawImage(image, 520, 20, 50, 50);
 
-                // Add Table Header
-                gfx.DrawString("Insurance Plans:", fontBold, XBrushes.Black, new XRect(20, 120, page.Width, 20), XStringFormats.TopLeft);
-                gfx.DrawLine(XPens.Black, 20, 140, page.Width - 20, 140);
+                gfx.DrawString("Insure Tech", fontBold, XBrushes.DarkGreen,
+                    new XRect(0, 20, page.Width, 20),
+                    XStringFormats.TopCenter);
 
-                gfx.DrawString("Request ID", fontBold, XBrushes.Black, new XRect(20, 150, 100, 20), XStringFormats.TopLeft);
-                gfx.DrawString("Date", fontBold, XBrushes.Black, new XRect(120, 150, 100, 20), XStringFormats.TopLeft);
-                gfx.DrawString("Plan ID", fontBold, XBrushes.Black, new XRect(220, 150, 100, 20), XStringFormats.TopLeft);
-                gfx.DrawString("Plan Name", fontBold, XBrushes.Black, new XRect(320, 150, 200, 20), XStringFormats.TopLeft);
-                gfx.DrawString("Coverage", fontBold, XBrushes.Black, new XRect(520, 150, 100, 20), XStringFormats.TopLeft);
-                gfx.DrawString("Premium", fontBold, XBrushes.Black, new XRect(620, 150, 100, 20), XStringFormats.TopLeft);
+                gfx.DrawString("User Details:", fontBold, XBrushes.Black, new XRect(20, 140, page.Width, 20), XStringFormats.TopLeft);
+                gfx.DrawString($"Name: {user.Name}", fontRegular, XBrushes.Black, new XRect(20, 160, page.Width, 20), XStringFormats.TopLeft);
+                gfx.DrawString($"Email: {user.Email}", fontRegular, XBrushes.Black, new XRect(20, 180, page.Width, 20), XStringFormats.TopLeft);
+                gfx.DrawString($"Phone: {user.PhoneNumber}", fontRegular, XBrushes.Black, new XRect(20, 200, page.Width, 20), XStringFormats.TopLeft);
+                gfx.DrawString("Insurance Plans:", fontBold, XBrushes.Black, new XRect(20, 240, page.Width, 20), XStringFormats.TopLeft);
+                gfx.DrawLine(XPens.Black, 20, 260, page.Width - 20, 260);
 
-                gfx.DrawLine(XPens.Black, 20, 170, page.Width - 20, 170);
+                gfx.DrawString("Request ID", fontBold, XBrushes.Black, new XRect(20, 280, 100, 20), XStringFormats.TopLeft);
+                gfx.DrawString("Plan Name", fontBold, XBrushes.Black, new XRect(120, 280, 200, 20), XStringFormats.TopLeft);
+                gfx.DrawString("Plan Level", fontBold, XBrushes.Black, new XRect(220, 280, 200, 20), XStringFormats.TopLeft);
+                gfx.DrawString("Coverage", fontBold, XBrushes.Black, new XRect(320, 280, 100, 20), XStringFormats.TopLeft);
+                gfx.DrawString("Quotation", fontBold, XBrushes.Black, new XRect(420, 280, 100, 20), XStringFormats.TopLeft);
 
-                // Add Table Rows
-                int yPoint = 190;
+                gfx.DrawLine(XPens.Black, 20, 300, page.Width - 20, 300);
+
+                int yPoint = 320;
                 foreach (var request in userRequests)
                 {
-                  
-                        gfx.DrawString("1", fontRegular, XBrushes.Black, new XRect(20, yPoint, 100, 20), XStringFormats.TopLeft);
-                        gfx.DrawString("1", fontRegular, XBrushes.Black, new XRect(220, yPoint, 100, 20), XStringFormats.TopLeft);
-                        gfx.DrawString("1", fontRegular, XBrushes.Black, new XRect(320, yPoint, 200, 20), XStringFormats.TopLeft);
-                        gfx.DrawString("1", fontRegular, XBrushes.Black, new XRect(520, yPoint, 100, 20), XStringFormats.TopLeft);
-                        gfx.DrawString("1", fontRegular, XBrushes.Black, new XRect(620, yPoint, 100, 20), XStringFormats.TopLeft);
-                        yPoint += 20;
-                    
+                    gfx.DrawString(request.Id.ToString(), fontRegular, XBrushes.Black, new XRect(20, yPoint, 100, 20), XStringFormats.TopLeft);
+                    gfx.DrawString(request.InsurancePlan.Category.Name, fontRegular, XBrushes.Black, new XRect(120, yPoint, 100, 20), XStringFormats.TopLeft);
+                    gfx.DrawString(request.InsurancePlan.Level.ToString(), fontRegular, XBrushes.Black, new XRect(220, yPoint, 100, 20), XStringFormats.TopLeft);
+                    gfx.DrawString(request.InsurancePlan.YearlyCoverage.ToString(), fontRegular, XBrushes.Black, new XRect(320, yPoint, 200, 20), XStringFormats.TopLeft);
+                    gfx.DrawString(request.InsurancePlan.Quotation.ToString(), fontRegular, XBrushes.Black, new XRect(420, yPoint, 100, 20), XStringFormats.TopLeft);
+                    yPoint += 20;
                 }
-
-                // Save the document into the stream
                 document.Save(stream, false);
 
                 return File(stream.ToArray(), "application/pdf", "user_data.pdf");
             }
-    }
+        }
     #endregion
 
 }

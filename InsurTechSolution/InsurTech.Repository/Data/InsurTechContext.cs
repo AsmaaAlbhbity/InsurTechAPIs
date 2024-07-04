@@ -31,6 +31,8 @@ namespace InsurTech.Repository.Data
         public DbSet<RequestQuestion> RequestQuestions { get; set; }
         public DbSet<HealthPlanRequest> HealthPlanRequests { get; set; }
         public DbSet<HomePlanRequest> HomePlanRequests { get; set; }
+        public DbSet<MotorPlanRequest> MotorPlanRequests { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

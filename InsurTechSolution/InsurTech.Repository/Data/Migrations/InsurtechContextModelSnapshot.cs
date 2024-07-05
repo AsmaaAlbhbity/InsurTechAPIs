@@ -141,7 +141,8 @@ namespace InsurTech.Repository.Data.Migrations
 
                     b.Property<string>("Comment")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("CustomerId")
                         .IsRequired()
@@ -262,8 +263,7 @@ namespace InsurTech.Repository.Data.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-
-                            ConcurrencyStamp = "12eba7e0-33ce-4101-9c75-983a9221af15",
+                            ConcurrencyStamp = "0de9f5bc-f786-4f58-8d80-68412df97592",
                             Email = "asmaa_ash@gmail.com",
                             EmailConfirmed = true,
                             IsApprove = 1,
@@ -272,11 +272,10 @@ namespace InsurTech.Repository.Data.Migrations
                             Name = "Asmaa Ashraf",
                             NormalizedEmail = "ASMAA_ASH@GMAIL.COM",
                             NormalizedUserName = "ADMIN",
-
-                            PasswordHash = "AQAAAAIAAYagAAAAEDO92CCHD+yaewcECcfixeZ0BE9UvgAXqCxKtlNPURfp4/3jskKCbcKpm1KBxNmWaQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBZJj/86BungJebSkUyz8TKlLta5l7yjntthsjqi1rjWwLZbFBPmxDPBEDXb1vdC3w==",
                             PhoneNumber = "01211236779",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "91c74ba0-27da-407f-a39f-3f0a4df48132",
+                            SecurityStamp = "82cdf6bf-90f7-4e60-a489-7ffae924b93f",
                             TwoFactorEnabled = false,
                             UserName = "Admin",
                             UserType = 2
@@ -405,15 +404,30 @@ namespace InsurTech.Repository.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("CustomerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("date");
+
                     b.Property<int>("InsurancePlanId")
                         .HasColumnType("int");
 
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Quotation")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("YearlyCoverage")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -422,6 +436,8 @@ namespace InsurTech.Repository.Data.Migrations
                     b.HasIndex("InsurancePlanId");
 
                     b.ToTable("Requests");
+
+                    b.UseTptMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -680,6 +696,73 @@ namespace InsurTech.Repository.Data.Migrations
                     b.ToTable("MotorInsurancePlans");
                 });
 
+            modelBuilder.Entity("InsurTech.Core.Entities.HealthPlanRequest", b =>
+                {
+                    b.HasBaseType("InsurTech.Core.Entities.UserRequest");
+
+                    b.Property<decimal>("ClinicsCoverage")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("DentalCoverage")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("HospitalizationAndSurgery")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("MedicalNetwork")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("OpticalCoverage")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.ToTable("HealthPlanRequests");
+                });
+
+            modelBuilder.Entity("InsurTech.Core.Entities.HomePlanRequest", b =>
+                {
+                    b.HasBaseType("InsurTech.Core.Entities.UserRequest");
+
+                    b.Property<decimal>("AttemptedTheft")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("FiresAndExplosion")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("GlassBreakage")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("NaturalHazard")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("WaterDamage")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.ToTable("HomePlanRequests");
+                });
+
+            modelBuilder.Entity("InsurTech.Core.Entities.MotorPlanRequest", b =>
+                {
+                    b.HasBaseType("InsurTech.Core.Entities.UserRequest");
+
+                    b.Property<decimal>("LegalExpenses")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("OwnDamage")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("PersonalAccident")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("Theft")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<decimal>("ThirdPartyLiability")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.ToTable("MotorPlanRequests");
+                });
+
             modelBuilder.Entity("InsurTech.Core.Entities.Article", b =>
                 {
                     b.HasOne("InsurTech.Core.Entities.Identity.AppUser", "User")
@@ -732,7 +815,7 @@ namespace InsurTech.Repository.Data.Migrations
                     b.HasOne("InsurTech.Core.Entities.Identity.Company", "Company")
                         .WithMany("InsurancePlans")
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
@@ -874,6 +957,33 @@ namespace InsurTech.Repository.Data.Migrations
                     b.HasOne("InsurTech.Core.Entities.InsurancePlan", null)
                         .WithOne()
                         .HasForeignKey("InsurTech.Core.Entities.MotorInsurancePlan", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("InsurTech.Core.Entities.HealthPlanRequest", b =>
+                {
+                    b.HasOne("InsurTech.Core.Entities.UserRequest", null)
+                        .WithOne()
+                        .HasForeignKey("InsurTech.Core.Entities.HealthPlanRequest", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("InsurTech.Core.Entities.HomePlanRequest", b =>
+                {
+                    b.HasOne("InsurTech.Core.Entities.UserRequest", null)
+                        .WithOne()
+                        .HasForeignKey("InsurTech.Core.Entities.HomePlanRequest", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("InsurTech.Core.Entities.MotorPlanRequest", b =>
+                {
+                    b.HasOne("InsurTech.Core.Entities.UserRequest", null)
+                        .WithOne()
+                        .HasForeignKey("InsurTech.Core.Entities.MotorPlanRequest", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

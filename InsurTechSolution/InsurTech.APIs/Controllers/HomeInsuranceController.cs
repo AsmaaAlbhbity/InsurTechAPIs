@@ -28,12 +28,15 @@ namespace InsurTech.APIs.Controllers
         {
             if (ModelState.IsValid)
             {
+                Category insuranceCategoury = await unitOfWork.Repository<Category>().GetByIdAsync(HomeInsuranceDTO.CategoryId);
+
                 var HomeInsurancePlan = new HomeInsurancePlan
                 {
                     YearlyCoverage = HomeInsuranceDTO.YearlyCoverage,
                     Level = HomeInsuranceDTO.Level,
                     CategoryId = HomeInsuranceDTO.CategoryId,
                     Quotation = HomeInsuranceDTO.Quotation,
+                    Category=insuranceCategoury,
                     CompanyId = HomeInsuranceDTO.CompanyId,
                     WaterDamage= HomeInsuranceDTO.WaterDamage,
                     GlassBreakage= HomeInsuranceDTO.GlassBreakage,
@@ -77,6 +80,8 @@ namespace InsurTech.APIs.Controllers
 
             if (ModelState.IsValid)
             {
+                Category insuranceCategoury = await unitOfWork.Repository<Category>().GetByIdAsync(HomeInsuranceDTO.CategoryId);
+
                 var storedHomeInsurancePlan = await unitOfWork.Repository<HomeInsurancePlan>().GetByIdAsync(id);
                 if (storedHomeInsurancePlan == null)
                 {
@@ -93,6 +98,7 @@ namespace InsurTech.APIs.Controllers
                 storedHomeInsurancePlan.NaturalHazard = HomeInsuranceDTO.NaturalHazard;
                 storedHomeInsurancePlan.AttemptedTheft = HomeInsuranceDTO.AttemptedTheft;
                 storedHomeInsurancePlan.FiresAndExplosion = HomeInsuranceDTO.FiresAndExplosion;
+                storedHomeInsurancePlan.Category = insuranceCategoury;
 
                 await unitOfWork.Repository<HomeInsurancePlan>().Update(storedHomeInsurancePlan);
                 await unitOfWork.CompleteAsync();

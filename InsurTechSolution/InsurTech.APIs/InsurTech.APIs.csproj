@@ -19,6 +19,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="8.0.6" />
+    <PackageReference Include="PdfSharpCore" Version="1.3.63" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
@@ -26,6 +27,10 @@
     <ProjectReference Include="..\InsurTech.Core\InsurTech.Core.csproj" />
     <ProjectReference Include="..\InsurTech.Repository\InsurTech.Repository.csproj" />
     <ProjectReference Include="..\InsurTech.Service\InsurTech.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
   </ItemGroup>
 
 </Project>

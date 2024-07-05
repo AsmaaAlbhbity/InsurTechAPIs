@@ -141,9 +141,40 @@ namespace InsurTech.APIs.Controllers
 
         #endregion
 
+        #region checkCustomerHasInsurancePlans 
+        [HttpGet("checkCustomerHasInsurancePlans/{catId}")]
+        public async Task<ActionResult> checkCustomerHasInsurancePlans([FromRoute] int catId)
+        {
+            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //var customerId = "b7f9468b-6f42-4d61-b100-6461ffeba8dd";
+            //return array of true or false for all insurance plan based on user requested it before or not
+            var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
+            var insurancePlans = await _unitOfWork.Repository<InsurancePlan>().GetAllAsync();
+            var userRequestsIds = userRequests.Where(r => r.CustomerId == customerId).Select(r => r.InsurancePlanId).ToList();
+            var insurancePlansIds = insurancePlans.Where(i => i.CategoryId == catId).Select(i => i.Id).ToList();
+            var result = insurancePlansIds.Select(i => userRequestsIds.Contains(i)).ToList();
+            return Ok(result);
+        }
+        #endregion
+        #region getRequestStatusByPlanId
+        [HttpGet("getRequestStatusByPlanId/{planId}")]
+        public async Task<ActionResult> getRequestStatusByPlanId([FromRoute] int planId)
+        {
+            //var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var customerId = "b7f9468b-6f42-4d61-b100-6461ffeba8dd";
+            var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
+            var userRequest = userRequests.FirstOrDefault(r => r.CustomerId == customerId && r.InsurancePlanId == planId);
+            if (userRequest == null)
+            {
+                return BadRequest(new ApiResponse(400, "Request Not Found"));
+            }
+            return Ok(new { Status = userRequest.Status.ToString() });
+        }
+        #endregion
+
         #region GetCustomerRequests
         [HttpGet("GetCustomerRequests/{customerId}")]
-		public async Task<ActionResult> GetCustomerRequests([FromRoute] string customerId)
+		    public async Task<ActionResult> GetCustomerRequests([FromRoute] string customerId)
         {
 			var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
 

@@ -8,6 +8,11 @@ using InsurTech.APIs.DTOs.HomeInsurancePlanDTO;
 using AutoMapper;
 using InsurTech.APIs.DTOs.HealthInsurancePlanDTO;
 using InsurTech.APIs.Errors;
+using InsurTech.Core.Entities.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
+using InsurTech.APIs.Helpers;
+using Microsoft.EntityFrameworkCore;
 
 namespace InsurTech.APIs.Controllers
 {
@@ -17,11 +22,15 @@ namespace InsurTech.APIs.Controllers
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper _mapper;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public HomeInsuranceController(IUnitOfWork unitOfWork , IMapper mapper)
+        public HomeInsuranceController(IUnitOfWork unitOfWork , IMapper mapper, UserManager<AppUser> userManager, IHubContext<NotificationHub> hubContext)
         {
             this.unitOfWork = unitOfWork;
             _mapper = mapper;
+            _userManager = userManager;
+            _hubContext = hubContext;
         }
         [HttpPost("AddHomePlan")]
         public async Task<IActionResult> AddHomePlan(CreateHomeInsuranceDTO HomeInsuranceDTO)
@@ -57,6 +66,27 @@ namespace InsurTech.APIs.Controllers
                     IsRead = false
                 };
                 await unitOfWork.Repository<Notification>().AddAsync(notification);
+
+                await _hubContext.Clients.Group("admin").SendAsync("ReceiveNotification", notification.Body);
+
+
+
+                var approvedCustomers = await _userManager.Users
+                    .Where(u => u.UserType == UserType.Customer && u.IsApprove == IsApprove.approved)
+                    .ToListAsync();
+
+                foreach (var customer in approvedCustomers)
+                {
+                    var notificationToCustomer = new Notification
+                    {
+                        Body = $"A new Home insurance plan '{HomeInsurancePlan.Level}' has been added by  {HomeInsurancePlan.Company.UserName}.",
+                        UserId = customer.Id,
+                        IsRead = false
+                    };
+
+                    await unitOfWork.Repository<Notification>().AddAsync(notificationToCustomer);
+                    await _hubContext.Clients.Group("customer").SendAsync("ReceiveNotification", notificationToCustomer.Body);
+                }
                 await unitOfWork.CompleteAsync();
 
                 return Ok(HomeInsuranceDTO);
@@ -111,6 +141,9 @@ namespace InsurTech.APIs.Controllers
                 };
                 await unitOfWork.Repository<Notification>().AddAsync(notification);
                 await unitOfWork.CompleteAsync();
+
+                await _hubContext.Clients.Group("admin").SendAsync("ReceiveNotification", notification.Body);
+
 
                 return Ok(HomeInsuranceDTO);
             }

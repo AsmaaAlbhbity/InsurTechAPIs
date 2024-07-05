@@ -6,6 +6,7 @@ using InsurTech.APIs.DTOs.HomeInsurancePlanDTO;
 using InsurTech.APIs.DTOs.InsurancePlanDTO;
 using InsurTech.APIs.DTOs.MotorInsurancePlanDTO;
 using InsurTech.APIs.Errors;
+using InsurTech.APIs.Helpers;
 using InsurTech.Core;
 using InsurTech.Core.Entities;
 using InsurTech.Core.Entities.Identity;
@@ -13,6 +14,7 @@ using InsurTech.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Org.BouncyCastle.Pqc.Crypto.Lms;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
@@ -25,12 +27,14 @@ namespace InsurTech.APIs.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public InsurancePlanController(IUnitOfWork unitOfWork , IMapper mapper , UserManager<AppUser> userManager)
+        public InsurancePlanController(IUnitOfWork unitOfWork , IMapper mapper , UserManager<AppUser> userManager ,IHubContext<NotificationHub> hubContext)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _userManager = userManager;
+            _hubContext = hubContext;
         }
 
         #region GetInsurancePlansByCategoryId
@@ -132,11 +136,13 @@ namespace InsurTech.APIs.Controllers
 
                 var notification = new Notification
                 {
-                    Body = $"The insurance plan  with ID { plan.Id } has been deleted by company ID { plan.CompanyId }.",
+                    Body = $"The insurance plan  with ID { plan.Id } has been deleted by  { plan.Company.UserName }.",
                     UserId = "1" ,
                     IsRead = false
                 };
                 await _unitOfWork.Repository<Notification>().AddAsync(notification);
+                await _hubContext.Clients.Group("admin").SendAsync("ReceiveNotification", notification.Body);
+
                 await _unitOfWork.CompleteAsync();
 
                 return Ok(new ApiResponse(200, "Deleted"));

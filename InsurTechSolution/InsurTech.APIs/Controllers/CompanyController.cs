@@ -4,6 +4,7 @@ using InsurTech.APIs.DTOs.CompanyRequests;
 using InsurTech.APIs.DTOs.CompanyUpdateDto;
 using InsurTech.APIs.DTOs.RequestDTO;
 using InsurTech.APIs.Errors;
+using InsurTech.APIs.Helpers;
 using InsurTech.Core;
 using InsurTech.Core.Entities;
 using InsurTech.Core.Entities.Identity;
@@ -15,6 +16,7 @@ using InsurTech.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using PdfSharpCore.Drawing;
 using PdfSharpCore.Pdf;
@@ -28,11 +30,12 @@ namespace InsurTech.APIs.Controllers
 
         private readonly UserManager<AppUser> _userManager;
         private readonly IRequestService _requestService;
+        private readonly IHubContext<NotificationHub> _hubContext;
         private readonly IEmailService _emailService;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CompanyController(UserManager<AppUser> userManager, IUnitOfWork unitOfWork, IEmailService emailService, IMapper mapper, IRequestService requestService)
+        public CompanyController(UserManager<AppUser> userManager, IUnitOfWork unitOfWork, IEmailService emailService, IMapper mapper, IRequestService requestService,IHubContext<NotificationHub> hubContext)
 
         {
             _userManager = userManager;
@@ -40,7 +43,7 @@ namespace InsurTech.APIs.Controllers
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _requestService = requestService;
-
+            _hubContext = hubContext;
         }
 
 
@@ -214,9 +217,20 @@ namespace InsurTech.APIs.Controllers
 
             await _unitOfWork.Repository<UserRequest>().Update(existingRequest);
 
-            string ResaultOfRequest = (existingRequest.Status == RequestStatus.Approved && existingRequest.Status != RequestStatus.Pending) ? "congratulations ..! Your request has been approved " : "Oops..! Your request has been Rejected";
+            var company = await _userManager.FindByIdAsync(existingRequest.InsurancePlan.CompanyId);
+            var customer =await _userManager.FindByEmailAsync(existingRequest.CustomerId);
 
-            await _unitOfWork.Repository<Notification>().AddAsync(new Notification() { UserId = existingRequest.CustomerId, Body = ResaultOfRequest });
+            string ResaultOfRequest = (existingRequest.Status == RequestStatus.Approved && existingRequest.Status != RequestStatus.Pending) ? "congratulations ..! Your request has been approved " : "Oops..! Your request has been Rejected";
+            string ResaultOfRequestToAdmin = (existingRequest.Status == RequestStatus.Approved && existingRequest.Status != RequestStatus.Pending) ? $"Congratulations! {company.UserName} has accepted {customer.UserName}'s request." : $"Oops! {company.UserName} has rejected {customer.UserName}'s request.";
+
+
+            var notification = new Notification() { UserId = existingRequest.CustomerId, Body = ResaultOfRequest ,IsRead=false};
+            var notificationToAdmin = new Notification() { UserId = "1", Body =ResaultOfRequestToAdmin, IsRead = false };
+
+            await _unitOfWork.Repository<Notification>().AddAsync(notification);
+            await _hubContext.Clients.Group("customer").SendAsync("ReceiveNotification", notification.Body);
+            await _hubContext.Clients.Group("admin").SendAsync("ReceiveNotification", notificationToAdmin.Body);
+
             await _unitOfWork.CompleteAsync();
 
 

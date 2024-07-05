@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using MailKit.Security;
 using Microsoft.Extensions.Logging;
+using InsurTech.Service.Assets.Emails_Layout;
 
 namespace InsurTech.Service
 {
@@ -65,14 +66,16 @@ namespace InsurTech.Service
         public async Task SendPasswordResetEmail(string toEmail, string resetUrl)
         {
             var subject = "Reset your password";
-            var message = $"<p>Please reset your password by <a href='{resetUrl}'>clicking here</a>.</p>";
+            var message = TemplateManager.GetPasswordResetEmailTemplate(resetUrl);
+
             await SendEmailAsync(toEmail, subject, message);
         }
 
         public async Task SendConfirmationEmail(string toEmail, string confirmationUrl)
         {
             var subject = "Confirm your email";
-            var message = $"<h1>Welcome to InsurTech</h1><p>Please confirm your email by <a href='{confirmationUrl}'>clicking here</a>.</p>";
+            var message = TemplateManager.GetConfirmationEmailTemplate(confirmationUrl);
+
             await SendEmailAsync(toEmail, subject, message);
         }
     }

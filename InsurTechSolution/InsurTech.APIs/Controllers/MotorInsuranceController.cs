@@ -34,6 +34,7 @@ namespace InsurTech.APIs.Controllers
         {
             if (ModelState.IsValid)
             {
+                Category insuranceCategoury = await _unitOfWork.Repository<Category>().GetByIdAsync(motorInsuranceDTO.CategoryId);
                 var motorInsurancePlan = new MotorInsurancePlan
                 {
                     YearlyCoverage = motorInsuranceDTO.YearlyCoverage,
@@ -46,6 +47,7 @@ namespace InsurTech.APIs.Controllers
                     ThirdPartyLiability = motorInsuranceDTO.ThirdPartyLiability,
                     OwnDamage = motorInsuranceDTO.OwnDamage,
                     LegalExpenses = motorInsuranceDTO.LegalExpenses,
+                    Category=insuranceCategoury,
                     AvailableInsurance=true
                 };
 
@@ -80,6 +82,7 @@ namespace InsurTech.APIs.Controllers
 
             if (ModelState.IsValid)
             {
+                Category insuranceCategoury = await _unitOfWork.Repository<Category>().GetByIdAsync(motorInsuranceDTO.CategoryId);
                 var storedMotorInsurancePlan = await _unitOfWork.Repository<MotorInsurancePlan>().GetByIdAsync(id);
                 if (storedMotorInsurancePlan == null)
                 {
@@ -96,6 +99,7 @@ namespace InsurTech.APIs.Controllers
                 storedMotorInsurancePlan.ThirdPartyLiability = motorInsuranceDTO.ThirdPartyLiability;
                 storedMotorInsurancePlan.OwnDamage = motorInsuranceDTO.OwnDamage;
                 storedMotorInsurancePlan.LegalExpenses = motorInsuranceDTO.LegalExpenses;
+                storedMotorInsurancePlan.Category = insuranceCategoury;
 
                 await _unitOfWork.Repository<MotorInsurancePlan>().Update(storedMotorInsurancePlan);
                 await _unitOfWork.CompleteAsync();

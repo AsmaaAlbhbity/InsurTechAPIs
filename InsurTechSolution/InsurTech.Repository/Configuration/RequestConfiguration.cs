@@ -17,6 +17,12 @@ namespace InsurTech.Repository.Configuration
                 .WithMany(ip => ip.Requests)
                 .HasForeignKey(r => r.InsurancePlanId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            builder.UseTptMappingStrategy();
+
+            builder.Property(a => a.YearlyCoverage).HasColumnType("decimal(18,2)");
+            builder.Property(a => a.Quotation).HasColumnType("decimal(18,2)");
+
         }
     }
 }

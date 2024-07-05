@@ -74,7 +74,7 @@ namespace InsurTech.APIs
 			{
 				options.AddPolicy("AllowSpecificOrigin", policyBuilder =>
 				{
-					policyBuilder.WithOrigins("http://localhost:4200")
+					policyBuilder.WithOrigins(["http://localhost:4200"])
 						.AllowAnyMethod()
 						.AllowAnyHeader()
 						.AllowCredentials();
@@ -118,9 +118,16 @@ namespace InsurTech.APIs
 			builder.Services.AddScoped<ITokenService, TokenService>();
 			builder.Services.AddScoped<IEmailService, EmailService>();
 			builder.Services.AddScoped<IRequestService, RequestService>();
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", builder =>
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader());
+            });
 
-			#region Validation Error Handling
-			builder.Services.Configure<ApiBehaviorOptions>(options =>
+            #region Validation Error Handling
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
 			{
 				options.InvalidModelStateResponseFactory = actionContext =>
 				{
@@ -143,16 +150,21 @@ namespace InsurTech.APIs
 			#endregion
 
 			var app = builder.Build();
-
-			// Configure the HTTP request pipeline.
-			app.UseMiddleware<ExceptionMiddleWare>();
+            
+            // Configure the HTTP request pipeline.
+            app.UseMiddleware<ExceptionMiddleWare>();
 			if (app.Environment.IsDevelopment())
 			{
 				app.UseSwagger();
 				app.UseSwaggerUI();
 			}
+            // create folder for uploaded files
+            if (!Directory.Exists(Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles")))
+            {
+                Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles"));
+            }
 
-			app.UseStaticFiles(new StaticFileOptions
+            app.UseStaticFiles(new StaticFileOptions
 			{
 				FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "UploadedFiles")),
 				RequestPath = ""
@@ -162,7 +174,7 @@ namespace InsurTech.APIs
 
 			app.UseHttpsRedirection();
 
-			app.UseCors("AllowSpecificOrigin");
+            app.UseCors("AllowAll");
 
 			app.UseAuthentication();
 			app.UseAuthorization();

@@ -21,6 +21,7 @@ using Microsoft.Extensions.FileProviders;
 using System;
 using System.IO;
 using System.Linq;
+using InsurTech.APIs.Helpers;
 
 namespace InsurTech.APIs
 {
@@ -32,7 +33,8 @@ namespace InsurTech.APIs
 
 			// Add services to the container.
 			builder.Services.AddControllers();
-			builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSignalR();
+            builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen(op =>
 			{
 				op.SwaggerDoc("v1", new OpenApiInfo { Title = "InsurTech API", Version = "v1" });
@@ -168,7 +170,7 @@ namespace InsurTech.APIs
 			app.UseAuthorization();
 
 			app.MapControllers();
-
+			app.MapHub<NotificationHub>("/notificationHub");
 			app.Run();
 		}
 	}

@@ -19,6 +19,9 @@ using InsurTech.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using AutoMapper;
 using InsurTech.APIs.DTOs.UserDTOs;
+using Microsoft.AspNetCore.SignalR;
+using InsurTech.APIs.Helpers;
+using InsurTech.Service.Models;
 
 namespace InsurTech.APIs.Controllers
 {
@@ -32,8 +35,9 @@ namespace InsurTech.APIs.Controllers
         private readonly IEmailService _emailService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,ITokenService tokenService, IEmailService emailService,IUnitOfWork unitOfWork,IMapper mapper)
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager,ITokenService tokenService, IEmailService emailService,IUnitOfWork unitOfWork,IMapper mapper, IHubContext<NotificationHub> hubContext)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -41,6 +45,7 @@ namespace InsurTech.APIs.Controllers
             _emailService = emailService;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _hubContext= hubContext;
         }
 
         #region Login
@@ -231,6 +236,9 @@ namespace InsurTech.APIs.Controllers
             await _unitOfWork.Repository<Notification>().AddAsync(notification);
             await _unitOfWork.CompleteAsync();
 
+            await _hubContext.Clients.Group("admin").SendAsync("ReceiveNotification", notification.Body);
+
+
 
             return Ok( new ApiResponse(200, $"Company Registered Successfully, Please check your email to confirm your account {User.Email}"));
         }
@@ -286,6 +294,9 @@ namespace InsurTech.APIs.Controllers
             };
             await _unitOfWork.Repository<Notification>().AddAsync(notification);
             await _unitOfWork.CompleteAsync();
+
+            await _hubContext.Clients.Group("admin").SendAsync("ReceiveNotification", notification.Body);
+
 
             return Ok(new ApiResponse(200, $"Customer Registered Successfully, Please check your email to confirm your account {User.Email}"));
         }
@@ -441,6 +452,18 @@ namespace InsurTech.APIs.Controllers
                         UserType = UserType.Customer,
 
                     };
+
+                    var notification = new Notification
+                    {
+                        Body = $"A new customer {user.Name} has registered.",
+                        UserId = "1",
+                        IsRead = false
+                    };
+                    await _unitOfWork.Repository<Notification>().AddAsync(notification);
+                    await _unitOfWork.CompleteAsync();
+
+                    await _hubContext.Clients.Group("admin").SendAsync("ReceiveNotification", notification.Body);
+
 
                     var result = await _userManager.CreateAsync(user, "Asmaa***12345");
 

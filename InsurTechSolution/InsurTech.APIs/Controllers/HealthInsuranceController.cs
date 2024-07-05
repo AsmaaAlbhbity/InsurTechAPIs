@@ -29,11 +29,14 @@ namespace InsurTech.APIs.Controllers
         {
             if (ModelState.IsValid)
             {
+                Category insuranceCategoury=await unitOfWork.Repository<Category>().GetByIdAsync(healthInsuranceDTO.CategoryId);
+
                 var healthInsurancePlan = new HealthInsurancePlan
                 {
                     YearlyCoverage = healthInsuranceDTO.YearlyCoverage,
                     Level = healthInsuranceDTO.Level,
                     CategoryId = healthInsuranceDTO.CategoryId,
+                    Category= insuranceCategoury,
                     Quotation = healthInsuranceDTO.Quotation,
                     CompanyId = healthInsuranceDTO.CompanyId,
                     MedicalNetwork = healthInsuranceDTO.MedicalNetwork,
@@ -78,6 +81,7 @@ namespace InsurTech.APIs.Controllers
 
             if (ModelState.IsValid)
             {
+                Category insuranceCategoury = await unitOfWork.Repository<Category>().GetByIdAsync(HealthInsuranceDTO.CategoryId);
                 var storedHealthInsurancePlan = await unitOfWork.Repository<HealthInsurancePlan>().GetByIdAsync(id);
                 if (storedHealthInsurancePlan == null)
                 {
@@ -94,6 +98,7 @@ namespace InsurTech.APIs.Controllers
                 storedHealthInsurancePlan.HospitalizationAndSurgery = HealthInsuranceDTO.HospitalizationAndSurgery;
                 storedHealthInsurancePlan.OpticalCoverage = HealthInsuranceDTO.OpticalCoverage;
                 storedHealthInsurancePlan.DentalCoverage = HealthInsuranceDTO.DentalCoverage;
+                storedHealthInsurancePlan.Category = insuranceCategoury;
                 
 
                 await unitOfWork.Repository<HealthInsurancePlan>().Update(storedHealthInsurancePlan);

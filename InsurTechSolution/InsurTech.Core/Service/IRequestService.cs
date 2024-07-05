@@ -11,7 +11,8 @@ namespace InsurTech.Core.Service
     {
         Task<List<UserRequest>> GetRequestsByCompanyId(string companyId);
         Task<UserRequest> GetRequestByIdAsync(string id); 
-        Task UpdateRequestAsync(UserRequest request); 
+        Task UpdateRequestAsync(UserRequest request);
+        Task<List<UserRequest>> GetRequestsByUserId(string userId);
 
     }
 }

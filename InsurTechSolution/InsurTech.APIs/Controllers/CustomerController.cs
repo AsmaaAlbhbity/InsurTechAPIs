@@ -192,11 +192,14 @@ namespace InsurTech.APIs.Controllers
                 customerRequestsDto.Add(
                     new UserRequestDTO
                         {
-                    		CustomerName = req.CustomerId,
+                            CustomerID = req.CustomerId,
 							InsurancePlanLevel = req.InsurancePlan.Level.ToString(),
 							YearlyCoverage = req.InsurancePlan.YearlyCoverage,
 							Quotation = req.InsurancePlan.Quotation,
-							Status = req.Status.ToString()
+							Status = req.Status.ToString(),
+                            catId = req.InsurancePlan.CategoryId,
+                            planId = req.InsurancePlanId,
+                            companyName = req.InsurancePlan.Company.Name
                          }
                     );
 

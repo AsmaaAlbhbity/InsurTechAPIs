@@ -21,6 +21,8 @@ using Microsoft.Extensions.FileProviders;
 using System;
 using System.IO;
 using System.Linq;
+using InsurTech.Service.Models;
+using CloudinaryDotNet;
 
 namespace InsurTech.APIs
 {
@@ -111,9 +113,17 @@ namespace InsurTech.APIs
 			});
 
 			builder.Services.AddAuthorization();
+            #endregion
+
+            #region Cloudinary - UploadService
+
+			builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+
+			builder.Services.AddScoped<IUploadService, UploadService>();
+
 			#endregion
 
-			builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 			builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 			builder.Services.AddScoped<ITokenService, TokenService>();
 			builder.Services.AddScoped<IEmailService, EmailService>();

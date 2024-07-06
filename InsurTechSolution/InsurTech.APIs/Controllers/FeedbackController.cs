@@ -46,7 +46,7 @@ namespace InsurTech.APIs.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         public async Task<IActionResult> CreateFeedback([FromBody] CreateFeedbackInput input)
         {
             if (!ModelState.IsValid)

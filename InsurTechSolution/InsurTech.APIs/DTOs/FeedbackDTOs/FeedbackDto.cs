@@ -9,4 +9,9 @@ public class FeedbackDto
     public string CustomerName { get; set; }
     public int InsurancePlanId { get; set; }
     public string InsurancePlanName { get; set; }
+    public string InsurancePlanLevel { get; set; }
+    public int catId { get; set; }
+    public string yearlyConverage { get; set; }
+
+    
 }

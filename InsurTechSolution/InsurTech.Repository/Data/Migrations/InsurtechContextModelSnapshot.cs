@@ -263,7 +263,7 @@ namespace InsurTech.Repository.Data.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0de9f5bc-f786-4f58-8d80-68412df97592",
+                            ConcurrencyStamp = "f6eebeb0-08a3-4f44-85df-433897317cba",
                             Email = "asmaa_ash@gmail.com",
                             EmailConfirmed = true,
                             IsApprove = 1,
@@ -272,10 +272,10 @@ namespace InsurTech.Repository.Data.Migrations
                             Name = "Asmaa Ashraf",
                             NormalizedEmail = "ASMAA_ASH@GMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBZJj/86BungJebSkUyz8TKlLta5l7yjntthsjqi1rjWwLZbFBPmxDPBEDXb1vdC3w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPa6AOAFTZMVN02zHs6qKHrII8ehqoEm4UAkKc3dvZI62zrIWBQNJJ4kXhCtWHS4Jg==",
                             PhoneNumber = "01211236779",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "82cdf6bf-90f7-4e60-a489-7ffae924b93f",
+                            SecurityStamp = "13e9f41f-4afa-48e0-9dfd-143a98f275ce",
                             TwoFactorEnabled = false,
                             UserName = "Admin",
                             UserType = 2
@@ -419,6 +419,9 @@ namespace InsurTech.Repository.Data.Migrations
 
                     b.Property<int>("Level")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Paid")
+                        .HasColumnType("bit");
 
                     b.Property<decimal>("Quotation")
                         .HasColumnType("decimal(18,2)");

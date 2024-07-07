@@ -399,8 +399,32 @@ namespace InsurTech.APIs.Controllers
         }
         #endregion
 
-        #region UpdateCustomer
-        [HttpPut("UpdateCustomer")]
+        #region ChangeRequestPaidStatus
+        [HttpPut("ChangeRequestPaidStatus")]
+		public async Task<ActionResult> ChangeRequestPaidStatus(int insurancePlanId)
+        { 
+            var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
+            var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUser == null) return BadRequest(
+                new ApiResponse(400, "User Not Found"));
+            var userRequest = userRequests.FirstOrDefault(r => r.CustomerId == currentUser && r.InsurancePlanId == insurancePlanId);
+			if (userRequest == null)
+            {
+				return BadRequest(new ApiResponse(400, "Request Not Found"));
+			}
+			userRequest.Paid = true;
+			await _unitOfWork.CompleteAsync();
+			return Ok(new ApiResponse(200, "Request Paid Successfully"));
+		}
+        #endregion
+
+
+
+
+
+
+		#region UpdateCustomer
+		[HttpPut("UpdateCustomer")]
         public async Task<ActionResult> UpdateCustomer(UpdateCustomerDTO model)
         {
             dynamic existingCustomer = await _userManager.FindByIdAsync(model.Id);

@@ -230,7 +230,7 @@ namespace InsurTech.APIs.Controllers
                 customerRequestsDto.Add(
                     new UserRequestDTO
                     {
-                        CustomerName = req.CustomerId,
+						CustomerID = req.CustomerId,
                         InsurancePlanLevel = req.InsurancePlan.Level.ToString(),
                         YearlyCoverage = req.InsurancePlan.YearlyCoverage,
                         Quotation = req.InsurancePlan.Quotation,
@@ -412,10 +412,16 @@ namespace InsurTech.APIs.Controllers
             {
 				return BadRequest(new ApiResponse(400, "Request Not Found"));
 			}
-			userRequest.Paid = true;
+            if(userRequest.Paid)
+            {
+                userRequest.Paid = false;
+                return Ok(new ApiResponse(200, "Request Unpaid Successfully"));
+            }
+            userRequest.Paid = true;
 			await _unitOfWork.CompleteAsync();
 			return Ok(new ApiResponse(200, "Request Paid Successfully"));
 		}
+
         #endregion
 
 

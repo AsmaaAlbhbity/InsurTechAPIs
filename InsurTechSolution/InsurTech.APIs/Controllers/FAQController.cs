@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using InsurTech.APIs.DTOs.FAQDTOs;
+using InsurTech.APIs.Helpers;
 using InsurTech.Core;
 using InsurTech.Core.Entities;
 using InsurTech.Core.Entities.Identity;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -19,12 +21,14 @@ namespace InsurTech.APIs.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public FAQController(IUnitOfWork unitOfWork, IMapper mapper,UserManager<AppUser> userManager)
+        public FAQController(IUnitOfWork unitOfWork, IMapper mapper,UserManager<AppUser> userManager,IHubContext<NotificationHub> hubContext)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _userManager = userManager;
+            _hubContext = hubContext;
         }
 
         [HttpGet]
@@ -68,23 +72,32 @@ namespace InsurTech.APIs.Controllers
             // Create and send notifications
 
             // Fetch all approved customers
-            var approvedCustomers = await _userManager.Users
-                                       .Where(u => u.UserType == UserType.Customer && u.IsApprove == IsApprove.approved)
-                                       .ToListAsync();
+            var approvedUsers = await _userManager.Users
+         .Where(u => (u.UserType == UserType.Customer || u.UserType == UserType.Company) && u.IsApprove == IsApprove.approved)
+         .ToListAsync();
 
-            foreach (var customer in approvedCustomers)
+            foreach (var user in approvedUsers)
             {
                 var notification = new Notification
                 {
                     Body = $"A new FAQ titled '{faq.Body}' has been added. Check it out!",
-                    UserId = customer.Id,
+                    UserId = user.Id,
                     IsRead = false
                 };
 
                 await _unitOfWork.Repository<Notification>().AddAsync(notification);
+
+                if (user.UserType == UserType.Customer)
+                {
+                    await _hubContext.Clients.Group("customer").SendAsync("ReceiveNotification", notification.Body);
+                }
+                else if (user.UserType == UserType.Company)
+                {
+                    await _hubContext.Clients.Group("company").SendAsync("ReceiveNotification", notification.Body);
+                }
             }
 
-            await _unitOfWork.CompleteAsync();
+                await _unitOfWork.CompleteAsync();
 
             return CreatedAtAction(nameof(GetFAQ), new { id = faq.Id }, faqDto);
         }

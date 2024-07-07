@@ -2,6 +2,7 @@
 using InsurTech.APIs.DTOs.HomeInsurancePlanDTO;
 using InsurTech.APIs.DTOs.MotorInsurancePlanDTO;
 using InsurTech.APIs.Errors;
+using InsurTech.APIs.Helpers;
 using InsurTech.Core;
 using InsurTech.Core.Entities;
 using InsurTech.Core.Entities.Identity;
@@ -9,8 +10,11 @@ using InsurTech.Core.Repositories;
 using InsurTech.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Pqc.Crypto.Lms;
 using System.Numerics;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -22,11 +26,16 @@ namespace InsurTech.APIs.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public MotorInsuranceController(IUnitOfWork unitOfWork, IMapper mapper)
+        public MotorInsuranceController(IUnitOfWork unitOfWork, IMapper mapper , UserManager<AppUser> userManager, IHubContext<NotificationHub> hubContext)
         {
+            
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _userManager = userManager;
+            _hubContext = hubContext;
         }
 
         [HttpPost("AddMotorPlan")]
@@ -54,13 +63,36 @@ namespace InsurTech.APIs.Controllers
                 await _unitOfWork.Repository<MotorInsurancePlan>().AddAsync(motorInsurancePlan);
                 await _unitOfWork.CompleteAsync();
 
-                var notification = new Notification
+                var company = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+                var notification = new Notification()
                 {
-                    Body = $"A new Motor insurance plan '{motorInsurancePlan.Level}' has been added by company ID {motorInsurancePlan.CompanyId}.",
+                    Body = $"A new Motor insurance plan '{motorInsurancePlan.Level}' has been added by company ID {company.Name}.",
                     UserId = "1" ,
                     IsRead = false
                 };
                 await _unitOfWork.Repository<Notification>().AddAsync(notification);
+
+                await _hubContext.Clients.Group("admin").SendAsync("ReceiveNotification", notification.Body);
+
+
+
+                var approvedCustomers = await _userManager.Users
+                    .Where(u => u.UserType == UserType.Customer && u.IsApprove == IsApprove.approved)
+                    .ToListAsync();
+
+                foreach (var customer in approvedCustomers)
+                {
+                    var notificationToCustomer = new Notification()
+                    {
+                        Body = $"A new Home insurance plan '{motorInsurancePlan.Level}' has been added by  {company.Name}.",
+                        UserId = customer.Id,
+                        IsRead = false
+                    };
+
+                    await _unitOfWork.Repository<Notification>().AddAsync(notificationToCustomer);
+                    await _hubContext.Clients.Group("customer").SendAsync("ReceiveNotification", notificationToCustomer.Body);
+                }
                 await _unitOfWork.CompleteAsync();
 
 
@@ -103,14 +135,19 @@ namespace InsurTech.APIs.Controllers
 
                 await _unitOfWork.Repository<MotorInsurancePlan>().Update(storedMotorInsurancePlan);
                 await _unitOfWork.CompleteAsync();
-                var notification = new Notification
+                var company = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+                var notification = new Notification()
                 {
-                    Body = $"The Motor insurance plan '{storedMotorInsurancePlan.Level}' has been updated by company ID { storedMotorInsurancePlan.CompanyId }.",
+                    Body = $"The Motor insurance plan '{storedMotorInsurancePlan.Level}' has been updated by { company.Name }.",
                     UserId = "1" ,
                     IsRead = false
                 };
                 await _unitOfWork.Repository<Notification>().AddAsync(notification);
                 await _unitOfWork.CompleteAsync();
+
+                await _hubContext.Clients.Group("admin").SendAsync("ReceiveNotification", notification.Body);
+
 
                 return Ok(motorInsuranceDTO);
             }
@@ -140,7 +177,7 @@ namespace InsurTech.APIs.Controllers
                     Quotation = motorInsurance.Quotation,
                     YearlyCoverage = motorInsurance.YearlyCoverage,
                     Category = motorInsurance.Category.Name,
-                    Company = motorInsurance.Company?.UserName ?? "no comapny"
+                    Company = motorInsurance.Company?.UserName ?? "no company"
                 };
                 return Ok(motorinsuranceDto);
             }
@@ -204,6 +241,6 @@ namespace InsurTech.APIs.Controllers
             return Ok(motorInsuranceDtos);
         }
 
-
-    }
+           
+        }
 }

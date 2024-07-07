@@ -210,8 +210,23 @@ namespace InsurTech.APIs.Controllers
 
         #endregion
 
-        #region GetCustomerRequests
-        [HttpGet("GetCustomerRequests/{customerId}")]
+        #region getCustomer
+        [HttpGet("GetCustomer")]
+        public async Task<ActionResult> GetCustomer()
+        {
+			var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			var customer = await _userManager.FindByIdAsync(customerId);
+			if (customer == null)
+            {
+				return BadRequest(new ApiResponse(400, "Customer Not Found"));
+			}
+			var customerDto = _mapper.Map<GetCustomerDTO>(customer);
+			return Ok(customerDto);
+		}
+        #endregion
+
+		#region GetCustomerRequests
+		[HttpGet("GetCustomerRequests/{customerId}")]
         public async Task<ActionResult> GetCustomerRequests([FromRoute] string customerId)
         {
             var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();

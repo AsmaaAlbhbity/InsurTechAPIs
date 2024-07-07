@@ -23,7 +23,7 @@ namespace InsurTech.Core.Entities.Identity
         public string Name { get; set; }
         /*		public string? NationalID { get; set; }
                 public DateOnly? BirthDate { get; set; }*/
-
+        public string? Image { get; set; }
 
         public const int MaxPlainPasswordLength = 128;
         public const int MaxEmailAddressLength = 120;

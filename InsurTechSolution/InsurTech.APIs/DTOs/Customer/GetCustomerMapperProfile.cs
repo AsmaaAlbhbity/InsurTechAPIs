@@ -8,6 +8,7 @@ namespace InsurTech.APIs.DTOs.Customer
 		{
 			CreateMap<Core.Entities.Identity.Customer, GetCustomerDTO>();
 			CreateMap<GetCustomerDTO, Core.Entities.Identity.Customer>();
+			CreateMap<Core.Entities.Identity.Customer, CustomerDto>();
 		}
 	}
 }

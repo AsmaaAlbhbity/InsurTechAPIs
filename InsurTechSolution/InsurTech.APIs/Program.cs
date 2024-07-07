@@ -155,12 +155,14 @@ namespace InsurTech.APIs
 			builder.Services.AddScoped<ITokenService, TokenService>();
 			builder.Services.AddScoped<IEmailService, EmailService>();
 			builder.Services.AddScoped<IRequestService, RequestService>();
-			// add CardValidationService to the DI container
+            // add CardValidationService to the DI container
+            builder.Services.AddHttpClient();
 
 
-		
-			#region Validation Error Handling
-			builder.Services.Configure<ApiBehaviorOptions>(options =>
+
+
+            #region Validation Error Handling
+            builder.Services.Configure<ApiBehaviorOptions>(options =>
 			{
 				options.InvalidModelStateResponseFactory = actionContext =>
 				{

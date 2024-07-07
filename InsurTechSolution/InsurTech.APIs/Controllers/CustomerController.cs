@@ -6,6 +6,7 @@ using InsurTech.APIs.DTOs.Question;
 using InsurTech.APIs.DTOs.RequestDTO;
 using InsurTech.APIs.DTOs.RequestQuestions;
 using InsurTech.APIs.Errors;
+using InsurTech.APIs.Helpers;
 using InsurTech.Core;
 using InsurTech.Core.Entities;
 using InsurTech.Core.Entities.Identity;
@@ -13,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -26,11 +28,14 @@ namespace InsurTech.APIs.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
-        public CustomerController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager)
+        private readonly IHubContext<NotificationHub> _hubContext;
+
+        public CustomerController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager,IHubContext<NotificationHub> hubContext)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _userManager = userManager;
+            _hubContext = hubContext;
         }
 
         #region GetQusetionsByCategory
@@ -176,6 +181,30 @@ namespace InsurTech.APIs.Controllers
 
                 await _unitOfWork.CompleteAsync();
 
+                var customer = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+                var plan = await _unitOfWork.Repository<InsurancePlan>().GetByIdAsync(applyForInsurancePlanInput.InsurancePlanId);
+                var adminNotification = new Notification()
+                {
+                    Body = $"A new insurance request has been created By {customer.UserName} .",
+                    UserId = "1"
+                };
+
+                var companyNotification = new Notification()
+                {
+                    Body = $"A new insurance request has been created By {customer.UserName} .",
+                    UserId = plan.CompanyId,
+                    IsRead = false
+                };
+
+                await _unitOfWork.Repository<Notification>().AddAsync(adminNotification);
+                await _unitOfWork.Repository<Notification>().AddAsync(companyNotification);
+                await _unitOfWork.CompleteAsync();
+
+                await _hubContext.Clients.Group("company").SendAsync("ReceiveNotification", companyNotification.Body);
+                await _hubContext.Clients.Group("admin").SendAsync("ReceiveNotification", adminNotification.Body);
+
+
                 return Ok(new ApiResponse(200, "Request Created Successfully"));
             }
             catch (Exception ex)
@@ -186,24 +215,7 @@ namespace InsurTech.APIs.Controllers
 
                 // Send notification to admin and company
 
-                var plan = await _unitOfWork.Repository<InsurancePlan>().GetByIdAsync(applyForInsurancePlanInput.InsurancePlanId);
-                var adminNotification = new Notification
-                {
-                    Body = $"A new insurance request has been created .",
-                    UserId = "1"
-                };
-
-                var companyNotification = new Notification
-                {
-                    Body = $"A new insurance request has been created .",
-                    UserId = plan.CompanyId,
-                    IsRead = false
-                };
-
-                await _unitOfWork.Repository<Notification>().AddAsync(adminNotification);
-                await _unitOfWork.Repository<Notification>().AddAsync(companyNotification);
-                await _unitOfWork.CompleteAsync();
-
+                
                 return BadRequest(new ApiResponse(400, ex.Message));
             }
         }

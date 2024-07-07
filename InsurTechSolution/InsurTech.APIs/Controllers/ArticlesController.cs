@@ -10,6 +10,8 @@ using Swashbuckle.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using InsurTech.Core.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
+using InsurTech.APIs.Helpers;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,12 +25,14 @@ namespace InsurTech.APIs.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public ArticlesController(IUnitOfWork unitOfWork, IMapper mapper,UserManager<AppUser> userManager)
+        public ArticlesController(IUnitOfWork unitOfWork, IMapper mapper,UserManager<AppUser> userManager,IHubContext<NotificationHub> hubContext)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _userManager = userManager;
+            _hubContext = hubContext;
         }
 
 
@@ -87,7 +91,7 @@ namespace InsurTech.APIs.Controllers
 
             foreach (var customer in approvedCustomers)
             {
-                var notification = new Notification
+                var notification = new Notification()
                 {
                     Body = $"A new article titled '{article.Title}' has been published by the admin.",
                     UserId = customer.Id,
@@ -95,6 +99,7 @@ namespace InsurTech.APIs.Controllers
                 };
 
                 await _unitOfWork.Repository<Notification>().AddAsync(notification);
+                await _hubContext.Clients.Group("customer").SendAsync("ReceiveNotification", notification.Body);
             }
 
             await _unitOfWork.CompleteAsync();

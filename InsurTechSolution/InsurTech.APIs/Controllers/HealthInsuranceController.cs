@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace InsurTech.APIs.Controllers
 {
@@ -60,9 +61,12 @@ namespace InsurTech.APIs.Controllers
                 await unitOfWork.Repository<HealthInsurancePlan>().AddAsync(healthInsurancePlan);
                 await unitOfWork.CompleteAsync();
 
-                var notification = new Notification
+                var company = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+
+                var notification = new Notification()
                 {
-                    Body = $"A new health insurance plan '{healthInsurancePlan.Level}' has been added by company ID {healthInsurancePlan.CompanyId}.",
+                    Body = $"A new health insurance plan '{healthInsurancePlan.Level}' has been added by  {company.Name}.",
                     UserId = "1",
                     IsRead = false
                 };
@@ -77,9 +81,9 @@ namespace InsurTech.APIs.Controllers
 
                 foreach (var customer in approvedCustomers)
                 {
-                    var notificationToCustomer = new Notification
+                    var notificationToCustomer = new Notification()
                     {
-                        Body = $"A new health insurance plan '{healthInsurancePlan.Level}' has been added by  {healthInsurancePlan.Company.UserName}.",
+                        Body = $"A new health insurance plan '{healthInsurancePlan.Level}' has been added by  {company.Name}.",
                         UserId = customer.Id,
                         IsRead = false
                     };
@@ -133,9 +137,12 @@ namespace InsurTech.APIs.Controllers
                 await unitOfWork.Repository<HealthInsurancePlan>().Update(storedHealthInsurancePlan);
                 await unitOfWork.CompleteAsync();
 
-                var notification = new Notification
+                var company = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+
+                var notification = new Notification()
                 {
-                    Body = $"The Health insurance plan '{storedHealthInsurancePlan.Level}' has been updated by company ID {storedHealthInsurancePlan.CompanyId}.",
+                    Body = $"The Health insurance plan '{storedHealthInsurancePlan.Level}' has been updated by  {company.Name}.",
                     UserId = "1" ,
                     IsRead = false
                 };

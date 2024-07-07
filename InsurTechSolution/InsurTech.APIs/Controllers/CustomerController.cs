@@ -181,26 +181,16 @@ namespace InsurTech.APIs.Controllers
 
                 await _unitOfWork.CompleteAsync();
 
-                return Ok(new ApiResponse(200, "Request Created Successfully"));
-            }
-            catch (Exception ex)
-            {
-                //await _unitOfWork.Repository<UserRequest>().Delete(new UserRequest { CustomerId = CustomerId, InsurancePlanId = applyForInsurancePlanInput.InsurancePlanId });
-
-                //await _unitOfWork.CompleteAsync();
-
-                // Send notification to admin and company
-
                 var customer = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
                 var plan = await _unitOfWork.Repository<InsurancePlan>().GetByIdAsync(applyForInsurancePlanInput.InsurancePlanId);
-                var adminNotification = new Notification
+                var adminNotification = new Notification()
                 {
                     Body = $"A new insurance request has been created By {customer.UserName} .",
                     UserId = "1"
                 };
 
-                var companyNotification = new Notification
+                var companyNotification = new Notification()
                 {
                     Body = $"A new insurance request has been created By {customer.UserName} .",
                     UserId = plan.CompanyId,
@@ -214,6 +204,18 @@ namespace InsurTech.APIs.Controllers
                 await _hubContext.Clients.Group("company").SendAsync("ReceiveNotification", companyNotification.Body);
                 await _hubContext.Clients.Group("admin").SendAsync("ReceiveNotification", adminNotification.Body);
 
+
+                return Ok(new ApiResponse(200, "Request Created Successfully"));
+            }
+            catch (Exception ex)
+            {
+                //await _unitOfWork.Repository<UserRequest>().Delete(new UserRequest { CustomerId = CustomerId, InsurancePlanId = applyForInsurancePlanInput.InsurancePlanId });
+
+                //await _unitOfWork.CompleteAsync();
+
+                // Send notification to admin and company
+
+                
                 return BadRequest(new ApiResponse(400, ex.Message));
             }
         }

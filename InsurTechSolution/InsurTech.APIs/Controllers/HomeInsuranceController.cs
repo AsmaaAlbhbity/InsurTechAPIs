@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.SignalR;
 using InsurTech.APIs.Helpers;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace InsurTech.APIs.Controllers
 {
@@ -59,9 +60,12 @@ namespace InsurTech.APIs.Controllers
                 await unitOfWork.Repository<HomeInsurancePlan>().AddAsync(HomeInsurancePlan);
                 await unitOfWork.CompleteAsync();
 
-                var notification = new Notification
+                var company = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+
+                var notification = new Notification()
                 {
-                    Body = $"A new Home insurance plan '{HomeInsurancePlan.Level}' has been added by company ID {HomeInsurancePlan.CompanyId}.",
+                    Body = $"A new Home insurance plan '{HomeInsurancePlan.Level}' has been added  {company.Name}.",
                     UserId = "1",
                     IsRead = false
                 };
@@ -77,9 +81,9 @@ namespace InsurTech.APIs.Controllers
 
                 foreach (var customer in approvedCustomers)
                 {
-                    var notificationToCustomer = new Notification
+                    var notificationToCustomer = new Notification()
                     {
-                        Body = $"A new Home insurance plan '{HomeInsurancePlan.Level}' has been added by  {HomeInsurancePlan.Company.UserName}.",
+                        Body = $"A new Home insurance plan '{HomeInsurancePlan.Level}' has been added by  {company.Name}.",
                         UserId = customer.Id,
                         IsRead = false
                     };
@@ -133,9 +137,12 @@ namespace InsurTech.APIs.Controllers
                 await unitOfWork.Repository<HomeInsurancePlan>().Update(storedHomeInsurancePlan);
                 await unitOfWork.CompleteAsync();
 
-                var notification = new Notification
+                var company = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+
+                var notification = new Notification()
                 {
-                    Body = $"The Home insurance plan '{storedHomeInsurancePlan.Level}' has been updated by company ID {storedHomeInsurancePlan.CompanyId}.",
+                    Body = $"The Home insurance plan '{storedHomeInsurancePlan.Level}' has been updated by {company.Name}.",
                     UserId = "1",
                     IsRead = false
                 };

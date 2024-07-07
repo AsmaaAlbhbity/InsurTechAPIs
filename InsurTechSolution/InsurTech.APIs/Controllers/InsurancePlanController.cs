@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Org.BouncyCastle.Pqc.Crypto.Lms;
+using System.Security.Claims;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace InsurTech.APIs.Controllers
@@ -134,9 +135,12 @@ namespace InsurTech.APIs.Controllers
                 await _unitOfWork.Repository<InsurancePlan>().Update(plan);
                 await _unitOfWork.CompleteAsync();
 
-                var notification = new Notification
+                var company = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+
+                var notification = new Notification()
                 {
-                    Body = $"The insurance plan  with ID { plan.Id } has been deleted by  { plan.Company.UserName }.",
+                    Body = $"The insurance plan  with ID { plan.Id } has been deleted by  { company.Name }.",
                     UserId = "1" ,
                     IsRead = false
                 };

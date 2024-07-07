@@ -22,6 +22,7 @@ using System;
 using System.IO;
 using System.Linq;
 using InsurTech.APIs.Helpers;
+using Microsoft.AspNetCore.SignalR;
 
 namespace InsurTech.APIs
 {
@@ -33,7 +34,6 @@ namespace InsurTech.APIs
 
 			// Add services to the container.
 			builder.Services.AddControllers();
-            builder.Services.AddSignalR();
             builder.Services.AddEndpointsApiExplorer();
 			builder.Services.AddSwaggerGen(op =>
 			{
@@ -105,17 +105,40 @@ namespace InsurTech.APIs
 					ValidateAudience = false,
 					IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
 				};
-			})
+                // Add this to support SignalR authentication
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var accessToken = context.Request.Query["access_token"];
+
+                        // If the request is for our SignalR hub...
+                        var path = context.HttpContext.Request.Path;
+                        if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/api/notificationHub")))
+                        {
+                            // Read the token out of the query string
+                            context.Token = accessToken;
+                        }
+                        return Task.CompletedTask;
+                    }
+                };
+           
+        })
 			.AddGoogle(option =>
 			{
 				option.ClientId = "30498991812-uog175jdj3vb9foj41sv9g2l88teu11n.apps.googleusercontent.com";
 				option.ClientSecret = "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";
 			});
 
-			builder.Services.AddAuthorization();
-			#endregion
+			
+			builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
+            builder.Services.AddSignalR();
 
-			builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddAuthorization();
+
+            #endregion
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 			builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 			builder.Services.AddScoped<ITokenService, TokenService>();
 			builder.Services.AddScoped<IEmailService, EmailService>();
@@ -170,7 +193,7 @@ namespace InsurTech.APIs
 			app.UseAuthorization();
 
 			app.MapControllers();
-			app.MapHub<NotificationHub>("/notificationHub");
+			app.MapHub<NotificationHub>("/api/notificationHub");
 			app.Run();
 		}
 	}

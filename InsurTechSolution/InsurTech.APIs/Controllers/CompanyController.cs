@@ -216,22 +216,26 @@ namespace InsurTech.APIs.Controllers
             existingRequest.Status = request.Status;
 
             await _unitOfWork.Repository<UserRequest>().Update(existingRequest);
+            await _unitOfWork.CompleteAsync();
+
 
             var company = await _userManager.FindByIdAsync(existingRequest.InsurancePlan.CompanyId);
-            var customer =await _userManager.FindByEmailAsync(existingRequest.CustomerId);
+            var customer =await _userManager.FindByIdAsync(existingRequest.CustomerId);
 
             string ResaultOfRequest = (existingRequest.Status == RequestStatus.Approved && existingRequest.Status != RequestStatus.Pending) ? "congratulations ..! Your request has been approved " : "Oops..! Your request has been Rejected";
             string ResaultOfRequestToAdmin = (existingRequest.Status == RequestStatus.Approved && existingRequest.Status != RequestStatus.Pending) ? $"Congratulations! {company.UserName} has accepted {customer.UserName}'s request." : $"Oops! {company.UserName} has rejected {customer.UserName}'s request.";
 
 
             var notification = new Notification() { UserId = existingRequest.CustomerId, Body = ResaultOfRequest ,IsRead=false};
-            var notificationToAdmin = new Notification() { UserId = "1", Body =ResaultOfRequestToAdmin, IsRead = false };
-
             await _unitOfWork.Repository<Notification>().AddAsync(notification);
+
+            var notificationToAdmin = new Notification() { UserId = "1", Body =ResaultOfRequestToAdmin, IsRead = false };
+            await _unitOfWork.Repository<Notification>().AddAsync(notification);
+            await _unitOfWork.CompleteAsync();
+    
             await _hubContext.Clients.Group("customer").SendAsync("ReceiveNotification", notification.Body);
             await _hubContext.Clients.Group("admin").SendAsync("ReceiveNotification", notificationToAdmin.Body);
 
-            await _unitOfWork.CompleteAsync();
 
 
             return Ok();

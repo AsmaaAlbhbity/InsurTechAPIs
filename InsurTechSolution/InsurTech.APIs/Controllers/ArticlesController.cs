@@ -91,7 +91,7 @@ namespace InsurTech.APIs.Controllers
 
             foreach (var customer in approvedCustomers)
             {
-                var notification = new Notification
+                var notification = new Notification()
                 {
                     Body = $"A new article titled '{article.Title}' has been published by the admin.",
                     UserId = customer.Id,

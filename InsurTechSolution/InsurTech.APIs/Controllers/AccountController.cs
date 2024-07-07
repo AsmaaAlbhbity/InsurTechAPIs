@@ -210,12 +210,23 @@ namespace InsurTech.APIs.Controllers
 
            await _userManager.AddToRoleAsync(User, Roles.Company);
 
-            
+            var notification = new Notification()
+            {
+                Body = $"A new company {User.Name} has registered and needs approval.",
+                UserId = "1",
+                IsRead = false
+            };
+            await _unitOfWork.Repository<Notification>().AddAsync(notification);
+            await _unitOfWork.CompleteAsync();
+
+            await _hubContext.Clients.Group("admin").SendAsync("ReceiveNotification", notification.Body);
+
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(User);
 
             var confirmationLink = Url.Action("ConfirmEmail", "Account", new { token, email = User.Email }, Request.Scheme);
 
             if (confirmationLink is null) return BadRequest(new ApiResponse(400, "Error in sending confirmation email"));
+
 
             try
             {
@@ -227,16 +238,7 @@ namespace InsurTech.APIs.Controllers
 
 
 			// Send notification to admin
-			var notification = new Notification
-            {
-                Body = $"A new company {User.Name} has registered and needs approval.",
-                UserId = "1" ,
-                IsRead = false
-            };
-            await _unitOfWork.Repository<Notification>().AddAsync(notification);
-            await _unitOfWork.CompleteAsync();
-
-            await _hubContext.Clients.Group("admin").SendAsync("ReceiveNotification", notification.Body);
+			
 
 
 
@@ -272,6 +274,17 @@ namespace InsurTech.APIs.Controllers
 
             await _userManager.AddToRoleAsync(User, Roles.Customer);
 
+            var notification = new Notification()
+            {
+                Body = $"A new customer {User.Name} has registered.",
+                UserId = "1",
+                IsRead = false
+            };
+            await _unitOfWork.Repository<Notification>().AddAsync(notification);
+            await _unitOfWork.CompleteAsync();
+
+            await _hubContext.Clients.Group("admin").SendAsync("ReceiveNotification", notification.Body);
+
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(User);
 
@@ -286,16 +299,7 @@ namespace InsurTech.APIs.Controllers
             {
 				return BadRequest(new ApiResponse(400, "Error in sending confirmation email"));
 			}
-			var notification = new Notification
-            {
-                Body = $"A new customer {User.Name} has registered.",
-                UserId = "1" ,
-                IsRead=false
-            };
-            await _unitOfWork.Repository<Notification>().AddAsync(notification);
-            await _unitOfWork.CompleteAsync();
-
-            await _hubContext.Clients.Group("admin").SendAsync("ReceiveNotification", notification.Body);
+			
 
 
             return Ok(new ApiResponse(200, $"Customer Registered Successfully, Please check your email to confirm your account {User.Email}"));
@@ -452,8 +456,13 @@ namespace InsurTech.APIs.Controllers
                         UserType = UserType.Customer,
 
                     };
+                    var result = await _userManager.CreateAsync(user, "Asmaa***12345");
+                    if (!result.Succeeded)
+                    {
+                        return BadRequest("Failed to create user.");
+                    }
 
-                    var notification = new Notification
+                    var notification = new Notification()
                     {
                         Body = $"A new customer {user.Name} has registered.",
                         UserId = "1",
@@ -465,12 +474,9 @@ namespace InsurTech.APIs.Controllers
                     await _hubContext.Clients.Group("admin").SendAsync("ReceiveNotification", notification.Body);
 
 
-                    var result = await _userManager.CreateAsync(user, "Asmaa***12345");
+                    
 
-                    if (!result.Succeeded)
-                    {
-                        return BadRequest("Failed to create user.");
-                    }
+                    
 
                 }
 

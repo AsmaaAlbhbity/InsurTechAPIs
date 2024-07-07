@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Pqc.Crypto.Lms;
 using System.Numerics;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -62,9 +63,11 @@ namespace InsurTech.APIs.Controllers
                 await _unitOfWork.Repository<MotorInsurancePlan>().AddAsync(motorInsurancePlan);
                 await _unitOfWork.CompleteAsync();
 
-                var notification = new Notification
+                var company = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+                var notification = new Notification()
                 {
-                    Body = $"A new Motor insurance plan '{motorInsurancePlan.Level}' has been added by company ID {motorInsurancePlan.CompanyId}.",
+                    Body = $"A new Motor insurance plan '{motorInsurancePlan.Level}' has been added by company ID {company.Name}.",
                     UserId = "1" ,
                     IsRead = false
                 };
@@ -80,9 +83,9 @@ namespace InsurTech.APIs.Controllers
 
                 foreach (var customer in approvedCustomers)
                 {
-                    var notificationToCustomer = new Notification
+                    var notificationToCustomer = new Notification()
                     {
-                        Body = $"A new Home insurance plan '{motorInsurancePlan.Level}' has been added by  {motorInsurancePlan.Company.UserName}.",
+                        Body = $"A new Home insurance plan '{motorInsurancePlan.Level}' has been added by  {company.Name}.",
                         UserId = customer.Id,
                         IsRead = false
                     };
@@ -132,9 +135,11 @@ namespace InsurTech.APIs.Controllers
 
                 await _unitOfWork.Repository<MotorInsurancePlan>().Update(storedMotorInsurancePlan);
                 await _unitOfWork.CompleteAsync();
-                var notification = new Notification
+                var company = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+                var notification = new Notification()
                 {
-                    Body = $"The Motor insurance plan '{storedMotorInsurancePlan.Level}' has been updated by company ID { storedMotorInsurancePlan.CompanyId }.",
+                    Body = $"The Motor insurance plan '{storedMotorInsurancePlan.Level}' has been updated by { company.Name }.",
                     UserId = "1" ,
                     IsRead = false
                 };
@@ -172,7 +177,7 @@ namespace InsurTech.APIs.Controllers
                     Quotation = motorInsurance.Quotation,
                     YearlyCoverage = motorInsurance.YearlyCoverage,
                     Category = motorInsurance.Category.Name,
-                    Company = motorInsurance.Company?.UserName ?? "no comapny"
+                    Company = motorInsurance.Company?.UserName ?? "no company"
                 };
                 return Ok(motorinsuranceDto);
             }

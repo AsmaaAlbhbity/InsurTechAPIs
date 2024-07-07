@@ -235,6 +235,7 @@ namespace InsurTech.APIs.Controllers
                         YearlyCoverage = req.InsurancePlan.YearlyCoverage,
                         Quotation = req.InsurancePlan.Quotation,
                         Status = req.Status.ToString(),
+                        planId = req.Id
                     }
                     );
 
@@ -406,27 +407,37 @@ namespace InsurTech.APIs.Controllers
             var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
             var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (currentUser == null) return BadRequest(
-                new ApiResponse(400, "User Not Found"));
+                                              new ApiResponse(400, "User Not Found"));
             var userRequest = userRequests.FirstOrDefault(r => r.CustomerId == currentUser && r.InsurancePlanId == insurancePlanId);
-			if (userRequest == null)
+            if (userRequest == null)
             {
-				return BadRequest(new ApiResponse(400, "Request Not Found"));
-			}
-            if(userRequest.Status != RequestStatus.Approved)
-            {
-                return BadRequest(new ApiResponse(400, "Request Not Approved Yet"));
-            }
-            if(userRequest.Paid)
-            {
-                userRequest.Paid = false;
-                return Ok(new ApiResponse(200, "Request Unpaid Successfully"));
+                return BadRequest(new ApiResponse(400, "Request Not Found"));
             }
             userRequest.Paid = true;
-			await _unitOfWork.CompleteAsync();
-			return Ok(new ApiResponse(200, "Request Paid Successfully"));
-		}
-
+            await _unitOfWork.CompleteAsync();
+            return Ok(new ApiResponse(200, "Request Paid Successfully"));
+        }
         #endregion
+        #region CancelPaid 
+        [HttpPut("CancelPaid")]
+        public async Task<ActionResult> CancelPaid(int insurancePlanId)
+        {
+            var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
+            var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUser == null) return BadRequest(
+                                                             new ApiResponse(400, "User Not Found"));
+            var userRequest = userRequests.FirstOrDefault(r => r.CustomerId == currentUser && r.InsurancePlanId == insurancePlanId);
+            if (userRequest == null)
+            {
+                return BadRequest(new ApiResponse(400, "Request Not Found"));
+            }
+            userRequest.Paid = false;
+            await _unitOfWork.CompleteAsync();
+            return Ok(new ApiResponse(200, "Request Paid Successfully"));
+        }
+        #endregion
+
+
 
         #region getUserRequestswithPendingStatus
         [HttpGet("getUserRequestswithPendingStatus")]
@@ -461,9 +472,8 @@ namespace InsurTech.APIs.Controllers
                         Status = req.Status.ToString(),
                         catId = req.CategoryId,
                         planId = req.InsurancePlanId,
-                        companyName = req.InsurancePlan.Company.Name
-
-
+                        companyName = req.InsurancePlan.Company.Name,
+                        Paid = req.Paid
                     }
                     );
 
@@ -504,7 +514,8 @@ namespace InsurTech.APIs.Controllers
                         Status = req.Status.ToString(),
                         catId = req.CategoryId,
                         planId = req.InsurancePlanId,
-                        companyName = req.InsurancePlan.Company.Name
+                        companyName = req.InsurancePlan.Company.Name,
+                        Paid = req.Paid
 
 
                     }
@@ -547,7 +558,8 @@ namespace InsurTech.APIs.Controllers
                         Status = req.Status.ToString(),
                         catId = req.CategoryId,
                         planId = req.InsurancePlanId,
-                        companyName = req.InsurancePlan.Company.Name
+                        companyName = req.InsurancePlan.Company.Name,
+                        Paid = req.Paid
 
 
                     }
@@ -590,7 +602,9 @@ namespace InsurTech.APIs.Controllers
                                            Status = req.Status.ToString(),
                                            catId = req.CategoryId,
                                            planId = req.InsurancePlanId,
-                                           companyName = req.InsurancePlan.Company.Name
+                                           companyName = req.InsurancePlan.Company.Name,
+                                           Paid = req.Paid
+
                                        });
 
             }

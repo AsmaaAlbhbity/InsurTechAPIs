@@ -4,6 +4,7 @@ using InsurTech.Repository.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InsurTech.Repository.Data.Migrations
 {
     [DbContext(typeof(InsurtechContext))]
-    partial class InsurtechContextModelSnapshot : ModelSnapshot
+    [Migration("20240707150849_user-profile-image")]
+    partial class userprofileimage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -267,7 +270,6 @@ namespace InsurTech.Repository.Data.Migrations
                             Id = "1",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "4d5a70ac-0bda-4b9a-b511-d529a92dac52",
-
                             Email = "asmaa_ash@gmail.com",
                             EmailConfirmed = true,
                             IsApprove = 1,
@@ -280,7 +282,6 @@ namespace InsurTech.Repository.Data.Migrations
                             PhoneNumber = "01211236779",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "c6aaa0a8-8848-42ca-a816-2d95f089c50e",
-
                             TwoFactorEnabled = false,
                             UserName = "Admin",
                             UserType = 2
@@ -424,9 +425,6 @@ namespace InsurTech.Repository.Data.Migrations
 
                     b.Property<int>("Level")
                         .HasColumnType("int");
-
-                    b.Property<bool>("Paid")
-                        .HasColumnType("bit");
 
                     b.Property<decimal>("Quotation")
                         .HasColumnType("decimal(18,2)");

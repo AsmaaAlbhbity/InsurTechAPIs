@@ -10,6 +10,8 @@ namespace InsurTech.APIs.DTOs.RequestDTO
 		public decimal YearlyCoverage { get; set; }
 		public decimal Quotation { get; set; }
 		public string Status { get; set; }
+		public bool Paid { get; set; }
+
 		public int catId { get; set; }
 		public int planId { get; set; }
 		public string companyName { get; set; }

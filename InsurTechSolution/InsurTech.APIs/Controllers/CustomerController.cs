@@ -6,7 +6,6 @@ using InsurTech.APIs.DTOs.Question;
 using InsurTech.APIs.DTOs.RequestDTO;
 using InsurTech.APIs.DTOs.RequestQuestions;
 using InsurTech.APIs.Errors;
-using InsurTech.APIs.Helpers;
 using InsurTech.Core;
 using InsurTech.Core.Entities;
 using InsurTech.Core.Entities.Identity;
@@ -14,7 +13,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -28,14 +26,11 @@ namespace InsurTech.APIs.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly UserManager<AppUser> _userManager;
-        private readonly IHubContext<NotificationHub> _hubContext;
-
-        public CustomerController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager,IHubContext<NotificationHub> hubContext)
+        public CustomerController(IUnitOfWork unitOfWork, IMapper mapper, UserManager<AppUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _userManager = userManager;
-            _hubContext = hubContext;
         }
 
         #region GetQusetionsByCategory
@@ -181,30 +176,6 @@ namespace InsurTech.APIs.Controllers
 
                 await _unitOfWork.CompleteAsync();
 
-                var customer = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-                var plan = await _unitOfWork.Repository<InsurancePlan>().GetByIdAsync(applyForInsurancePlanInput.InsurancePlanId);
-                var adminNotification = new Notification()
-                {
-                    Body = $"A new insurance request has been created By {customer.UserName} .",
-                    UserId = "1"
-                };
-
-                var companyNotification = new Notification()
-                {
-                    Body = $"A new insurance request has been created By {customer.UserName} .",
-                    UserId = plan.CompanyId,
-                    IsRead = false
-                };
-
-                await _unitOfWork.Repository<Notification>().AddAsync(adminNotification);
-                await _unitOfWork.Repository<Notification>().AddAsync(companyNotification);
-                await _unitOfWork.CompleteAsync();
-
-                await _hubContext.Clients.Group("company").SendAsync("ReceiveNotification", companyNotification.Body);
-                await _hubContext.Clients.Group("admin").SendAsync("ReceiveNotification", adminNotification.Body);
-
-
                 return Ok(new ApiResponse(200, "Request Created Successfully"));
             }
             catch (Exception ex)
@@ -215,48 +186,33 @@ namespace InsurTech.APIs.Controllers
 
                 // Send notification to admin and company
 
-                
+                var plan = await _unitOfWork.Repository<InsurancePlan>().GetByIdAsync(applyForInsurancePlanInput.InsurancePlanId);
+                var adminNotification = new Notification
+                {
+                    Body = $"A new insurance request has been created .",
+                    UserId = "1"
+                };
+
+                var companyNotification = new Notification
+                {
+                    Body = $"A new insurance request has been created .",
+                    UserId = plan.CompanyId,
+                    IsRead = false
+                };
+
+                await _unitOfWork.Repository<Notification>().AddAsync(adminNotification);
+                await _unitOfWork.Repository<Notification>().AddAsync(companyNotification);
+                await _unitOfWork.CompleteAsync();
+
                 return BadRequest(new ApiResponse(400, ex.Message));
             }
         }
 
         #endregion
 
-        #region checkCustomerHasInsurancePlans 
-        [HttpGet("checkCustomerHasInsurancePlans/{catId}")]
-        public async Task<ActionResult> checkCustomerHasInsurancePlans([FromRoute] int catId)
-        {
-            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            //var customerId = "b7f9468b-6f42-4d61-b100-6461ffeba8dd";
-            //return array of true or false for all insurance plan based on user requested it before or not
-            var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
-            var insurancePlans = await _unitOfWork.Repository<InsurancePlan>().GetAllAsync();
-            var userRequestsIds = userRequests.Where(r => r.CustomerId == customerId).Select(r => r.InsurancePlanId).ToList();
-            var insurancePlansIds = insurancePlans.Where(i => i.CategoryId == catId).Select(i => i.Id).ToList();
-            var result = insurancePlansIds.Select(i => userRequestsIds.Contains(i)).ToList();
-            return Ok(result);
-        }
-        #endregion
-        #region getRequestStatusByPlanId
-        [HttpGet("getRequestStatusByPlanId/{planId}")]
-        public async Task<ActionResult> getRequestStatusByPlanId([FromRoute] int planId)
-        {
-            //var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var customerId = "b7f9468b-6f42-4d61-b100-6461ffeba8dd";
-            var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
-            var userRequest = userRequests.FirstOrDefault(r => r.CustomerId == customerId && r.InsurancePlanId == planId);
-            if (userRequest == null)
-            {
-                return BadRequest(new ApiResponse(400, "Request Not Found"));
-            }
-            return Ok(new { Status = userRequest.Status.ToString() });
-        }
-        #endregion
-
         #region GetCustomerRequests
         [HttpGet("GetCustomerRequests/{customerId}")]
-		    public async Task<ActionResult> GetCustomerRequests([FromRoute] string customerId)
-
+        public async Task<ActionResult> GetCustomerRequests([FromRoute] string customerId)
         {
             var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
 
@@ -273,27 +229,42 @@ namespace InsurTech.APIs.Controllers
             {
                 customerRequestsDto.Add(
                     new UserRequestDTO
-                        {
-                            CustomerID = req.CustomerId,
-							InsurancePlanLevel = req.InsurancePlan.Level.ToString(),
-							YearlyCoverage = req.InsurancePlan.YearlyCoverage,
-							Quotation = req.InsurancePlan.Quotation,
-							Status = req.Status.ToString(),
-                            catId = req.InsurancePlan.CategoryId,
-                            planId = req.InsurancePlanId,
-                            companyName = req.InsurancePlan.Company.Name
-                         }
-
+                    {
+						CustomerID = req.CustomerId,
+                        InsurancePlanLevel = req.InsurancePlan.Level.ToString(),
+                        YearlyCoverage = req.InsurancePlan.YearlyCoverage,
+                        Quotation = req.InsurancePlan.Quotation,
+                        Status = req.Status.ToString()
+                    }
                     );
 
             }
 
-            return Ok(customerRequestsDto);
-        }
-        #endregion
+			return Ok(customerRequestsDto);
+		}
+		#endregion
 
-        #region GetRequestQuestions
-        [HttpGet("GetRequestQuestions/{requestId}")]
+		#region checkCustomerHasInsurancePlans 
+		[HttpGet("checkCustomerHasInsurancePlans/{catId}")]
+		public async Task<ActionResult> checkCustomerHasInsurancePlans([FromRoute] int catId)
+		{
+			var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			//var customerId = "b7f9468b-6f42-4d61-b100-6461ffeba8dd";
+			//return array of true or false for all insurance plan based on user requested it before or not
+			var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
+			var insurancePlans = await _unitOfWork.Repository<InsurancePlan>().GetAllAsync();
+			var userRequestsIds = userRequests.Where(r => r.CustomerId == customerId).Select(r => r.InsurancePlanId).ToList();
+			var insurancePlansIds = insurancePlans.Where(i => i.CategoryId == catId).Select(i => i.Id).ToList();
+			var result = insurancePlansIds.Select(i => userRequestsIds.Contains(i)).ToList();
+			return Ok(result);
+		}
+
+
+
+		#endregion
+
+		#region GetRequestQuestions
+		[HttpGet("GetRequestQuestions/{requestId}")]
         public async Task<ActionResult> GetRequestQuestionsAndAnswers([FromRoute] int requestId)
         {
             var requestQuestions = await _unitOfWork.Repository<RequestQuestion>().GetAllAsync();
@@ -428,8 +399,38 @@ namespace InsurTech.APIs.Controllers
         }
         #endregion
 
-        #region UpdateCustomer
-        [HttpPut("UpdateCustomer")]
+        #region ChangeRequestPaidStatus
+        [HttpPut("ChangeRequestPaidStatus")]
+		public async Task<ActionResult> ChangeRequestPaidStatus(int insurancePlanId)
+        { 
+            var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
+            var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUser == null) return BadRequest(
+                new ApiResponse(400, "User Not Found"));
+            var userRequest = userRequests.FirstOrDefault(r => r.CustomerId == currentUser && r.InsurancePlanId == insurancePlanId);
+			if (userRequest == null)
+            {
+				return BadRequest(new ApiResponse(400, "Request Not Found"));
+			}
+            if(userRequest.Paid)
+            {
+                userRequest.Paid = false;
+                return Ok(new ApiResponse(200, "Request Unpaid Successfully"));
+            }
+            userRequest.Paid = true;
+			await _unitOfWork.CompleteAsync();
+			return Ok(new ApiResponse(200, "Request Paid Successfully"));
+		}
+
+        #endregion
+
+
+
+
+
+
+		#region UpdateCustomer
+		[HttpPut("UpdateCustomer")]
         public async Task<ActionResult> UpdateCustomer(UpdateCustomerDTO model)
         {
             dynamic existingCustomer = await _userManager.FindByIdAsync(model.Id);

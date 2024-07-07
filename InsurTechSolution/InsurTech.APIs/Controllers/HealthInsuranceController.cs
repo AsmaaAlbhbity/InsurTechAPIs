@@ -3,12 +3,18 @@ using InsurTech.APIs.DTOs.HealthInsurancePlanDTO;
 using InsurTech.APIs.DTOs.HomeInsurancePlanDTO;
 using InsurTech.APIs.DTOs.MotorInsurancePlanDTO;
 using InsurTech.APIs.Errors;
+using InsurTech.APIs.Helpers;
 using InsurTech.Core;
 using InsurTech.Core.Entities;
+using InsurTech.Core.Entities.Identity;
 using InsurTech.Core.Repositories;
 using InsurTech.Repository;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace InsurTech.APIs.Controllers
 {
@@ -18,11 +24,15 @@ namespace InsurTech.APIs.Controllers
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly IMapper _mapper;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly IHubContext<NotificationHub> _hubContext;
 
-        public HealthInsuranceController(IUnitOfWork unitOfWork , IMapper mapper)
+        public HealthInsuranceController(IUnitOfWork unitOfWork , IMapper mapper,UserManager<AppUser> userManager , IHubContext<NotificationHub> hubContext)
         {
             this.unitOfWork = unitOfWork;
             _mapper = mapper;
+            _userManager = userManager;
+            _hubContext = hubContext;
         }
         [HttpPost("AddHealthPlan")]
         public async Task<IActionResult> AddHealthPlan(CreateHealthInsuranceDTO healthInsuranceDTO)
@@ -51,13 +61,36 @@ namespace InsurTech.APIs.Controllers
                 await unitOfWork.Repository<HealthInsurancePlan>().AddAsync(healthInsurancePlan);
                 await unitOfWork.CompleteAsync();
 
-                var notification = new Notification
+                var company = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+
+                var notification = new Notification()
                 {
-                    Body = $"A new health insurance plan '{healthInsurancePlan.Level}' has been added by company ID {healthInsurancePlan.CompanyId}.",
+                    Body = $"A new health insurance plan '{healthInsurancePlan.Level}' has been added by  {company.Name}.",
                     UserId = "1",
                     IsRead = false
                 };
                 await unitOfWork.Repository<Notification>().AddAsync(notification);
+                await _hubContext.Clients.Group("admin").SendAsync("ReceiveNotification", notification.Body);
+
+
+
+                var approvedCustomers = await _userManager.Users
+                    .Where(u => u.UserType == UserType.Customer && u.IsApprove == IsApprove.approved)
+                    .ToListAsync();
+
+                foreach (var customer in approvedCustomers)
+                {
+                    var notificationToCustomer = new Notification()
+                    {
+                        Body = $"A new health insurance plan '{healthInsurancePlan.Level}' has been added by  {company.Name}.",
+                        UserId = customer.Id,
+                        IsRead = false
+                    };
+
+                    await unitOfWork.Repository<Notification>().AddAsync(notificationToCustomer);
+                    await _hubContext.Clients.Group("customer").SendAsync("ReceiveNotification", notificationToCustomer.Body);
+                }
                 await unitOfWork.CompleteAsync();
 
 
@@ -104,14 +137,20 @@ namespace InsurTech.APIs.Controllers
                 await unitOfWork.Repository<HealthInsurancePlan>().Update(storedHealthInsurancePlan);
                 await unitOfWork.CompleteAsync();
 
-                var notification = new Notification
+                var company = await _userManager.FindByIdAsync(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+
+                var notification = new Notification()
                 {
-                    Body = $"The Health insurance plan '{storedHealthInsurancePlan.Level}' has been updated by company ID {storedHealthInsurancePlan.CompanyId}.",
+                    Body = $"The Health insurance plan '{storedHealthInsurancePlan.Level}' has been updated by  {company.Name}.",
                     UserId = "1" ,
                     IsRead = false
                 };
                 await unitOfWork.Repository<Notification>().AddAsync(notification);
                 await unitOfWork.CompleteAsync();
+
+                await _hubContext.Clients.Group("admin").SendAsync("ReceiveNotification", notification.Body);
+
 
                 return Ok(HealthInsuranceDTO);
             }

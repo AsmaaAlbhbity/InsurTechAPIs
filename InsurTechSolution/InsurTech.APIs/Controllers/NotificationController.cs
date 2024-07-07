@@ -96,7 +96,7 @@ namespace InsurTech.APIs.Controllers
 
                 if (!userNotifications.Any())
                 {
-                    return NotFound(new { message = "Notifications not found for the user." });
+                    return Ok(new List<GetNotificationDTO>());
                 }
 
                 var notificationsDto = _mapper.Map<IEnumerable<GetNotificationDTO>>(userNotifications);

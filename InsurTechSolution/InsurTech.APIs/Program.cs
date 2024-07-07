@@ -21,8 +21,11 @@ using Microsoft.Extensions.FileProviders;
 using System;
 using System.IO;
 using System.Linq;
+using InsurTech.Service.Models;
+using CloudinaryDotNet;
 using InsurTech.APIs.Helpers;
 using Microsoft.AspNetCore.SignalR;
+
 
 namespace InsurTech.APIs
 {
@@ -130,15 +133,24 @@ namespace InsurTech.APIs
 				option.ClientSecret = "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";
 			});
 
-			
-			builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
-            builder.Services.AddSignalR();
-
-            builder.Services.AddAuthorization();
 
             #endregion
 
-            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+			builder.Services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
+       builder.Services.AddSignalR();
+
+       builder.Services.AddAuthorization();
+      
+       #region Cloudinary - UploadService
+
+			builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+
+			builder.Services.AddScoped<IUploadService, UploadService>();
+
+			#endregion
+
+
+     builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 			builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 			builder.Services.AddScoped<ITokenService, TokenService>();
 			builder.Services.AddScoped<IEmailService, EmailService>();

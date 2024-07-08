@@ -249,7 +249,8 @@ namespace InsurTech.APIs.Controllers
                         InsurancePlanLevel = req.InsurancePlan.Level.ToString(),
                         YearlyCoverage = req.InsurancePlan.YearlyCoverage,
                         Quotation = req.InsurancePlan.Quotation,
-                        Status = req.Status.ToString()
+                        Status = req.Status.ToString(),
+                        planId = req.Id
                     }
                     );
 
@@ -421,24 +422,225 @@ namespace InsurTech.APIs.Controllers
             var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
             var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (currentUser == null) return BadRequest(
-                new ApiResponse(400, "User Not Found"));
+                                              new ApiResponse(400, "User Not Found"));
             var userRequest = userRequests.FirstOrDefault(r => r.CustomerId == currentUser && r.InsurancePlanId == insurancePlanId);
-			if (userRequest == null)
+            if (userRequest == null)
             {
-				return BadRequest(new ApiResponse(400, "Request Not Found"));
-			}
-            if(userRequest.Paid)
-            {
-                userRequest.Paid = false;
-                return Ok(new ApiResponse(200, "Request Unpaid Successfully"));
+                return BadRequest(new ApiResponse(400, "Request Not Found"));
             }
             userRequest.Paid = true;
-			await _unitOfWork.CompleteAsync();
-			return Ok(new ApiResponse(200, "Request Paid Successfully"));
-		}
-
+            await _unitOfWork.CompleteAsync();
+            return Ok(new ApiResponse(200, "Request Paid Successfully"));
+        }
+        #endregion
+        #region CancelPaid 
+        [HttpPut("CancelPaid")]
+        public async Task<ActionResult> CancelPaid(int insurancePlanId)
+        {
+            var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
+            var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUser == null) return BadRequest(
+                                                             new ApiResponse(400, "User Not Found"));
+            var userRequest = userRequests.FirstOrDefault(r => r.CustomerId == currentUser && r.InsurancePlanId == insurancePlanId);
+            if (userRequest == null)
+            {
+                return BadRequest(new ApiResponse(400, "Request Not Found"));
+            }
+            userRequest.Paid = false;
+            await _unitOfWork.CompleteAsync();
+            return Ok(new ApiResponse(200, "Request Paid Successfully"));
+        }
         #endregion
 
+
+
+        #region getUserRequestswithPendingStatus
+        [HttpGet("getUserRequestswithPendingStatus")]
+        public async Task<ActionResult> getUserRequestswithPendingStatus()
+        {
+            var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
+            var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUser == null) return BadRequest(
+                               new ApiResponse(400, "User Not Found"));
+            var userRequest = userRequests.Where(r => r.CustomerId == currentUser && r.Status == RequestStatus.Pending).ToList();
+            if (userRequest == null)
+            {
+                return BadRequest(new ApiResponse(400, "Request Not Found"));
+            }
+            List<UserRequest> requests = [];
+
+            foreach (UserRequest req in userRequest)
+            {
+                req.InsurancePlan = await _unitOfWork.Repository<InsurancePlan>().GetByIdAsync(req.InsurancePlanId);
+                requests.Add(req);
+            }
+            List<UserRequestDTO> customerRequestsDto = [];
+            foreach (UserRequest req in requests)
+            {
+                customerRequestsDto.Add(
+                    new UserRequestDTO
+                    {
+                        CustomerID = req.CustomerId,
+                        InsurancePlanLevel = req.InsurancePlan.Level.ToString(),
+                        YearlyCoverage = req.InsurancePlan.YearlyCoverage,
+                        Quotation = req.InsurancePlan.Quotation,
+                        Status = req.Status.ToString(),
+                        catId = req.CategoryId,
+                        Category = "hi",
+                        planId = req.InsurancePlanId,
+                        companyName = req.InsurancePlan.Company.Name,
+                        Paid = req.Paid
+                    }
+                    );
+
+            }
+            return Ok( customerRequestsDto );
+        }
+        #endregion
+        #region getRequestsWtihPaidTrue
+        [HttpGet("getRequestsWtihPaidTrue")]
+        public async Task<ActionResult> getRequestsWtihPaidTrue()
+        {
+            var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
+            var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUser == null) return BadRequest(
+                                              new ApiResponse(400, "User Not Found"));
+            var userRequest = userRequests.Where(r => r.CustomerId == currentUser && r.Paid == true).ToList();
+            if (userRequest == null)
+            {
+                return BadRequest(new ApiResponse(400, "Request Not Found"));
+            }
+            List<UserRequest> requests = [];
+
+            foreach (UserRequest req in userRequest)
+            {
+                req.InsurancePlan = await _unitOfWork.Repository<InsurancePlan>().GetByIdAsync(req.InsurancePlanId);
+                requests.Add(req);
+            }
+            List<UserRequestDTO> customerRequestsDto = [];
+            foreach (UserRequest req in requests)
+            {
+                customerRequestsDto.Add(
+                    new UserRequestDTO
+                    {
+                        CustomerID = req.CustomerId,
+                        InsurancePlanLevel = req.InsurancePlan.Level.ToString(),
+                        YearlyCoverage = req.InsurancePlan.YearlyCoverage,
+                        Quotation = req.InsurancePlan.Quotation,
+                        Status = req.Status.ToString(),
+                        catId = req.CategoryId,
+                        planId = req.InsurancePlanId,
+                        companyName = req.InsurancePlan.Company.Name,
+                        Paid = req.Paid
+
+
+                    }
+                    );
+
+            }
+            return Ok(customerRequestsDto);
+        }
+        #endregion
+        #region getRequestsWtihApprovedStatusbutNotPaid
+        [HttpGet("getRequestsWtihApprovedStatusbutNotPaid")]
+        public async Task<ActionResult> getRequestsWtihApprovedStatusbutNotPaid()
+        {
+            var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
+            var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUser == null) return BadRequest(
+                                                             new ApiResponse(400, "User Not Found"));
+            var userRequest = userRequests.Where(r => r.CustomerId == currentUser && r.Status == RequestStatus.Approved && r.Paid == false).ToList();
+            if (userRequest == null)
+            {
+                return BadRequest(new ApiResponse(400, "Request Not Found"));
+            }
+            List<UserRequest> requests = [];
+
+            foreach (UserRequest req in userRequest)
+            {
+                req.InsurancePlan = await _unitOfWork.Repository<InsurancePlan>().GetByIdAsync(req.InsurancePlanId);
+                requests.Add(req);
+            }
+            List<UserRequestDTO> customerRequestsDto = [];
+            foreach (UserRequest req in requests)
+            {
+                customerRequestsDto.Add(
+                    new UserRequestDTO
+                    {
+                        CustomerID = req.CustomerId,
+                        InsurancePlanLevel = req.InsurancePlan.Level.ToString(),
+                        YearlyCoverage = req.InsurancePlan.YearlyCoverage,
+                        Quotation = req.InsurancePlan.Quotation,
+                        Status = req.Status.ToString(),
+                        catId = req.CategoryId,
+                        planId = req.InsurancePlanId,
+                        companyName = req.InsurancePlan.Company.Name,
+                        Paid = req.Paid
+
+
+                    }
+                    );
+
+            }
+            return Ok(customerRequestsDto);
+        }
+        #endregion
+        #region getRequestsWtihRejectedStatus
+        [HttpGet("getRequestsWtihRejectedStatus")]
+        public async Task<ActionResult> getRequestsWtihRejectedStatus()
+        {
+            var userRequests = await _unitOfWork.Repository<UserRequest>().GetAllAsync();
+            var currentUser = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (currentUser == null) return BadRequest(
+                                                                            new ApiResponse(400, "User Not Found"));
+            var userRequest = userRequests.Where(r => r.CustomerId == currentUser && r.Status == RequestStatus.Rejected).ToList();
+            if (userRequest == null)
+            {
+                return BadRequest(new ApiResponse(400, "Request Not Found"));
+            }
+            List<UserRequest> requests = [];
+
+            foreach (UserRequest req in userRequest)
+            {
+                req.InsurancePlan = await _unitOfWork.Repository<InsurancePlan>().GetByIdAsync(req.InsurancePlanId);
+                requests.Add(req);
+            }
+            List<UserRequestDTO> customerRequestsDto = [];
+            foreach (UserRequest req in requests)
+            {
+                customerRequestsDto.Add(
+                                       new UserRequestDTO
+                                       {
+                                           CustomerID = req.CustomerId,
+                                           InsurancePlanLevel = req.InsurancePlan.Level.ToString(),
+                                           YearlyCoverage = req.InsurancePlan.YearlyCoverage,
+                                           Quotation = req.InsurancePlan.Quotation,
+                                           Status = req.Status.ToString(),
+                                           catId = req.CategoryId,
+                                           planId = req.InsurancePlanId,
+                                           companyName = req.InsurancePlan.Company.Name,
+                                           Paid = req.Paid
+
+                                       });
+
+            }
+            return Ok(customerRequestsDto);
+        }
+        #endregion
+
+        #region GetCustomer
+        [HttpGet("GetCustomer")]
+        public async Task<ActionResult> GetCustomer()
+        {
+			var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			var user = await _userManager.FindByIdAsync(customerId);
+			if (user is null) return NotFound(new ApiResponse(404, "User not found"));
+			if (user.UserType != UserType.Customer) return BadRequest(new ApiResponse(400, "User is not a Customer"));
+			if (user.IsDeleted == true) return BadRequest(new ApiResponse(400, "User is deleted"));
+			var customer = _mapper.Map<GetCustomerDTO>(user);
+			return Ok(customer);
+		}
+        #endregion
 
 
 

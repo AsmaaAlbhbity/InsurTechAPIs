@@ -13,6 +13,7 @@ namespace InsurTech.APIs.DTOs.RequestDTO
 		public bool Paid { get; set; }
 
 		public int catId { get; set; }
+		public string Category { get; set; }
 		public int planId { get; set; }
 		public string companyName { get; set; }
 

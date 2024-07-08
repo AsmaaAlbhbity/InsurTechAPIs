@@ -471,6 +471,7 @@ namespace InsurTech.APIs.Controllers
                         Quotation = req.InsurancePlan.Quotation,
                         Status = req.Status.ToString(),
                         catId = req.CategoryId,
+                        Category = "hi",
                         planId = req.InsurancePlanId,
                         companyName = req.InsurancePlan.Company.Name,
                         Paid = req.Paid
@@ -612,13 +613,26 @@ namespace InsurTech.APIs.Controllers
         }
         #endregion
 
+        #region GetCustomer
+        [HttpGet("GetCustomer")]
+        public async Task<ActionResult> GetCustomer()
+        {
+			var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+			var user = await _userManager.FindByIdAsync(customerId);
+			if (user is null) return NotFound(new ApiResponse(404, "User not found"));
+			if (user.UserType != UserType.Customer) return BadRequest(new ApiResponse(400, "User is not a Customer"));
+			if (user.IsDeleted == true) return BadRequest(new ApiResponse(400, "User is deleted"));
+			var customer = _mapper.Map<GetCustomerDTO>(user);
+			return Ok(customer);
+		}
+        #endregion
 
 
 
 
 
-        #region UpdateCustomer
-        [HttpPut("UpdateCustomer")]
+		#region UpdateCustomer
+		[HttpPut("UpdateCustomer")]
         public async Task<ActionResult> UpdateCustomer(UpdateCustomerDTO model)
         {
             dynamic existingCustomer = await _userManager.FindByIdAsync(model.Id);

@@ -93,10 +93,21 @@ namespace InsurTech.APIs
                 };
             });
 
-            #endregion
+			#endregion
 
-            #region Login by Google in Api
-            builder.Services.AddCors(options =>
+
+			builder.Services.AddCors(options =>
+			{
+				options.AddPolicy("AllowSpecificOrigin",
+					builder => builder
+						.WithOrigins("http://localhost:4200")
+						.AllowAnyHeader()
+						.AllowAnyMethod());
+			});
+
+
+			#region Login by Google in Api
+			builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowMyOrigin",
                     builder => builder
@@ -115,7 +126,9 @@ namespace InsurTech.APIs
             //======================================================
 
             var app = builder.Build();
-            app.UseCors("AllowMyOrigin");
+			app.UseCors("AllowSpecificOrigin");
+
+			app.UseCors("AllowMyOrigin");
             // Configure the HTTP request pipeline.
             app.UseMiddleware<ExceptionMiddleWare>();
             if (app.Environment.IsDevelopment())

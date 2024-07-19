@@ -1,0 +1,149 @@
+<section class="p-4 rounded my-3 w-100 mx-auto ">
+    <section class="sign-in">
+        <div class="container">
+            <div class="signin-content " style="display: flex;">
+                <div class="signin-image w-75">
+                    <figure style=" width:100%;">
+                        <img src="../../../../../../assets/images/Company/health.jpeg"alt="sing up image">
+                    </figure>
+                </div>
+
+                <div class="signin-form">
+
+                    <form [formGroup]="addhealthform" (ngSubmit)="addhealth()">
+                        <div class="mb-2">
+                            <label for="YearlyCoverage">Yearly Coverage</label>
+                            <input formControlName="yearlyCoverage" min="0" id="YearlyCoverage" type="number"
+                                class="form-control">
+                            <div
+                                *ngIf="addhealthform.get('yearlyCoverage')?.errors&& addhealthform.get('yearlyCoverage')?.touched">
+                                <span style="color: red;"
+                                    *ngIf="addhealthform.get('yearlyCoverage')?.getError('required')">Yearly Coverage is
+                                    required</span>
+                                <span style="color: red;"
+                                    *ngIf="addhealthform.get('yearlyCoverage')?.getError('min')">Minimun Value is
+                                    Zero</span>
+                                <span style="color: red;"
+                                    *ngIf="addhealthform.get('yearlyCoverage')?.getError('max')">Maximum Value is
+                                    1.7976931348623157e+308</span>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label>Insurance Level</label>
+                            <select formControlName="level" class="form-control">
+                                <option [value]="InsurancePlanLevel.Basic">Basic</option>
+                                <option [value]="InsurancePlanLevel.Standard">Standard</option>
+                                <option [value]="InsurancePlanLevel.Premium">Premium</option>
+                            </select>
+                            <div *ngIf="addhealthform.get('level')?.errors&& addhealthform.get('level')?.touched">
+                                <span style="color: red;"
+                                    *ngIf="addhealthform.get('level')?.getError('required')">Insurance
+                                    Level</span>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label>Quotation</label>
+                            <input formControlName="quotation" min="0" type="number" class="form-control">
+                            <div
+                                *ngIf="addhealthform.get('quotation')?.errors&& addhealthform.get('quotation')?.touched">
+                                <span style="color: red;"
+                                    *ngIf="addhealthform.get('quotation')?.getError('required')">Quotation is
+                                    required</span>
+                                <span style="color: red;"
+                                    *ngIf="addhealthform.get('quotation')?.getError('min')">Minimun Value is Zero</span>
+                                <span style="color: red;"
+                                    *ngIf="addhealthform.get('quotation')?.getError('max')">Maximum Value is
+                                    1.7976931348623157e+308</span>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label>Medical Network</label>
+                            <input formControlName="medicalNetwork" min="0" type="text" class="form-control">
+                            <div
+                                *ngIf="addhealthform.get('medicalNetwork')?.errors&& addhealthform.get('medicalNetwork')?.touched">
+                                <span style="color: red;"
+                                    *ngIf="addhealthform.get('medicalNetwork')?.getError('required')">Medical Network is
+                                    required</span>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label>Clinics Coverage</label>
+                            <input formControlName="clinicsCoverage" min="0" type="number" class="form-control">
+                            <div
+                                *ngIf="addhealthform.get('clinicsCoverage')?.errors&& addhealthform.get('clinicsCoverage')?.touched">
+                                <span style="color: red;"
+                                    *ngIf="addhealthform.get('clinicsCoverage')?.getError('required')">Clinics Coverage
+                                    is required</span>
+                                <span style="color: red;"
+                                    *ngIf="addhealthform.get('clinicsCoverage')?.getError('min')">Minimun Value is
+                                    Zero</span>
+                                <span style="color: red;"
+                                    *ngIf="addhealthform.get('clinicsCoverage')?.getError('max')">Maximum Value is
+                                    1.7976931348623157e+308</span>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label>Hospitalization and Surgery</label>
+                            <input formControlName="hospitalizationAndSurgery" min="0" type="number"
+                                class="form-control">
+                            <div
+                                *ngIf="addhealthform.get('hospitalizationAndSurgery')?.errors&& addhealthform.get('hospitalizationAndSurgery')?.touched">
+                                <span style="color: red;"
+                                    *ngIf="addhealthform.get('hospitalizationAndSurgery')?.getError('required')">Hospitalization
+                                    And Surgery is required</span>
+                                <span style="color: red;"
+                                    *ngIf="addhealthform.get('hospitalizationAndSurgery')?.getError('min')">Minimun
+                                    Value is Zero</span>
+                                <span style="color: red;"
+                                    *ngIf="addhealthform.get('hospitalizationAndSurgery')?.getError('max')">Maximum
+                                    Value is 1.7976931348623157e+308</span>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label>Optical Coverage</label>
+                            <input formControlName="opticalCoverage" min="0" type="number" class="form-control">
+                            <div
+                                *ngIf="addhealthform.get('opticalCoverage')?.errors&& addhealthform.get('opticalCoverage')?.touched">
+                                <span style="color: red;"
+                                    *ngIf="addhealthform.get('opticalCoverage')?.getError('required')">Optical Coverage
+                                    is required</span>
+                                <span style="color: red;"
+                                    *ngIf="addhealthform.get('opticalCoverage')?.getError('min')">Minimun Value is
+                                    Zero</span>
+                                <span style="color: red;"
+                                    *ngIf="addhealthform.get('opticalCoverage')?.getError('max')">Maximum Value is
+                                    1.7976931348623157e+308</span>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label>Dental Coverage</label>
+                            <input formControlName="dentalCoverage" min="0" type="number" class="form-control">
+                            <div
+                                *ngIf="addhealthform.get('dentalCoverage')?.errors&& addhealthform.get('dentalCoverage')?.touched">
+                                <span style="color: red;"
+                                    *ngIf="addhealthform.get('dentalCoverage')?.getError('required')">Dental Coverage is
+                                    required</span>
+                                <span style="color: red;"
+                                    *ngIf="addhealthform.get('dentalCoverage')?.getError('min')">Minimun Value is
+                                    Zero</span>
+                                <span style="color: red;"
+                                    *ngIf="addhealthform.get('dentalCoverage')?.getError('max')">Maximum Value is
+                                    1.7976931348623157e+308</span>
+                            </div>
+                        </div>
+                        <div [ngStyle]="addhealthform.invalid? {'cursor':' not-allowed'} :  {'cursor':'pointer'} "class="mt-4">
+
+                            <button [disabled]="addhealthform.invalid" type="submit"
+                                style="background-color: #17bd82 ; color:white ;font: bold;"
+                                class=" btn  d-block ms-auto w-25 btn-Add">Add</button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </section>
+    <p-toast/>
+    <p-confirmDialog />
+</section>

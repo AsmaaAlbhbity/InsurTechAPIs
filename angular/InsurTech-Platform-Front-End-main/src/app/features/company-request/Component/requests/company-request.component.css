@@ -1,0 +1,118 @@
+
+.question-label {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.answer-label {
+    font-size: 1rem;
+    color: #555;
+}
+
+.ques {
+    border-radius: 15px;
+    background-color: #46484a;
+}
+
+::ng-deep .custom-button .p-button {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+    color: white !important;
+}
+
+::ng-deep .custom-button-reject .p-button {
+    background-color: rgba(152, 8, 8, 0.764) !important;
+    border-color: rgba(196, 11, 11, 0.688) !important;
+    color: white !important;
+}
+
+::ng-deep .p-button {
+    border-radius: 20px !important;
+}
+
+.containerInfo {
+    background-color: #efdadaba;
+    padding: 11px 24px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    margin: 5px;
+}
+
+.containerInfo span {
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .containerInfo {
+        flex: 1 1 100%;
+        margin-bottom: 10px;
+    }
+
+    .p-table {
+        min-width: 100% !important;
+    }
+
+    th, td {
+        padding: 8px 4px;
+    }
+
+    .card-header .question-label {
+        font-size: 1rem;
+    }
+
+    .card-body .answer-label {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .containerInfo {
+        flex: 1 1 100%;
+    }
+
+    .card-header .question-label {
+        font-size: 0.9rem;
+    }
+
+    .card-body .answer-label {
+        font-size: 0.8rem;
+    }
+}
+
+/* Base styles */
+.flex {
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 1rem; /* Optional: Adds space between items */
+}
+
+/* Adjustments for small screens */
+@media (max-width: 768px) {
+    .flex {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .flex h5 {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .containerInfo {
+        width: 100%;
+        text-align: center;
+    }
+
+    .p-input-icon-left {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .p-input-icon-left input {
+        width: 100%;
+        max-width: 400px; /* Optional: Sets a maximum width for the input field */
+    }
+}

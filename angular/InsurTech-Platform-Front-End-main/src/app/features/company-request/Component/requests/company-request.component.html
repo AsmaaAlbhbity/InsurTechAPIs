@@ -1,0 +1,113 @@
+<app-sidenav></app-sidenav>
+<div class="card">
+    <p-toast />
+    <p-table #dt [value]="companyRequsts" [rows]="10" [paginator]="true"
+        [globalFilterFields]="['customerName', 'insurancePlanName','level','companyName', 'status']"
+        [tableStyle]="{ 'min-width': '100%' }" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+        <ng-template pTemplate="caption">
+            <div class="flex align-items-center justify-content-between">
+                <h5 class="m-0" style="background-color: #84f184; padding: 11px 24px; border-radius: 9px;">Manage Requests</h5>
+                <!-- count requests -->
+                <div class="containerInfo">
+                    Requests
+                    <span>{{companyRequsts.length}}</span>
+                </div>
+                <!-- pending -->
+                <div class="containerInfo" style="color: #FF9800;">
+                    Pending
+                    <span>{{cntPending}}</span>
+                </div>
+                <!-- approved -->
+                <div class="containerInfo" style="color: #20a76b;">
+                    Approved
+                    <span>{{cntAccepted}}</span>
+                </div>
+                <!-- rejected -->
+                <div class="containerInfo" style="color: #e90000;">
+                    Rejected
+                    <span>{{cntRejected}}</span>
+                </div>
+                <span class="p-input-icon-left">
+                    <i class="pi pi-search"></i>
+                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." />
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="customerName">
+                    customer Name <p-sortIcon field="customerName" />
+                </th>
+                <th pSortableColumn="insurancePlanName" style="min-width:10rem">
+                    insurancePlan Name <p-sortIcon field="insurancePlanName" />
+                </th>
+                <th pSortableColumn="companyName" style="min-width:10rem">
+                    company Name <p-sortIcon field="companyName" />
+                </th>
+                <th pSortableColumn="level" style="min-width:10rem">
+                    level<p-sortIcon field="level" />
+                </th>
+                <th pSortableColumn="status" style="min-width:10rem">
+                    Status <p-sortIcon field="status" />
+                </th>
+                <th>
+                    Action
+                </th>
+            </tr>
+        </ng-template>
+        <!-- Body Template -->
+        <ng-template pTemplate="body" let-request>
+            <tr>
+                <td>{{ request.customerName }}</td>
+                <td>{{ request.insurancePlanName }}</td>
+                <td>{{ request.companyName }}</td>
+                <td>
+                    <p-tag [value]="request.level | levelInsurance" [severity]="getSeverityLevel(request.level)" />
+                </td>
+                <td [ngStyle]="{ 'color': getSeverity(request.status), 'font-weight': 'bold' }">
+                    {{ request.status | statusLabel }}
+                    <i *ngIf="request.status == 0" class="fa-solid fa-spinner"></i>
+                    <i *ngIf="request.status == 1" class="fa-regular fa-circle-check"></i>
+                    <i *ngIf="request.status == 2" class="fa-solid fa-ban text-danger"></i>
+                </td>
+                <td>
+                    <div style="display: flex; justify-content: space-between; flex-wrap: wrap;">
+                        <p-button pRipple icon="fa-regular fa-eye" class="mr-2" [rounded]="true" [outlined]="true"
+                            severity="success" (click)="viewRequsts(request.requestQuestions)" />
+                        <div *ngIf="request.status == 0" style="display: flex; justify-content: space-evenly; width: 100%;">
+                            <p-button pRipple icon="fa-solid fa-check" [rounded]="true" [outlined]="true" (click)="approveRequest(request.id)" label="Approved" class="custom-button" />
+                            <p-button pRipple icon="fa-solid fa-xmark" severity="danger" [rounded]="true" [outlined]="true"
+                                (click)="rejectRequest(request.id)" label="Rejected" class="custom-button-reject" />
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="summary">
+            <div class="flex align-items-center justify-content-between">
+                In total there are {{ companyRequsts.length }} Requests.
+            </div>
+        </ng-template>
+    </p-table>
+    <p-dialog [(visible)]="productDialog" [style]="{ width: '90%', maxWidth: '500px' }" header="Request Details" [modal]="true"
+        styleClass="p-fluid custom-dialog">
+        <ng-template pTemplate="content">
+            <div class="container mt-4">
+                <div class="row">
+                    <div class="col-12" *ngFor="let question of requestQuestions; let i = index">
+                        <div class="card mb-3">
+                            <div class="card-header text-white ques">
+                                <label for="questionLabel{{i}}" class="question-label m-0">{{ question.question }}</label>
+                            </div>
+                            <div class="card-body">
+                                <label for="answerLabel{{i}}" class="answer-label">{{ question.answer }}</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-template>
+    </p-dialog>
+    <p-confirmDialog [style]="{ width: '90%', maxWidth: '450px' }" />
+</div>

@@ -1,0 +1,30 @@
+.container-fluid {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.row {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.holder {
+    margin-top: 30px;
+}
+
+.holder-chart {
+    margin-top: 30px;
+}
+
+.holder-UserList {
+    margin-top: 30px;
+}
+
+/* Ensure box-sizing is set to border-box */
+*, *::before, *::after {
+    box-sizing: border-box;
+}

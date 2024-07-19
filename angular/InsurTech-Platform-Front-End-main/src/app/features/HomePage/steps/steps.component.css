@@ -1,0 +1,249 @@
+:root {
+    --primary-color: #45644c; /* Dark green */
+    --secondary-color: #7dc98f; /* Light green */
+    --grey-color: #f8f9fa; /* Light grey background */
+    --button-secondary-color: #6c757d; /* Secondary button background */
+    --button-secondary-hover-color: #5a6268; /* Secondary button hover background */
+    --inactive-step-color: #ccc; /* Inactive step color */
+  }
+  .about{
+    padding: 100px 0;
+    text-align: center;
+    width: 78%;
+    margin: 0 auto;
+}
+
+.about h2{
+    font-size: 2.5em;
+}
+  .ImgStyle{
+    width: 100%;
+    height: 40vh;
+  }
+  .card-wrapper {
+    width: 100%;
+    height: 100vh; /* Full height of viewport */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+  }
+  .button-spacing{
+    padding: 25px;
+  }
+  
+  .card {
+    width: 70vw;
+    padding: 2rem;
+    background-color: #ffffff;
+    border: none;
+    margin: auto;
+
+  }
+  
+  .p-stepper {
+    max-width: 1000px;
+  }
+  
+  .p-stepper .p-stepper-panel {
+    padding: 2rem;
+  }
+  
+  .p-stepper .p-stepper-title {
+    font-size: 1.2rem;
+    color: var(--primary-color);
+  }
+  
+  .p-stepper .p-stepper-step {
+    position: relative;
+  }
+  
+  .p-stepper .p-stepper-step .p-stepper-title {
+    color: var(--primary-color);
+  }
+  
+  .p-stepper .p-stepper-step .p-stepper-number {
+    background-color: var(--primary-color);
+    color: #fff;
+  }
+  
+  .p-stepper .p-stepper-step.p-highlight .p-stepper-number {
+    background-color: var(--primary-color);
+  }
+  
+  .p-stepper .p-stepper-step.p-highlight .p-stepper-title {
+    color: var(--primary-color);
+  }
+  
+  .p-stepper .p-stepper-step .p-stepper-line {
+    background-color: var(--primary-color);
+  }
+  
+  .p-button-success {
+    background-color: #10B981 ;
+    border-color: #10B981 ;
+    color: #fff;
+  }
+  
+  .p-button-success:hover {
+    background-color:#1d805f ;
+    border-color: #1d805f ;
+  }
+  
+  .p-button-secondary {
+    background-color:#10B981;
+    border-color: #10B981;
+    color: #fff;
+  }
+  
+  .p-button-secondary:hover {
+    background-color: var(--button-secondary-hover-color);
+    border-color: #545b62;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .mt-3 {
+    margin-top: 1rem;
+  }
+  
+  .mb-3 {
+    margin-bottom: 1rem;
+  }
+  
+  .text-xl {
+    font-size: 1.5rem;
+  }
+  
+  .font-semibold {
+    font-weight: 600;
+  }
+  
+  .step-header {
+    background: none;
+    border: none;
+  }
+  
+  .step-icon {
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid transparent; /* Adjust as needed */
+  }
+  
+  .active-step .step-icon {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+  
+  .active-step .step-icon i {
+    color: #fff;
+  }
+  
+  .inactive-step .step-icon {
+    background-color: var(--inactive-step-color);
+    border-color: var(--inactive-step-color);
+  }
+  
+  .p-button {
+    border-radius: 200px; /* Adjust border radius as needed */
+  }
+  
+  /* Ensure button hover color matches active step */
+  .p-button-success:hover {
+    background-color:#10B981 !important;
+    border-color: #10B981 !important;
+  }
+  
+  /* Ensure step icon hover color matches active step */
+  .step-icon:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+  }
+  .containerr {
+    height: auto; /* Full viewport height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.title-container {
+    color: #10B981 ;
+    display: flex;
+    align-items: center;
+    font-size: 40px;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ; /* Adjust the font size as needed */
+}
+
+.dot {
+    margin: 0 30px; /* Adjust the spacing as needed */
+}
+
+.title {
+    font-weight: bold; /* Adjust the font weight as needed */
+}
+
+
+/* Media Quary */
+@media screen and (max-width: 576px) {
+
+  .card-wrapper{
+    flex-direction: column;
+    height: 100%;
+  }
+   .ImgStyle{
+    width:100%;
+    height: 40vh;
+  }
+}
+
+.heading {
+  font-size: 4rem;
+  color: var(--navyBlue);
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bolder;
+  margin: auto;
+  width: fit-content;
+  margin-bottom: 6rem;
+  font-family: "Nunito", sans-serif;
+}
+
+.heading span {
+  text-transform: uppercase;
+  font-family: "Nunito", sans-serif;
+}
+.heading::before{
+  content: '';
+  display: block;
+  width: 100%;
+  height: 25px;
+  background-color: #10B981;
+  position: relative;
+  top: 50px;
+  z-index: -1;
+  animation:widthanimation 5050ms infinite linear ;
+  animation-delay: 2s;
+  border-radius: 10px;
+  -webkit-animation:widthanimation 9050ms infinite linear ;
+}
+@keyframes widthanimation {
+  0%{
+    width: 0;
+  }
+  25%{
+    width: 100%;
+  }
+}

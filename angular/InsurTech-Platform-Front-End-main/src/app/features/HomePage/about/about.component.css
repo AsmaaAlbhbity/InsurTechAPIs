@@ -1,0 +1,113 @@
+
+/* about styles */
+.about{
+    padding: 100px 0;
+    text-align: center;
+    width: 78%;
+    margin: 0 auto;
+    color: white;
+}
+#about
+{
+    background-color: #10b981;
+}
+h2{
+    font-size: 2.5em;
+    color:white;
+
+}
+
+.about p, .right-side p{
+    font-size: 1.2em;
+    color:white;
+    line-height: 1.67rem;
+    padding-top: 20px;
+}
+
+.container{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+}
+
+.left-side,.right-side {
+    width: 50%;
+    margin: 20px 0;
+}
+
+.left-side img{
+    width: 90%;
+    /* height: 500px; */
+    border-radius: 4px;
+    /* background-position: center center; */
+    object-fit: cover;
+}
+
+.right-side .btn{
+    margin-top: 20px;
+}
+.left-side
+{
+    background-image: url('../../../../assets/images/About\ us\ page.gif');
+    width: 450px;
+    height: 450px;
+    background-size: cover;
+    -webkit-background-position: center;
+    background-position: center center;
+    margin: 20px;
+    box-shadow: 0 5px 5px 5px rgba(14, 250, 104, 0.384);
+    transition: all 1s ease-in-out; 
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+
+}
+
+/* Media Quary */
+@media screen and (max-width: 576px) {
+    .about{
+        width: 100%;
+    }
+    .container{
+        flex-direction: column;
+    }
+    .right-side{
+        width: 100%;
+    }
+    .left-side{
+        width: 280px;
+        height: 280px;
+    }
+}
+.heading {
+    font-size: 4rem;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bolder;
+    margin: auto;
+    width: fit-content;
+    margin-bottom: 6rem;
+    font-family: "Nunito", sans-serif;
+    color: #1e4135;
+  }
+  
+  .heading span {
+    text-transform: uppercase;
+    font-family: "Nunito", sans-serif;
+  }
+ 
+  .aicon
+  {
+    color: #1e4135;
+    font-size: 3rem;
+    margin-right: 2%;
+  }
+  .about .row .content p {
+    font-size: 1.1rem;
+    padding: 1rem 0;
+    line-height: 2;
+    font-family: "Nunito", sans-serif;
+  }
+  h3{
+    font-size: 4.3rem;
+    color: white;
+  }

@@ -1,0 +1,136 @@
+<div class="plans-container">
+  <h2 class="text-warning">Pending Requests</h2>
+  <hr>
+  @if(pendingRequests.length != 0){ @for (plan of pendingRequests; track $index)
+  {
+<div class="pricing-card">
+  <div class="parent-card">
+    <div class="card">
+      <!-- Plan Title and Basic Details -->
+      <div class="title">
+        <h2 class="fs-3">{{ plan.catId == 0 ? "Health Insurance" : (plan.catId == 1 ? "Home Insurance" : (plan.catId == 2 ? "Motor Insurance" : "Insurance Plan")) }}</h2>
+      </div>
+      <div class="title">
+        <h3>{{ plan?.level == 0 ? 'Basic' : plan?.level == 1 ? 'Standard' : 'Premium' }}</h3>
+      </div>
+      <div class="alert badge-color badge-primary alert-dismissible fade show" role="alert">
+        <strong>Company:</strong> {{ plan?.companyName }}
+      </div>
+      <div class="price">
+        <h5 class="mb-2">yearly Coverage : {{ plan?.yearlyCoverage }} <span>EGP/year</span></h5>
+        <h6 class="fs-5">Quotation : {{ plan?.quotation }} <span class="fw-bold">EGP/Month</span></h6>
+      </div>
+      <div class="m-auto">
+        <h3 class="text-warning">You will be notified soon</h3>
+      </div>
+    </div>
+  </div>
+  </div>
+  
+
+  } } @else {
+  <p class="text-center text-danger">No pending requests.</p>
+  }
+
+  <h2 class="text-success">Paid Requests</h2>
+  @if(paidRequests.length != 0){ @for (plan of paidRequests; track $index) {
+    <div class="pricing-card">
+      <div class="parent-card">
+        <div class="card">
+          <!-- Plan Title and Basic Details -->
+          <div class="title">
+            <h2 class="fs-3">{{ plan.catId == 0 ? "Health Insurance" : (plan.catId == 1 ? "Home Insurance" : (plan.catId == 2 ? "Motor Insurance" : "Insurance Plan")) }}</h2>
+          </div>
+          <div class="title">
+            <h3>{{ plan?.level == 0 ? 'Basic' : plan?.level == 1 ? 'Standard' : 'Premium' }}</h3>
+          </div>
+          <div class="alert badge-color badge-primary alert-dismissible fade show" role="alert">
+            <strong>Company:</strong> {{ plan?.companyName }}
+          </div>
+          <div class="price">
+            <h5 class="mb-2">yearly Coverage : {{ plan?.yearlyCoverage }} <span>EGP/year</span></h5>
+            <h6 class="fs-5">Quotation : {{ plan?.quotation }} <span class="fw-bold">EGP/Month</span></h6>
+          </div>
+          <!-- <div class="m-auto">
+            <h3 class="text-warning">You will be notified soon</h3>
+          </div> -->
+      <!-- button for payment disabled -->
+      <button class="btn btn-danger rounded-3" [disabled]="!plan.paid" (click)="CancelSubscription(plan)">
+        Cancel Subscription ({{plan.quotation}})
+      </button>
+    </div>
+    </div>
+  </div>
+  } } @else {
+  <p class="text-center text-danger">No paid requests.</p>
+  }
+
+  <h2 class="text-info">Approved but Not Paid Requests</h2>
+  @if(approvedButNotPaidRequests.length != 0)
+  {
+     @for (plan of approvedButNotPaidRequests; track $index) {
+      <div class="pricing-card">
+        <div class="parent-card">
+          <div class="card">
+            <!-- Plan Title and Basic Details -->
+            <div class="title">
+              <h2 class="fs-3">{{ plan.catId == 0 ? "Health Insurance" : (plan.catId == 1 ? "Home Insurance" : (plan.catId == 2 ? "Motor Insurance" : "Insurance Plan")) }}</h2>
+            </div>
+            <div class="title">
+              <h3>{{ plan?.level == 0 ? 'Basic' : plan?.level == 1 ? 'Standard' : 'Premium' }}</h3>
+            </div>
+            <div class="alert badge-color badge-primary alert-dismissible fade show" role="alert">
+              <strong>Company:</strong> {{ plan?.companyName }}
+            </div>
+            <div class="price">
+              <h5 class="mb-2">yearly Coverage : {{ plan?.yearlyCoverage }} <span>EGP/year</span></h5>
+              <h6 class="fs-5">Quotation : {{ plan?.quotation }} <span class="fw-bold">EGP/Month</span></h6>
+            </div>
+            <div class="text-center">
+              <button class="btn btn-success rounded-2 m-3 w-75" (click)="Payment(plan)">
+                Pay Now
+              </button>
+            </div>
+            <hr>
+            <div class="m-auto">
+              <h3 class="text-success">It's time for you to pay</h3>
+            </div>
+          </div>
+        </div>
+        </div>
+  } } @else {
+  <p class="text-center text-danger">No approved but not paid requests.</p>
+  }
+  <!-- pleasework -->
+
+  <h2 class="text-danger">Rejected Requests</h2>
+  @if(rejectedRequests.length != 0){ @for (plan of rejectedRequests; track
+  $index) {
+    <div class="pricing-card">
+      <div class="parent-card">
+        <div class="card">
+          <!-- Plan Title and Basic Details -->
+          <div class="title">
+            <h2 class="fs-3">{{ plan.catId == 0 ? "Health Insurance" : (plan.catId == 1 ? "Home Insurance" : (plan.catId == 2 ? "Motor Insurance" : "Insurance Plan")) }}</h2>
+          </div>
+          <div class="title">
+            <h3>{{ plan?.level == 0 ? 'Basic' : plan?.level == 1 ? 'Standard' : 'Premium' }}</h3>
+          </div>
+          <div class="alert badge-color badge-primary alert-dismissible fade show" role="alert">
+            <strong>Company:</strong> {{ plan?.companyName }}
+          </div>
+          <div class="price">
+            <h5 class="mb-2">yearly Coverage : {{ plan?.yearlyCoverage }} <span>EGP/year</span></h5>
+            <h6 class="fs-5">Quotation : {{ plan?.quotation }} <span class="fw-bold">EGP/Month</span></h6>
+          </div>
+          <div class="m-auto">
+            <h3 class="text-danger">You can always apply again</h3>
+          </div>
+        </div>
+      </div>
+      </div>
+  } } @else {
+  <p class="text-center text-danger">No rejected requests.</p>
+  }
+</div>
+<br>

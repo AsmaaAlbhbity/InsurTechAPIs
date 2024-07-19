@@ -1,0 +1,177 @@
+<div class="grid">
+    <div class="row w-100">
+        <div class="col-12 col-sm-4">
+            <div class="card l-bg-blue-dark p-0 m-0">
+                <div class="card-statistic-3 p-4">
+                    <div class="card-icon card-icon-large"><fa-icon class="fas" [icon]="faUsers"></fa-icon></div>
+                    <div class="mb-2">
+                        <h3 class="card-title mb-0 text-white">New Requests</h3>
+                    </div>
+                    <div class="row align-items-center d-flex">
+                        <div class="col-8">
+                            <h2 class="d-flex align-items-center mb-0 text-white">
+                                {{newRequestCount}}
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-4">
+            <div class="card l-bg-green-dark p-0 m-0">
+                <div class="card-statistic-3 p-4">
+                    <div class="card-icon card-icon-large"><fa-icon class="fas" [icon]="faCheck"></fa-icon></div>
+                    <div class="mb-2">
+                        <h3 class="card-title mb-0 text-white">Approved</h3>
+                    </div>
+                    <div class="row align-items-center d-flex">
+                        <div class="col-8">
+                            <h2 class="d-flex align-items-center mb-0 text-white">
+                                {{approvedCount}}
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-4">
+            <div class="card l-bg-orange-dark p-0 m-0">
+                <div class="card-statistic-3 p-4">
+                    <div class="card-icon card-icon-large"><fa-icon class="fas" [icon]="faX"></fa-icon></div>
+                    <div class="mb-2">
+                        <h3 class="card-title mb-0 text-white">Rejected</h3>
+                    </div>
+                    <div class="row align-items-center d-flex">
+                        <div class="col-8">
+                            <h2 class="d-flex align-items-center mb-0 text-white">
+                                {{rejectedCount}}
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-4 w-100">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Open Requests</h3>
+                </div>
+                <div class="card-body table-responsive">
+                    <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover" id="open-request-table">
+                        <thead class="text-white bgcgreen">
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Tax Number</th>
+                                <th>Phone Number</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (request of companies; track $index)
+                            {
+                            @if (request.status == "pending")
+                            {
+                            <tr>
+                                <td>{{ request.id }}</td>
+                                <td>{{ request.name }}</td>
+                                <td>{{ request.taxNumber }}</td>
+                                @if(request.phoneNumber == null)
+                                {
+                                <td>
+                                    <span class="badge text-bg-danger mx-1">
+                                        No Phone Number
+                                    </span>
+                                </td>
+                                }@else {
+                                <td>{{ request.phoneNumber }}</td>
+                                }
+                                <td>{{ request.location }}</td>
+                                <td>
+                                    <span class="badge text-bg-warning mx-1">
+                                        Pending
+                                    </span>
+                                </td>
+                                <td>
+                                    <p-button icon="pi pi-check" (click)="showApproveAlert(request.id)" class="me-3"/>
+                                    <p-button icon="pi pi-times" severity="danger" (click)="showDeclineAlert(request.id)"/>
+                                </td>
+                            </tr>
+                            }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2 w-100">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Closed Requests</h3>
+                </div>
+                <div class="card-body table-responsive">
+                    <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border hover" id="cloded-request-table">
+                        <thead class="text-white bgcgreen">
+                            <tr>
+                                <th>Id</th>
+                                <th>Name</th>
+                                <th>Tax Number</th>
+                                <th>Phone Number</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (request of companies; track $index)
+                            {
+                            @if (request.status != "pending")
+                            {
+                            <tr>
+                                <td>{{ request.id }}</td>
+                                <td>{{ request.name }}</td>
+                                <td>{{ request.taxNumber }}</td>
+                                @if(request.phoneNumber == null)
+                                {
+                                <td>
+                                    <span class="badge text-bg-dark mx-1">
+                                        No Phone Number
+                                    </span>
+                                </td>
+                                }@else {
+                                <td>{{ request.phoneNumber }}</td>
+                                }
+                                <td>{{ request.location }}</td>
+                                <td>
+                                    @if (request.status == "approved")
+                                    {
+                                    <span class="badge text-bg-success mx-1">
+                                        Approved
+                                    </span>
+                                    }
+                                    @else
+                                    {
+                                    <span class="badge text-bg-danger mx-1">
+                                        Rejected
+                                    </span>
+                                    }
+                                </td>
+                                <td>
+                                    <p-button icon="pi pi-pencil" severity="info" (click)="showSwitchAlert(request.id)"/>
+                                </td>
+                            </tr>
+                            }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

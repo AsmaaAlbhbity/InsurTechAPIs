@@ -1,0 +1,40 @@
+<!-- Service section -->
+<section id="services">
+  <div class="about">
+    <h1 class="heading">our <span> Services</span></h1>
+  </div>
+
+  <div class="services">
+    <div class="service-card">
+      <div class="number"> <i class="fas fa-home"></i></div>
+      <div class="service-text">
+        <h3>Home Insurance</h3>
+        <p>
+          {{categories[1].description}}
+
+        </p>
+       <a [routerLink]="['/homedetails']">Read More</a>
+      </div>
+    </div>
+    <div class="service-card">
+      <div class="number"><i class="fas fa-heartbeat"></i></div>
+      <div class="service-text">
+        <h3>Health Insurance</h3>
+        <p>
+          {{categories[0].description}}
+        </p>
+       <a [routerLink]="['/healthdetails']">Read More</a>
+      </div>
+    </div>
+    <div class="service-card">
+      <div class="number"><i class="fas fa-car"></i></div>
+      <div class="service-text">
+        <h3>Car Insurance</h3>
+        <p>
+          {{categories[2].description}}
+        </p>
+      <a [routerLink]="['/motordetails']">Read More</a>
+      </div>
+    </div>
+  </div>
+</section>

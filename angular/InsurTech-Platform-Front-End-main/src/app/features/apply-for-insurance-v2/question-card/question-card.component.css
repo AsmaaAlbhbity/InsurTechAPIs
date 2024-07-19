@@ -1,0 +1,91 @@
+.stepper {
+    background-color: #cfcfcf;
+    height: 4px;
+    margin: 5px;
+    width: 50px
+}
+.active {
+    background-color: #26f7fd
+}
+
+ .info {
+    display: flex
+}
+
+ .info .user-img {
+    border-radius: 100%;
+    height: 30px;
+    width: 30px
+}
+
+ .info .user-img img {
+    height: 100%;
+    width: 100%
+}
+
+ .info .greeting {
+    margin-left: 16px
+}
+
+ .info .greeting p, .info .greeting span {
+    color: #373334;
+    font-size: 1.1rem;
+    font-weight: 700
+}
+.btnAsh{
+    background-color: #24aa9d;
+    color: #f0f5f5;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+    width: 40%
+}
+.inpAsh{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: none;
+    border-bottom: #24aa9d 2px solid;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
+/* Ensure the container div takes full width */
+.horizontal-listbox .p-listbox-list {
+  display: flex;
+  flex-wrap: wrap; /* Allows items to wrap to the next line if they exceed the width */
+}
+
+.horizontal-listbox .p-listbox-item {
+  flex: 0 0 auto; /* Prevents items from shrinking */
+  width: 100px; /* Set a fixed width for each item */
+  margin: 5px; /* Optional: Add some spacing between items */
+  box-sizing: border-box;
+}
+
+
+
+
+@media only screen and (min-width: 280px)and (max-width:360px) {
+     .info .greeting p, .info .greeting span {
+        font-size:12px
+    }
+}
+
+ .info .greeting p {
+    color: #373334
+}
+
+
+
+@media only screen and (max-width: 767px) {
+     .info .greeting p {
+        color:#373334
+    }
+}

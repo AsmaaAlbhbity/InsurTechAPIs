@@ -1,0 +1,23 @@
+.upload-btn {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #54f28e;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+  }
+  
+  .upload-btn .file-input {
+      display: none;
+  }
+  
+  .upload-btn i {
+      margin-right: 8px;
+  }
+  
+  .upload-btn:hover {
+      background-color: #3aa360;
+  }
+  
+  

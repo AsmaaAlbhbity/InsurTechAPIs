@@ -1,0 +1,414 @@
+<br>
+<div class="container">
+  <div class="row">
+    <div class="col d-flex align-items-center insurance-item" id="Motor" (click)="click('Motor')">
+      <i class="fas fa-car"></i>
+      <div class="ms-3">
+        <h2>Motor Insurance</h2>
+      </div>
+    </div>
+
+    <div class="col d-flex align-items-center insurance-item" id="health" (click)="click('health')">
+      <i class="fas fa-heartbeat"></i>
+      <div class="ms-3">
+        <h2>Health Insurance</h2>
+      </div>
+    </div>
+
+    <div class="col d-flex align-items-center insurance-item" id="home" (click)="click('home')">
+      <i class="fas fa-home"></i>
+      <div class="ms-3">
+        <h2>Home Insurance</h2>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="container" style=" background-color: white;">
+  <!-- Motor Insurance Table -->
+  <div class="table-responsive rounded p-3" style="background-color: white;" *ngIf="flag == 1">
+    <div *ngIf="MotorList?.length; else noMotorInsurance">
+      <p-table #dt [value]="MotorList" [rows]="10" [paginator]="true"
+        [globalFilterFields]="['YearlyCoverag', 'level', 'category', 'quotation','personalAccident','theft','thirdPartyLiability','ownDamage','legalExpenses','numberOfUsers']"
+        [tableStyle]="{ 'min-width': '75rem' }" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+        <ng-template pTemplate="caption">
+          <div class="flex align-items-center justify-content-center">
+            <p-button label="+ New Plan" (click)="showDialog()"
+              [style]="{'background-color': '#2acaac', 'color': 'white','border':'none'}"></p-button>
+
+            <div class="search-input-container ml-auto">
+              <span class="p-input-icon-left">
+                <i class="pi pi-search action"></i>
+                <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                  placeholder="Search..." />
+              </span>
+            </div>
+          </div>
+
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="yearlyCoverage" style="min-width: 10rem">
+              Yearly Coverage <p-sortIcon field="yearlyCoverage"></p-sortIcon>
+            </th>
+            <th pSortableColumn="level">
+              Level <p-sortIcon field="level"></p-sortIcon>
+            </th>
+            <th pSortableColumn="category" style="min-width: 10rem">
+              Category <p-sortIcon field="category"></p-sortIcon>
+            </th>
+            <th pSortableColumn="quotation">
+              Quotation <p-sortIcon field="quotation"></p-sortIcon>
+            </th>
+            <th pSortableColumn="personalAccident">
+              Personal Accident <p-sortIcon field="personalAccident"></p-sortIcon>
+            </th>
+            <th pSortableColumn="theft">
+              Theft <p-sortIcon field="theft"></p-sortIcon>
+            </th>
+            <th pSortableColumn="thirdPartyLiability">
+              Third Party Liability <p-sortIcon field="thirdPartyLiability"></p-sortIcon>
+            </th>
+            <th pSortableColumn="ownDamage">
+              Own Damage <p-sortIcon field="ownDamage"></p-sortIcon>
+            </th>
+            <th pSortableColumn="legalExpenses">
+              Legal Expenses <p-sortIcon field="legalExpenses"></p-sortIcon>
+            </th>
+            <th pSortableColumn="numberOfUsers">
+              Users <p-sortIcon field="numberOfUsers"></p-sortIcon>
+            </th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+          <tr>
+            <td>
+              {{ product.yearlyCoverage }}
+            </td>
+            <td>
+              <div [ngSwitch]="product.level" [ngClass]="{
+                'basic-box': product.level === 0,
+                'standard-box': product.level === 1,
+                'premium-box': product.level === 2,
+                'unknown-box': product.level !== 0 && product.level !== 1 && product.level !== 2
+              }">
+                <span *ngSwitchCase="0">Basic</span>
+                <span *ngSwitchCase="1">Standard</span>
+                <span *ngSwitchCase="2">Premium</span>
+                <span *ngSwitchDefault>Unknown Level</span>
+              </div>
+            </td>
+
+
+            <td>
+              {{ product.category }}
+            </td>
+            <td>
+              {{ product.quotation }}
+            </td>
+            <td>
+              {{ product.personalAccident }}
+            </td>
+            <td>
+              {{ product.theft }}
+            </td>
+            <td>
+              {{ product.thirdPartyLiability }}
+            </td>
+            <td>
+              {{ product.ownDamage }}
+            </td>
+            <td>
+              {{ product.legalExpenses }}
+            </td>
+            <td>
+              {{ product.numberOfUsers }}
+            </td>
+            <td>
+              <!-- routerLink="editmotorinsurance/{{product.id}}" -->
+              <button class="btn newprimary btn-sm" (click)="showModal(1, product)">
+                <i class="fas fa-edit action"></i>
+              </button>
+              <button class="btn newdanger btn-sm" (click)="deleteInsurance(product.id)">
+                <i class="fas fa-trash-alt action"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <ng-template #noMotorInsurance>
+      <div class="message">No motor insurance records yet.</div>
+    </ng-template>
+    <p-toast />
+    <p-confirmDialog />
+  </div>
+
+
+
+  <!-- Health Insurance Table -->
+  <div class="table-responsive rounded p-3" style="background-color: white;" *ngIf="flag == 2">
+    <div *ngIf="HealthList?.length; else noHealthInsurance">
+      <p-table #dt [value]="HealthList" [rows]="10" [paginator]="true"
+        [globalFilterFields]="['yearlyCoverag', 'level', 'category', 'quotation','clinicsCoverage','dentalCoverage','hospitalizationAndSurgery','medicalNetwork','opticalCoverage','numberOfUsers']"
+        [tableStyle]="{ 'min-width': '75rem' }" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+        <ng-template pTemplate="caption">
+          <div class="flex align-items-center justify-content-center">
+            <p-button label="+ New Plan" (click)="showDialog()"
+              [style]="{'background-color': '#2acaac', 'color': 'white','border':'none'}"></p-button>
+
+            <div class="search-input-container ml-auto">
+              <span class="p-input-icon-left">
+                <i class="pi pi-search action"></i>
+                <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                  placeholder="Search..." />
+              </span>
+            </div>
+          </div>
+
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="yearlyCoverage" style="min-width: 10rem">
+              Yearly Coverage <p-sortIcon field="yearlyCoverage"></p-sortIcon>
+            </th>
+            <th pSortableColumn="level">
+              Level <p-sortIcon field="level"></p-sortIcon>
+            </th>
+            <th pSortableColumn="category" style="min-width: 10rem">
+              Category <p-sortIcon field="category"></p-sortIcon>
+            </th>
+            <th pSortableColumn="quotation">
+              Quotation <p-sortIcon field="quotation"></p-sortIcon>
+            </th>
+            <th pSortableColumn="clinicsCoverage">
+              Clinics Coverage <p-sortIcon field="clinicsCoverage"></p-sortIcon>
+            </th>
+            <th pSortableColumn="dentalCoverage">
+              Dental Coverage <p-sortIcon field="dentalCoverage"></p-sortIcon>
+            </th>
+            <th pSortableColumn="hospitalizationAndSurgery">
+              Hospitalization And Surgery <p-sortIcon field="hospitalizationAndSurgery"></p-sortIcon>
+            </th>
+            <th pSortableColumn="medicalNetwork">
+              Medical Network <p-sortIcon field="medicalNetwork"></p-sortIcon>
+            </th>
+            <th pSortableColumn="opticalCoverage">
+              Optical Coverage <p-sortIcon field="opticalCoverage"></p-sortIcon>
+            </th>
+            <th pSortableColumn="numberOfUsers">
+              Users <p-sortIcon field="numberOfUsers"></p-sortIcon>
+            </th>
+            <th></th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-product>
+          <tr>
+            <td>
+              {{ product.yearlyCoverage }}
+            </td>
+            <td>
+              <div [ngSwitch]="product.level" [ngClass]="{
+                'basic-box': product.level === 0,
+                'standard-box': product.level === 1,
+                'premium-box': product.level === 2,
+                'unknown-box': product.level !== 0 && product.level !== 1 && product.level !== 2
+              }">
+                <span *ngSwitchCase="0">Basic</span>
+                <span *ngSwitchCase="1">Standard</span>
+                <span *ngSwitchCase="2">Premium</span>
+                <span *ngSwitchDefault>Unknown Level</span>
+              </div>
+            </td>
+            <td>
+              {{ product.category }}
+            </td>
+            <td>
+              {{ product.quotation }}
+            </td>
+            <td>
+              {{ product.clinicsCoverage }}
+            </td>
+            <td>
+              {{ product.dentalCoverage }}
+            </td>
+            <td>
+              {{ product.hospitalizationAndSurgery }}
+            </td>
+            <td>
+              {{ product.medicalNetwork }}
+            </td>
+            <td>
+              {{ product.opticalCoverage }}
+            </td>
+            <td>
+              {{ product.numberOfUsers }}
+            </td>
+            <td>
+              <!-- routerLink="/edithealthinsurance/{{product.id}}"  -->
+              <button class="btn newprimary btn-sm" (click)="showModal(2, product)">
+                <i class="fas fa-edit action"></i>
+              </button>
+              <button class="btn newdanger btn-sm" (click)="deleteInsurance(product.id)">
+                <i class="fas fa-trash-alt action"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <p-toast />
+      <p-confirmDialog />
+    </div>
+
+
+
+    <ng-template #noHealthInsurance>
+      <div class="message">No health insurance records yet.</div>
+    </ng-template>
+  </div>
+
+  <!-- Home Insurance Table -->
+  <div class="table-responsive rounded p-3 " style="background-color: white;" *ngIf="flag == 3">
+    <div *ngIf="HomeList?.length; else noHomeInsurance">
+      <p-table #dt [value]="HomeList" [rows]="10" [paginator]="true"
+        [globalFilterFields]="['yearlyCoverag', 'level', 'category', 'quotation','waterDamage','glassBreakage','naturalHazard','attemptedTheft','firesAndExplosion','numberOfUsers']"
+        [tableStyle]="{ 'min-width': '75rem' }" [rowHover]="true" dataKey="id"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+        <ng-template pTemplate="caption">
+          <div class="flex">
+            <p-button label="+ New Plan" (click)="showDialog()"
+              [style]="{'background-color': '#2acaac', 'color': 'white','border':'none'}"></p-button>
+
+            <div class="search-input-container ml-auto">
+              <span class="p-input-icon-left">
+                <i class="pi pi-search action"></i>
+                <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')"
+                  placeholder="Search..." />
+              </span>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th pSortableColumn="yearlyCoverage" style="min-width: 10rem">
+              Yearly Coverage <p-sortIcon field="yearlyCoverage"></p-sortIcon>
+            </th>
+            <th pSortableColumn="level">
+              Level <p-sortIcon field="level"></p-sortIcon>
+            </th>
+            <th pSortableColumn="category" style="min-width: 10rem">
+              Category <p-sortIcon field="category"></p-sortIcon>
+            </th>
+            <th pSortableColumn="quotation">
+              Quotation <p-sortIcon field="quotation"></p-sortIcon>
+            </th>
+            <th pSortableColumn="waterDamage">
+              Water Damage <p-sortIcon field="waterDamage"></p-sortIcon>
+            </th>
+            <th pSortableColumn="glassBreakage">
+              Glass Breakage <p-sortIcon field="glassBreakage"></p-sortIcon>
+            </th>
+            <th pSortableColumn="naturalHazard">
+              Natural Hazard <p-sortIcon field="naturalHazard"></p-sortIcon>
+            </th>
+            <th pSortableColumn="attemptedTheft">
+              Attempted Theft <p-sortIcon field="attemptedTheft"></p-sortIcon>
+            </th>
+            <th pSortableColumn="firesAndExplosion">
+              Fires And Explosion <p-sortIcon field="firesAndExplosion"></p-sortIcon>
+            </th>
+            <th pSortableColumn="numberOfUsers">
+              Users <p-sortIcon field="numberOfUsers"></p-sortIcon>
+            </th>
+            <th></th>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-product>
+          <tr>
+            <td>
+              {{ product.yearlyCoverage }}
+            </td>
+            <td>
+              <div [ngSwitch]="product.level" [ngClass]="{
+                'basic-box': product.level === 0,
+                'standard-box': product.level === 1,
+                'premium-box': product.level === 2,
+                'unknown-box': product.level !== 0 && product.level !== 1 && product.level !== 2
+              }">
+                <span *ngSwitchCase="0">Basic</span>
+                <span *ngSwitchCase="1">Standard</span>
+                <span *ngSwitchCase="2">Premium</span>
+                <span *ngSwitchDefault>Unknown Level</span>
+              </div>
+            </td>
+            <td>
+              {{ product.category }}
+            </td>
+            <td>
+              {{ product.quotation }}
+            </td>
+            <td>
+              {{ product.waterDamage }}
+            </td>
+            <td>
+              {{ product.glassBreakage }}
+            </td>
+            <td>
+              {{ product.naturalHazard }}
+            </td>
+            <td>
+              {{ product.attemptedTheft }}
+            </td>
+            <td>
+              {{ product.firesAndExplosion }}
+            </td>
+            <td>
+              {{ product.numberOfUsers }}
+            </td>
+            <td>
+              <!-- routerLink="edithomeinsurance/{{product.id}}" -->
+              <button class="btn newprimary btn-sm" (click)="showModal(3, product)">
+                <i class="fas fa-edit action"></i>
+              </button>
+              <button class="btn newdanger btn-sm" (click)="deleteInsurance(product.id)">
+                <i class="fas fa-trash-alt action"></i>
+              </button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+      <p-toast />
+      <p-confirmDialog />
+    </div>
+    <ng-template #noHomeInsurance>
+      <div class="message">No home insurance records yet.</div>
+    </ng-template>
+  </div>
+</div>
+
+<!-- add  -->
+<div class="flex justify-content-center">
+  <p-dialog header="New Insurance Plan" [(visible)]="visible" [modal]="true"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '80%' ,padding:'-10px'}" [draggable]="false"
+    [resizable]="false">
+    <app-motorinsurance *ngIf="flag==1" style="margin: 0px; padding: 0px"></app-motorinsurance>
+    <app-healthinsurance *ngIf="flag==2" style="margin: 0px; padding: 0px"></app-healthinsurance>
+    <app-homeinsurance *ngIf="flag==3" style="margin: 0px; padding: 0px"></app-homeinsurance>
+  </p-dialog>
+</div>
+
+
+<!-- edit -->
+<div class=" flex justify-content-center">
+  <p-dialog header="Edit Insurance Plan" [(visible)]="VisibleEdit" [modal]="true"
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }" [style]="{ width: '80%', padding: '-10px' }"
+    [draggable]="false" [resizable]="false">
+    <app-editmotorinsurance *ngIf="showEditModal==1" [motorInsuranceData]="dataToSend"></app-editmotorinsurance>
+    <app-edit-health-insurance-plan *ngIf="showEditModal==2"
+      [healthInsuranceData]="dataToSend"></app-edit-health-insurance-plan>
+    <app-edithomeinsurance *ngIf="showEditModal==3" [homeInsuranceData]="dataToSend"></app-edithomeinsurance>
+  </p-dialog>
+</div>

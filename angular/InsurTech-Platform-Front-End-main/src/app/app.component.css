@@ -1,0 +1,6 @@
+body{
+    display: flex;
+}
+.home{
+    min-height: 100vh;
+}

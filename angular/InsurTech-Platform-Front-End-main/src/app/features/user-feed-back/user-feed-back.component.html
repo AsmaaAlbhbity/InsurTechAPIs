@@ -1,0 +1,56 @@
+<!-- Service section -->
+<section id="services">
+  <div class="about">
+    <h2>Our Services</h2>
+  </div>
+
+  <div class="services">
+    <ng-container *ngFor="let plan of insurancePlans; let i = index">
+      <div *ngIf="plan.status === 'Approved' || plan.status === 'Rejected'" class="service-card">
+        <div class="number">
+          <i *ngIf="plan.catId === 1" class="fas fa-heartbeat"></i>
+          <i *ngIf="plan.catId === 2" class="fas fa-home"></i>
+          <i *ngIf="plan.catId === 3" class="fas fa-car"></i>
+        </div>
+        <div class="service-text">
+          <h3>Category: {{ getCategoryName(plan.catId) }}</h3>
+          <h4 class="plan-name">Company: {{ plan.companyName }}</h4>
+          <h4 [ngClass]="{
+              'premium-plan': plan.insurancePlanLevel === 'Premium',
+              'standard-plan': plan.insurancePlanLevel === 'Standard',
+              'basic-plan': plan.insurancePlanLevel === 'Basic'
+            }">
+            {{ plan.insurancePlanLevel }}
+          </h4>
+          <p [ngClass]="{
+              'Approved': plan.status === 'Approved',
+              'Rejected': plan.status === 'Rejected'
+
+          }">Status: {{ plan.status }}</p>
+
+          <!-- Feedback Form (only for Approved status) -->
+          <ng-container *ngIf="plan.status === 'Approved'">
+            <form [formGroup]="feedbackForms[i]" (ngSubmit)="submitFeedback(plan.planId, i)" class="feedback-form">
+              <div class="form-group">
+                <ngb-rating [(rate)]="ratings[i]" [max]="5" [readonly]="false" formControlName="rating"
+                  id="rate"></ngb-rating>
+              </div>
+              <div class="form-group">
+                <p-floatLabel>
+                  <textarea id="float-input" pInputTextarea rows="5" cols="30" formControlName="comment"></textarea>
+                  <label for="float-input">Comment</label>
+                </p-floatLabel>
+              </div>
+              <p-button icon="pi pi-check" [rounded]="true" severity="success" type="submit"></p-button>
+            </form>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <p-toast></p-toast> <!-- Add Toast component here -->
+</section>
+
+<ng-template #noPlans>
+  <p>No insurance plans found.</p>
+</ng-template>

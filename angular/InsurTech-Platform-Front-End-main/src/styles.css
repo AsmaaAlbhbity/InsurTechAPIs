@@ -1,0 +1,113 @@
+/* Define the order of layers */
+@layer reset, bootstrap, angular-material, dashboard, primeng, custom;
+
+/* Import full Bootstrap CSS */
+@import "../node_modules/bootstrap/dist/css/bootstrap.min.css" layer(bootstrap);
+
+/* Import Angular Material CSS */
+@import "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css" layer(angular-material);
+
+/* Import dahsboard layout styles */
+@import "./assets/layout/styles/layout/layout.css" layer(dashboard);
+
+/* Import PrimeNG CSS */
+@import "../node_modules/primeng/resources/themes/aura-light-green/theme.css" layer(primeng);
+@import "../node_modules/primeng/resources/primeng.min.css" layer(primeng);
+
+/* Import PrimeFlex CSS */
+/* @import "../node_modules/primeflex/primeflex.css" layer(primeng); */
+
+/* Import Prime Icon */
+@import "../node_modules/primeicons/primeicons.css" layer(primeng);
+
+/* Import font awesome Don't delete plz */
+@import "../node_modules/@fortawesome/fontawesome-free/css/all.min.css";
+
+/* @import "primeicons/primeicons.css"; */
+
+
+/* Import Quill CSS */
+@import "../node_modules/quill/dist/quill.core.css" layer(primeng);
+@import "../node_modules/quill/dist/quill.snow.css" layer(primeng);
+
+
+/* PrimeNG */
+/* @import "assets/layout/styles/layout/layout.scss"; */
+
+
+/* Custom styles to resolve conflicts and override defaults */
+@layer custom {
+    
+    /* Chatbot css */
+    /* .bpFabContainer{
+        width: 100%;
+        height: 100%;
+    }
+    .bpMessageBlocksBubble{
+        word-break: break-word;
+    } */
+
+    /* Example of custom form border styles */
+    .form-border {
+        border: 3px solid #5d7571;
+        padding: 15px;
+        border-radius: 5px;
+    }
+
+    /* Example of custom button styles */
+    .btn-colors {
+        background-color: #0A6847;
+    }
+
+    /* Background color utility classes */
+    .bgcwhite {
+        background-color: #e9eeed !important;
+    }
+
+    .bgcgray {
+        background-color: #898b8b !important;
+    }
+
+    .bgcbrightgreen {
+        background-color: #24c9aa !important;
+    }
+
+    .bgcgreen {
+        background-color: #1c9c7c !important;
+    }
+
+    .bgcgreenygray {
+        background-color: #769494 !important;
+    }
+
+    .bgcmainbg {
+        background-color: #e4f8f4 !important;
+    }
+
+    .bgcmaincontainer {
+        background-color: #f3fdfb !important;
+    }
+
+    .bgcdarkgreen {
+        background-color: #001e18 !important;
+    }
+
+    /* General body and HTML styles */
+    /* html, body {
+        height: 100%;
+    } */
+
+    body {
+        margin: 0;
+        font-family: Roboto, "Helvetica Neue", sans-serif;
+    }
+
+    /* Specific PrimeNG button adjustments */
+    .my-custom-prime-button .p-button {
+        border-radius: 1rem !important;
+        background-color: #28a745 !important;
+        color: white !important;
+        padding: 0.5rem 1rem !important;
+    }
+}
+

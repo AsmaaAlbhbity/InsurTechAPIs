@@ -1,0 +1,25 @@
+<app-header/>
+<section class="dark">
+
+
+	<h1 class="h1 text-center" id="pageHeaderTitle">Articles</h1>
+	@for (item of articles; track $index) {
+	<div class="container py-4">
+		
+		
+			<article class="postcard dark yellow">
+				<a class="postcard__img_link">
+					<img style="height: 150px;" class="postcard__img" src={{item.articleImg}} alt="Image Title" />
+				</a>
+				<div class="postcard__text">
+					<h1 class="postcard__title yellow text-white">{{item.title}}</h1>
+					<div class="postcard__preview-txt" [innerHTML]="item.content">
+					</div>
+				</div>
+			</article>
+
+		
+	</div>
+}
+</section>
+

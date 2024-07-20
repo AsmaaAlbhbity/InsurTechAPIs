@@ -266,8 +266,7 @@ namespace InsurTech.Repository.Data.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "4d5a70ac-0bda-4b9a-b511-d529a92dac52",
-
+                            ConcurrencyStamp = "7fad3e8c-8e2a-4604-95e3-212c3eb6bfc3",
                             Email = "asmaa_ash@gmail.com",
                             EmailConfirmed = true,
                             IsApprove = 1,
@@ -276,11 +275,10 @@ namespace InsurTech.Repository.Data.Migrations
                             Name = "Asmaa Ashraf",
                             NormalizedEmail = "ASMAA_ASH@GMAIL.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIVS4LkswPwq8+aOBZKRPRkJdmdtOqXVSxPQwiAieOIlFyHF4HG2OQWeqAYTI05HWA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECPqNboh2RZfZta3BuLYp+zwtM/malwJoF3/9IgxR5OOS6mr89hzpbq8hkGUnNpQiQ==",
                             PhoneNumber = "01211236779",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c6aaa0a8-8848-42ca-a816-2d95f089c50e",
-
+                            SecurityStamp = "5f84a382-f3ba-460a-a837-441ddd90ceb0",
                             TwoFactorEnabled = false,
                             UserName = "Admin",
                             UserType = 2
@@ -364,6 +362,17 @@ namespace InsurTech.Repository.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Options")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Placeholder")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Type")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

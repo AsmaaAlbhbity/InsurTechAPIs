@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using InsurTech.Core.Entities;
+using AutoMapper;
 
 namespace InsurTech.APIs.DTOs.Question
 {
@@ -8,6 +9,8 @@ namespace InsurTech.APIs.DTOs.Question
         {
             CreateMap<Core.Entities.Question, QuestionsDTO>();
             CreateMap<QuestionsDTO, Core.Entities.Question>();
+            CreateMap<CreateQuestionInput, Core.Entities.Question>();
+
         }
     }
 }

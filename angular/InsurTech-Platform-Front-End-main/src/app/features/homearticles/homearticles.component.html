@@ -1,0 +1,21 @@
+<h1 class="heading"> <span> Articals</span></h1>
+
+<div class="container">
+  @for (item of limitedArticles; track $index) {
+    <div class="card">
+      <div class="card__header">
+        <img height="300px" src={{item.articleImg}} alt="card__image" class="card__image" width="600">
+      </div>
+      <div class="card__body">
+        <span class="tag tag-blue">Technology</span>
+        <h4>{{item.title}}</h4>
+        <p [innerHTML]="truncateContent(item.content)"></p>
+      </div>
+      <div class="card__footer">
+        <a [routerLink]="['/allarticles']" class="show-more">Show More</a>
+      </div>
+    </div>
+  }
+   
+  
+  </div>

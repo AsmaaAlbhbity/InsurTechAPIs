@@ -1,0 +1,185 @@
+<div class="container-xl px-4 mt-4">
+  <hr class="mt-0 mb-4" />
+  <div class="row">
+    <div class="col-xl-4">
+      <div class="card mb-4 mb-xl-0">
+        <div class="card-header fs-5 text-success">Profile Picture</div>
+        <div class="card-body text-center">
+          <!-- 
+            add camera icon to the image to indicate that the user can upload a new image
+            show on hover
+          -->
+          <!-- <div class="upload-input">
+            <input
+              type="file"
+              class="file-input"
+              (change)="onFileSelected($event)"
+            />
+            <i class="fas fa-camera"></i>
+          </div> -->
+          <!-- 
+          *{
+  "id": "19ec8e92-e6a7-49af-90ef-81c248db08af",
+  "name": "sdffdsa",
+  "userName": "sadfasdfasdfasf",
+  "email": "moh.ash5ggfffff918@gmail.com",
+  "nationalId": "42341234123421",
+  "birthDate": "22/07/1999",
+  "phoneNumber": "01211236779",
+  "image": "http://res.cloudinary.com/dtfziggtc/image/upload/v1720370353/bensi0g0bf4wjx0615qv.jpg"
+}
+ */
+          -->
+
+          @if(imageSrc){
+          <img
+            class="img-account-profile rounded-circle mb-2 w-50"
+            [src]="imageSrc"
+            alt="avatar"
+          />
+          }@else{
+          <img
+            class="img-account-profile rounded-circle mb-2 w-50"
+            [src]="
+              customerData?.image ||
+              'http://bootdey.com/img/Content/avatar/avatar1.png'
+            "
+            alt="avatar"
+          />
+          }
+          <div class="small font-italic text-muted mb-4">
+            JPG or PNG no larger than 5 MB
+          </div>
+          <label class="upload-btn">
+            <input
+              type="file"
+              class="file-input"
+              (change)="onFileSelected($event)"
+            />
+            <i class="fas fa-camera"></i> Upload new image
+          </label>
+          @if(selectedFile){
+          <button
+            class=" upload-btn mt-2 mx-2"
+            (click)="onUpload()"
+            [disabled]="isLoading"
+          >
+            Save changes
+            <i class="fas fa-check ms-2"></i>
+          </button>
+          } @if(isLoading){
+          <div class="spinner-border text-dark mt-2" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+          }
+
+          <div *ngIf="uploadMessage as message" class="upload-message mt-2">
+            {{ message }}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-xl-8">
+      <div class="card mb-4">
+        <div class="card-header fs-5 text-success">Account Details</div>
+        <div class="card-body">
+          <form>
+            <div class="mb-3">
+              <label class="small  mb-1" for="inputUsername">Username</label>
+              <input
+                class="form-control"
+                id="inputUsername"
+                type="text"
+                placeholder="Enter your username"
+                [value]="customerData?.userName"
+              />
+            </div>
+            <div class="row gx-3 mb-3">
+              <div class="col-md-6">
+                <label class="small mb-1" for="inputFirstName"
+                  >First name</label
+                >
+                <input
+                  class="form-control"
+                  id="inputFirstName"
+                  type="text"
+                  placeholder="Enter your first name"
+                  [value]="customerData?.name.split(' ')[0]"
+                />
+              </div>
+              <div class="col-md-6">
+                <label class="small mb-1" for="inputLastName">Last name</label>
+                <input
+                  class="form-control"
+                  id="inputLastName"
+                  type="text"
+                  placeholder="Enter your last name"
+                  [value]="customerData?.name.split(' ')[1] || ''"
+                />
+              </div>
+            </div>
+            <!-- <div class="row gx-3 mb-3">
+              <div class="col-md-6">
+                <label class="small mb-1" for="inputOrgName"
+                  >Organization name</label
+                >
+                <input
+                  class="form-control"
+                  id="inputOrgName"
+                  type="text"
+                  placeholder="Enter your organization name"
+                />
+              </div>
+              <div class="col-md-6">
+                <label class="small mb-1" for="inputLocation">Location</label>
+                <input
+                  class="form-control"
+                  id="inputLocation"
+                  type="text"
+                  placeholder="Enter your location"
+                  [value]="customerData?.location"
+                />
+              </div>
+            </div> -->
+            <div class="mb-3">
+              <label class="small mb-1" for="inputEmailAddress"
+                >Email address</label
+              >
+              <input
+                class="form-control"
+                id="inputEmailAddress"
+                type="email"
+                placeholder="Enter your email address"
+                [value]="customerData?.email"
+              />
+            </div>
+            <div class="row gx-3 mb-3">
+              <div class="col-md-6">
+                <label class="small mb-1" for="inputPhone">Phone number</label>
+                <input
+                  class="form-control"
+                  id="inputPhone"
+                  type="tel"
+                  placeholder="Enter your phone number"
+                  [value]="customerData?.phoneNumber"
+                />
+              </div>
+              <div class="col-md-6">
+                <label class="small mb-1" for="inputBirthday">Birthday</label>
+                <input
+                  class="form-control"
+                  id="inputBirthday"
+                  type="date"
+                  name="birthday"
+                  placeholder="Enter your birthday"
+                  [value]="customerData?.birthDate"
+                />
+              </div>
+            </div>
+            <button class="btn upload-btn" type="button">Save changes</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

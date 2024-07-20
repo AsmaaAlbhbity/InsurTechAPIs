@@ -1,0 +1,60 @@
+<div class="container" id="page-wrapper">
+      <div class="checkout checkout-wrapper">
+        <div class="flex-box gap-120">
+          <div class="flex-basis-50 pb-60">
+            <div class="payment-wrapper">
+              <h3>How would you like to pay?</h3>
+              <div class="cards-wrapper">
+                <div class="checkout-card">
+                  <button class="card-btn selected-btn">
+                    <img src="/static/media/full_amount.ef05f9fa83ebc6b9eaf37f4fd0411080.svg" alt="cardIcon" class="">
+                    Full payment
+                  </button>
+                </div>
+                <div class="checkout-card">
+                  <button class="card-btn">
+                    <img src="/static/media/installment.fbd2161003ac85bfd1472d3db67665a5.svg" alt="cardIcon" class="">
+                    Instalments
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="payment-wrapper">
+              <h3>Available payment methods</h3>
+              <div class="cards-wrapper">
+                <div class="checkout-card">
+                  <button class="card-btn">
+                    <img src="https://dr9wsh0kbe2fq.cloudfront.net/media/psp/icon_4_1684418870.png" alt="cardIcon" class="">
+                    Mobile Wallet
+                  </button>
+                </div>
+                <div class="checkout-card">
+                  <button class="card-btn selected-btn">
+                    <img src="https://dr9wsh0kbe2fq.cloudfront.net/media/psp/icon_5_1684418863.png" alt="cardIcon" class="">
+                    Card Online
+                  </button>
+                </div>
+                <div class="checkout-card">
+                  <button class="card-btn">
+                    <img src="https://dr9wsh0kbe2fq.cloudfront.net/media/psp/icon_6_1684418856.png" alt="cardIcon" class="">
+                    Aman/Masary
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex-basis-35">
+            <div class="policy-summary-card">
+              <p class="body-16 mb-0">Almost there</p>
+              <p class="policy-name subtitle dark-black">
+                Buy <span>{{ plan?.level == 0 ? 'Basic' : plan?.level == 1 ? 'Standard' : 'Premium' }}</span> policy
+                from <span>{{ plan?.category }}</span> for EGP {{ plan?.yearlyCoverage }}
+              </p>
+              <div style="height: 48px;"></div>
+              <button class="active-btn" type="submit" (click)="proceedToPayment()">Proceed to Payment</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    

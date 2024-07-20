@@ -1,0 +1,185 @@
+.footer {
+    background-color:#10B981 ;
+    padding-top: 20px;
+    position: relative;
+    overflow: hidden;
+    color: rgb(4, 37, 33);
+    border-radius: 50px;
+    padding: 20px;
+    
+}
+.footer__logo{
+    display: flex;
+    align-items: center;
+    
+}
+.brand-name{
+    margin-left: 10px; /* Adjust margin as needed */
+    font-size: 30px; /* Adjust font size as needed */
+    font-weight: bold; /* Adjust font weight as needed */
+}
+
+.footer__logo a {
+    margin-top: 60px;
+    font-size: 27px;
+    font-weight: 500;
+    color: var(--brand-color);
+    font-family: "Nova Round", cursive;
+}
+
+.footer__logo img {
+    width: auto;
+    height: 60px;
+    
+}
+
+.footer__tagline {
+    margin-top: 10px;
+    display: block;
+    font-size: 14px;
+    line-height: 24px;
+    color: #4e5d78;
+    margin-bottom: 0;
+}
+.footer__social {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+    .footer__social a {
+        margin-top: 20px;
+        margin-right: 20px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        width: 20px;
+        height: 20px;
+        position: relative;
+    }
+
+        .footer__social a svg {
+            width: 100%;
+            height: auto;
+            fill: #4e5d78;
+            transition: fill 0.5s ease;
+        }
+
+        .footer__social a:last-child {
+            margin-right: 0;
+        }
+
+        .footer__social a:hover svg {
+            fill: #189cf4;
+        }
+
+.footer__content {
+    position: relative;
+    margin-top: 20px;
+    padding: 0 20px 20px;
+    background: linear-gradient(1turn, #f1f6fd 30%, #edf1f7);
+    box-shadow: 3px 3px 9px rgba(164, 164, 186, 0.2);
+    border: 1px solid #fff;
+    border-bottom: none;
+    border-radius: 20px 20px 0 0;
+}
+
+.footer__copyright {
+    display: block; 
+    font-size: 14px;
+    color: #4e5d78;
+    margin-top: 20px;
+    font-family: "Nunito", sans-serif;
+    font-weight: 400;
+}
+
+    .footer__copyright a {
+        color: #4e5d78;
+    }
+
+        .footer__copyright a:hover {
+            color: #189cf4;
+        }
+
+.footer__title {
+    display: block;
+    margin-top: 30px;
+    font-size: 16px;
+    color: #33334f;
+    font-family: "Nunito", sans-serif;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.footer__nav {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+    .footer__nav a {
+        font-size: 14px;
+        line-height: 24px;
+        margin-bottom: 12px;
+        color: #4e5d78;
+        font-family: "Nunito", sans-serif;
+        font-weight: 400;
+    }
+
+        .footer__nav a:last-child {
+            margin-bottom: 0;
+        }
+
+        .footer__nav a:hover {
+            color: white;
+        }
+
+@media (min-width: 768px) {
+    .footer {
+        padding-top: 10px;
+    }
+
+    .footer__content {
+        margin-top: 20px;
+        padding: 15px 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    .footer__logo {
+        margin-top: 15px;
+    }
+
+    .footer__title {
+        margin-top: 25px;
+    }
+
+    .footer__social {
+        width: auto;
+        order: 2;
+    }
+
+        .footer__social a {
+            margin-top: 0;
+        }
+
+    .footer__copyright {
+        margin-top: 0;
+        order: 1;
+    }
+}
+
+@media (min-width: 1200px) {
+    .footer__social {
+        display: inline-flex;
+        width: auto;
+    }
+}

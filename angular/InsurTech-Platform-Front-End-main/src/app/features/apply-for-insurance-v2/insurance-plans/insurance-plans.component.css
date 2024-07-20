@@ -1,0 +1,23 @@
+.request-call-card {
+      align-items: center;
+      background-color: #f8f8f8;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      justify-content: center;
+      padding: 20px
+  }
+  
+  .request-call-card p {
+      margin: 0;
+      text-align: center
+  }
+  
+  .request-call-card .btn-call {
+      background-color: #24aa9d;
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      padding: 10px 20px
+  }

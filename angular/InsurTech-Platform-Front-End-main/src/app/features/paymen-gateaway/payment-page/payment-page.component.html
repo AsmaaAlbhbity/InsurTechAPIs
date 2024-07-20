@@ -1,0 +1,132 @@
+<app-header/>
+<div class="container bg-light d-md-flex align-items-center">
+  <div class="card box1 shadow-sm p-md-5 ">
+    <div class="fw-bolder mb-4">
+      <span class=""></span><span class="ps-1">{{ plan?.quotation || '0.00' }} LE</span>
+    </div>
+    <div class="d-flex flex-column">
+      <div class="d-flex align-items-center justify-content-between text">
+        <span>Commission</span>
+        <span ><span class="ps-1">1.99 LE</span></span>
+      </div>
+      <div class="d-flex align-items-center justify-content-between text mb-4">
+        <span>Total</span>
+        <span class=""><span class="ps-1">{{ plan?.quotation + 1.99 }} LE</span></span>
+      </div>
+      <div class="border-bottom mb-4"></div>
+      <div class="d-flex flex-column mb-4">
+        <span class="fa-regular fa-file text"><span class="ps-1 fs-5 fw-bold">Company: {{ plan?.company }}</span></span>
+        <!-- <span class="ps-3">{{ plan?.company }}</span> -->
+      </div>
+      <div class="d-flex flex-column mb-4">
+        <span class="fa-regular fa-file text"><span class="ps-1 fs-5 fw-bold">Level: {{ plan?.level==1 ? 'Basic' : plan?.level==2 ? 'Standard' : 'Premium' }}</span></span>
+        <!-- <span class="ps-3">{{ plan?.level==1 ? 'Basic' : plan?.level==2 ? 'Standard' : 'Premium' }}</span> -->
+      </div>
+      <div class="d-flex flex-column mb-4">
+        <span class="fa-regular fa-file text"><span class="ps-1 fs-5 fw-bold">Category: {{ plan?.category }}</span></span>
+        <!-- <span class="ps-3">{{ plan?.category }}</span> -->
+      </div>
+      <!-- <div class="d-flex flex-column mb-3">
+        <span class="fa-regular fa-calendar text"><span class="ps-2">Next payment:</span></span>
+        <span class="ps-3">22 July, 2024</span>
+      </div> -->
+      <div class="d-flex align-items-center justify-content-between text mb-3">
+        <div class="d-flex flex-column text">
+          <span class="fs-5 fw-bold">Customer Support</span> <span class="fs-5 fw-bold">online chat 24/7</span>
+        </div>
+        <div class="btn btn-primary rounded-circle">
+          <span class="fa-solid fa-comment-dots"></span>
+        </div>
+      </div>
+      <div class="request-call-card">
+        <!-- <button class="btn-call" (click)="createRequest()">Just make a Request </button> -->
+        <!-- <p>One of our insurance experts will contact you within 1 working day</p> -->
+      </div>
+    </div>
+  </div>
+
+  <div class="card box2 shadow-sm">
+    <div class="d-flex align-items-center justify-content-between p-md-5 p-4">
+      <span class="h5 fw-bold m-0">Payment methods</span>
+      <!-- <div class="btn btn-primary bar"><span class="fa-solid fa-bars"></span></div> -->
+    </div>
+    <ul class="nav nav-tabs mb-3 px-md-4 px-2">
+      <li class="nav-item">
+        <a class="nav-link px-2 active" aria-current="page" href="#">Credit Card</a>
+      </li>
+    </ul>
+    <div class="px-md-5 px-4 mb-4 d-flex align-items-center ">
+      <!-- <div class="btn btn-success me-4" (click)="saveCard()"><span class="fa-solid fa-plus"></span></div>
+      <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+        <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked />
+        <label class="btn btn-outline-primary" for="btnradio1"><span class="pe-1">+</span>{{ savedCardLastFour }}</label>
+      </div> -->
+      <div><img style="width: 100px; margin-top: 5px;" src="https://habrastorage.org/getpro/moikrug/uploads/company/100/004/791/5/logo/medium_e4ea4b1ee86c835208e8d84fd7b092f1.png" alt=""></div>
+    </div>
+    <form [formGroup]="paymentForm" (ngSubmit)="onSubmit()">
+      <div class="row">
+        <div class="col-12">
+          <div class="d-flex flex-column px-md-5 px-4 mb-4">
+            <span>Credit Card</span>
+            <div class="inputWithIcon">
+              <input class="form-control" formControlName="cardNumber" type="text" creditCardMask placeholder="XXXX XXXX XXXX XXXX" maxlength="19" />
+              <span class="">
+                <img src="https://www.freepnglogos.com/uploads/mastercard-png/mastercard-logo-logok-15.png" alt="" />
+              </span>
+            </div>
+            @if(paymentForm.get('cardNumber')?.invalid && (paymentForm.get('cardNumber')?.dirty || paymentForm.get('cardNumber')?.touched)){
+              <div class="text-danger">
+                Card number is required and should be 16 digits.
+              </div>
+            }
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="d-flex flex-column ps-md-5 px-md-0 px-4 mb-4">
+            <span>Expiration<span class="ps-1">Date</span></span>
+            <div class="inputWithIcon">
+              <input type="text" class="form-control" formControlName="expirationDate" expirationDateMask placeholder="MM/YY" maxlength="5" />
+              <span class="fa-solid fa-calendar-days"></span>
+            </div>
+            @if(paymentForm.get('expirationDate')?.invalid && (paymentForm.get('expirationDate')?.dirty || paymentForm.get('expirationDate')?.touched)){
+              <div class="text-danger">
+                Expiration date is required.
+              </div>
+            }
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="d-flex flex-column pe-md-5 px-md-0 px-4 mb-4">
+            <span>Code CVV</span>
+            <div class="inputWithIcon">
+              <input type="password" class="form-control" formControlName="cvv" cvvMask maxlength="3" placeholder="XXX" />
+              <span class="fa-solid fa-lock"></span>
+            </div>
+            @if(paymentForm.get('cvv')?.invalid && (paymentForm.get('cvv')?.dirty || paymentForm.get('cvv')?.touched)){
+              <div class="text-danger">
+                CVV is required and should be 3 digits.
+              </div>
+            }
+          </div>
+        </div>
+        <div class="col-12">
+          <div class="d-flex flex-column px-md-5 px-4 mb-4">
+            <span>Name</span>
+            <div class="inputWithIcon">
+              <input class="form-control text-uppercase" formControlName="name" type="text" />
+              <span class="fa-regular fa-user"></span>
+            </div>
+            @if(paymentForm.get('name')?.invalid && (paymentForm.get('name')?.dirty || paymentForm.get('name')?.touched)){
+              <div class="text-danger">
+                Name is required.
+              </div>
+            }
+          </div>
+        </div>
+        <div class="col-12 px-md-5 px-4 mt-3">
+          <button type="submit" class="btn btn-primary w-100">Pay {{ plan?.quotation + 1.99 + " LE" || '3000LE' }}</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

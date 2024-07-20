@@ -1,0 +1,250 @@
+html {
+    font-size: 16px;
+}
+.container
+{
+    margin: auto;
+    width: 90vw !important;
+    border-radius: 20px;
+}
+.holder {
+    margin-top: 30px;
+}
+
+.insurance-item {
+    cursor: pointer;
+}
+
+.insurance-item i {
+    font-size: 2rem; /* Adjust icon size */
+}
+
+.insurance-item h2 {
+    font-size: 1.5rem; /* Base font size for h2 */
+}
+
+/* Responsive font size for smaller screens */
+@media (max-width: 1200px) {
+    .insurance-item i {
+        font-size: 1.75rem;
+    }
+
+    .insurance-item h2 {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .insurance-item i {
+        font-size: 1.5rem;
+    }
+
+    .insurance-item h2 {
+        font-size: 1.125rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .insurance-item i {
+        font-size: 1.25rem;
+    }
+
+    .insurance-item h2 {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .insurance-item i {
+        font-size: 1rem;
+    }
+
+    .insurance-item h2 {
+        font-size: 0.875rem;
+    }
+}
+
+
+
+#Motor, #health, #home {
+    width: 50px;
+    height: 50px;
+    border-bottom: 2px solid #2acaac;
+    border-radius: 28px;
+    margin-left: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background-color: transparent; 
+    cursor: pointer; 
+}
+
+i {
+    color: #2acaac;
+    font-size: 2rem; 
+}
+
+h2 {
+    color: #4d413c;
+}
+
+hr {
+    height: 3px;
+    background-color: #4d413c;
+}
+tr:hover {
+    background-color: #184b40 !important; 
+    color: white;
+}
+tr{
+    border-bottom:1px solid;
+    font-size: 1.1rem;
+}
+th{
+
+    font-size: 1rem;
+    padding:0.5rem 0.5rem;
+    border-bottom:2px solid #2acaac;
+    background-color: white;
+}
+.rounded {
+    margin-top: 23px;
+}
+.head
+{
+    border-bottom:2px solid #2acaac;
+}
+.action
+{
+    font-size: 1rem;
+}
+.fa-trash-alt
+{
+    color:red;
+}
+.fa-edit 
+{
+    color:#2acaac;
+}
+.newprimary
+{
+    border: 1px solid #2acaac;
+    border-radius: 50%;
+
+}
+.newdanger
+{
+    border: 1px solid #ff8e8e;
+    border-radius: 50%;
+}
+.message
+{
+    padding-left: 40%;
+    color: #366836;
+    font-size: 1.3rem;
+
+}
+
+.action{
+     border-radius: 84px;
+    font-size:1rem;
+ 
+}
+
+.action2
+{
+    border-radius: 50%;
+    height: 28px;
+    width: 28px;
+}
+.basic-box {
+    background-color: #a9dfeb;
+    padding: 10px; 
+    display: inline-block;
+    border-radius: 10px;
+
+}
+  
+  .standard-box {
+    background-color: lightgreen;
+    padding: 10px; 
+    display: inline-block; 
+    border-radius: 10px;
+
+  }
+  
+  .premium-box {
+    background-color: gold;
+    padding: 10px;
+    display: inline-block; 
+    border-radius: 10px;
+  }
+  
+  .unknown-box {
+    background-color: lightgray;
+    padding: 10px; 
+    display: inline-block; 
+  }
+
+  /* CSS for responsive tables */
+@media only screen and (max-width: 1024px) {
+    p-table {
+        font-size: 0.9rem;
+    }
+
+    p-table thead th, p-table tbody td {
+        padding: 0.5rem;
+    }
+
+    p-table thead {
+        display: none;
+    }
+
+    p-table tbody td {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    p-table tbody tr {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid #ddd;
+    }
+
+    p-table tbody td::before {
+        content: attr(p-sortableColumn);
+        font-weight: bold;
+        display: block;
+        margin-bottom: 0.3rem;
+    }
+
+    .flex {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    p-table {
+        font-size: 0.8rem;
+    }
+
+    p-table tbody td::before {
+        font-size: 0.9rem;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    p-table {
+        font-size: 0.7rem;
+    }
+
+    p-table tbody td::before {
+        font-size: 0.8rem;
+    }
+}
+
+  

@@ -1,0 +1,72 @@
+/* Custom table styles */
+:host ::ng-deep .p-datatable {
+  font-size: 14px;
+  background-color: #f9f9f9;
+}
+
+:host ::ng-deep .p-datatable-header {
+  background-color: #ffffff;
+  color: rgb(58, 216, 40);
+  font-weight: bold;
+  text-align: center;
+}
+
+:host ::ng-deep .p-datatable-thead > tr > th {
+  background-color: #34d354;
+  color: white;
+}
+/* Custom styles for the header title */
+#HeaderTitle {
+  text-align: center;
+  background-color: #78e493;
+  color: white;
+  padding: 10px 0;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  width: 70%;
+  justify-content: center;
+  margin: 0 auto 20px auto;
+}
+
+#HeaderTitle h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
+  color: rgb(255, 255, 255);
+}
+
+:host ::ng-deep .p-datatable-tbody > tr > td {
+  padding: 10px;
+}
+
+/* Add hover effect for table rows with light green color */
+:host ::ng-deep .p-datatable-tbody > tr:hover {
+  background-color: #e0f7ea; /* Light green color */
+  cursor: pointer;
+}
+
+:host ::ng-deep .p-datatable-tbody > tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Custom tag styles */
+:host ::ng-deep .p-tag-success {
+  background-color: green;
+  color: white;
+}
+
+:host ::ng-deep .p-tag-warning {
+  background-color: gold;
+  color: black;
+}
+
+:host ::ng-deep .p-tag-info {
+  background-color: #1dc55a;
+  color: white;
+}
+
+/* Custom input text styles */
+:host ::ng-deep .p-inputtext {
+  border: 1px solid #1dc55a;
+  border-radius: 4px;
+}

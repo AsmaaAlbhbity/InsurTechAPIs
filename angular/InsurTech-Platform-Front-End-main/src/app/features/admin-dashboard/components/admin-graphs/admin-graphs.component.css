@@ -1,0 +1,21 @@
+/* Styles for responsive charts */
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.card {
+    flex: 1 1 30%;
+    margin: 10px;
+    box-sizing: border-box;
+}
+
+/* Adjust the width and height for smaller screens */
+@media (max-width: 768px) {
+    .card {
+        flex: 1 1 100%;
+        height: auto;
+    }
+}

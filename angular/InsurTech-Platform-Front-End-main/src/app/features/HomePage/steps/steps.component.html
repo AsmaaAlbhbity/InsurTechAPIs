@@ -1,0 +1,105 @@
+<div class="about" id="steps">
+  <h1 class="heading"> <span>Steps</span> </h1>
+</div>
+<div class="card-wrapper">
+  <div class="about">
+    <h2>Buy Insurance in 3 Steps</h2>
+    <h2 style="color:#10b981">Simple, Fast & Transparent
+    </h2>
+  </div>
+    <div class="card">
+      <p-stepper [(activeStep)]="active">
+        <p-stepperPanel>
+          <ng-template pTemplate="header" let-onClick="onClick" let-index="index">
+            <button class="step-header" (click)="onClick.emit()">
+              <span
+                class="step-icon"
+                [ngClass]="{
+                  'active-step': index === active,
+                  'inactive-step': index !== active
+                }"
+              >
+                <i class="pi pi-user"></i>
+              </span>
+            </button>
+          </ng-template>
+          <ng-template pTemplate="content" let-nextCallback="nextCallback">
+            <div class="flex flex-column gap-2 mx-auto" style="min-height: 16rem; max-width: 20rem">
+              <div class="text-center mt-3 mb-3 text-xl font-semibold">Create your account</div>
+              <img src="../../../../assets/images/Insurance-amico.png" class="ImgStyle">
+            </div>
+            <div class="flex pt-4 justify-content-between">
+              
+              <div class="button-spacing">
+                <p-button (onClick)="nextCallback.emit()" label="Next" icon="pi pi-arrow-right" iconPos="right" styleClass="p-button-success"></p-button>
+                <p-button *ngIf="!isFirstStep()" label="Back" icon="pi pi-arrow-left" styleClass="p-button-secondary"></p-button>
+              </div>
+             
+            </div>
+          </ng-template>
+        </p-stepperPanel>
+        <p-stepperPanel>
+          <ng-template pTemplate="header" let-onClick="onClick" let-index="index">
+            <button class="step-header" (click)="onClick.emit()">
+              <span
+                class="step-icon"
+                [ngClass]="{
+                  'active-step': index === active,
+                  'inactive-step': index !== active
+                }"
+              >
+                <i class="pi pi-star"></i>
+              </span>
+            </button>
+          </ng-template>
+          <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback">
+            <div class="flex flex-column gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
+
+              <div class="flex flex-wrap justify-content-center gap-3" style="margin: 25px;">
+                <!-- Use p-toggleButton for each option -->
+                <p-toggleButton [(ngModel)]="option1" onLabel="Category" offLabel="Category" styleClass="p-button-success"style="margin: 30px;" ></p-toggleButton>
+                <p-toggleButton [(ngModel)]="option2" onLabel="Price" offLabel="Price" styleClass="p-button-success"></p-toggleButton>
+
+                <img src="../../../../../assets/images/Select-amico.png" class="ImgStyle">
+              </div>
+            </div>
+            <div class="flex pt-4 justify-content-between">
+             
+              <div class="button-spacing">
+                <p-button *ngIf="!isFirstStep()" (onClick)="prevCallback.emit()" label="Back" icon="pi pi-arrow-left" styleClass="p-button-secondary"></p-button>
+                <p-button (onClick)="nextCallback.emit()" label="Next" icon="pi pi-arrow-right" iconPos="right" styleClass="p-button-success"></p-button>
+              </div>
+             
+            </div>
+          </ng-template>
+        </p-stepperPanel>
+        <p-stepperPanel>
+          <ng-template pTemplate="header" let-onClick="onClick" let-index="index">
+            <button class="step-header" (click)="onClick.emit()">
+              <span
+                class="step-icon"
+                [ngClass]="{
+                  'active-step': index === active,
+                  'inactive-step': index !== active
+                }"
+              >
+                <i class="pi pi-id-card"></i>
+              </span>
+            </button>
+          </ng-template>
+          <ng-template pTemplate="content" let-prevCallback="prevCallback">
+            <div class="flex flex-column gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
+              <div class="text-center mt-3 mb-3 text-xl font-semibold">Waiting for Company Approval</div>
+              <div class="text-center">
+                <img src="../../../../../assets/images/Writing a letter-amico.png" class="ImgStyle">
+              </div>
+            </div>
+            <div class="flex pt-4 justify-content-start">
+              <p-button (onClick)="prevCallback.emit()" label="Back" icon="pi pi-arrow-left" styleClass="p-button-secondary"></p-button>
+            </div>
+          </ng-template>
+        </p-stepperPanel>
+      </p-stepper>
+    </div>
+  </div>
+  

@@ -1,0 +1,173 @@
+<div class="pricing-card">
+  <div class="parent-card">
+    <div class="card">
+      <!-- Plan Title and Basic Details -->
+      <div class="title">
+        <h2>{{ plan?.category || 'Insurance Plan' }}</h2>
+      </div>
+      <div class="title">
+        <h3>{{ plan?.level == 0 ? 'Basic' : plan?.level == 1 ? 'Standard' : 'Premium' }}</h3>
+      </div>
+      <div class="alert badge-color {{ badgeColor }} alert-dismissible fade show" role="alert">
+        <strong>Company:</strong> {{ plan?.company }}
+      </div>
+
+      
+      <div class="price">
+        <h5>EGP {{ plan?.yearlyCoverage }} <span>/year</span></h5>
+        <span>EGP {{ plan?.quotation }} /month</span>
+      </div>
+
+      <!-- Coverage Options -->
+      <div class="options">
+        @if(catId == 1) {
+          <!-- Health Plan Specific Fields -->
+          <li>
+            <p>Hospitalization and Surgery</p>
+            <h3>EGP {{ plan?.hospitalizationAndSurgery }}</h3>
+          </li>
+          <li>
+            <p>
+              Clinics Coverage
+              <i class="fa-solid fa-circle-question helpIcon"></i>
+            </p>
+            <h3>EGP {{ plan?.clinicsCoverage }}</h3>
+          </li>
+          <li>
+            <p>
+              Optical Coverage
+              <i class="fa-solid fa-circle-question helpIcon"></i>
+            </p>
+            <h3>EGP {{ plan?.opticalCoverage }}</h3>
+          </li>
+          <li>
+            <p>
+              Dental Coverage
+              <i class="fa-solid fa-circle-question helpIcon"></i>
+            </p>
+            <h3>EGP {{ plan?.dentalCoverage }}</h3>
+          </li>
+          @if (showMore) {
+            <!-- Additional Health Plan Fields -->
+            <li>
+              <p>
+                Fires and Explosions
+                <i class="fa-solid fa-circle-question helpIcon"></i>
+              </p>
+              <h3>EGP 12,000,000</h3>
+            </li>
+            <li>
+              <p>
+                Burglary or Attempted Theft
+                <i class="fa-solid fa-circle-question helpIcon"></i>
+              </p>
+              <h3>EGP 3,000,000</h3>
+            </li>
+            <li>
+              <p>
+                Water Damage
+                <i class="fa-solid fa-circle-question helpIcon"></i>
+              </p>
+              <h3>EGP 12,000,000</h3>
+            </li>
+            <li>
+              <p>
+                Contents Temporary Removal
+                <i class="fa-solid fa-circle-question helpIcon"></i>
+              </p>
+              <h3>EGP 300,000</h3>
+            </li>
+            <li>
+              <p>
+                Debris Removal
+                <i class="fa-solid fa-circle-question helpIcon"></i>
+              </p>
+              <h3>EGP 600,000</h3>
+            </li>
+            <li>
+              <p>
+                Professional Interior Designer Fees
+                <i class="fa-solid fa-circle-question helpIcon"></i>
+              </p>
+              <h3>EGP 400,000</h3>
+            </li>
+          }
+        }
+
+        @if(catId == 2) {
+          <!-- Home Plan Specific Fields -->
+          <li>
+            <p>Fires and Explosions</p>
+            <h3>EGP {{ plan?.firesAndExplosion }}</h3>
+          </li>
+          <li>
+            <p>
+              Burglary or Attempted Theft
+              <i class="fa-solid fa-circle-question helpIcon"></i>
+            </p>
+            <h3>EGP {{ plan?.attemptedTheft }}</h3>
+          </li>
+          <li>
+            <p>
+              Water Damage
+              <i class="fa-solid fa-circle-question helpIcon"></i>
+            </p>
+            <h3>EGP {{ plan?.waterDamage }}</h3>
+          </li>
+          @if (showMore) {
+            <!-- Additional Home Plan Fields -->
+            <li>
+              <p>
+                Natural Hazard
+                <i class="fa-solid fa-circle-question helpIcon"></i>
+              </p>
+              <h3>EGP {{ plan?.naturalHazard }}</h3>
+            </li>
+            <li>
+              <p>Glass Breakage</p>
+              <h3>EGP {{ plan?.glassBreakage }}</h3>
+            </li>
+          }
+        }
+
+        @if(catId == 3) {
+          <!-- Motor Plan Specific Fields -->
+          <li>
+            <p>Personal Accident</p>
+            <h3>EGP {{ plan?.personalAccident }}</h3>
+          </li>
+          <li>
+            <p>Theft</p>
+            <h3>EGP {{ plan?.theft }}</h3>
+          </li>
+          <li>
+            <p>Third Party Liability</p>
+            <h3>EGP {{ plan?.thirdPartyLiability }}</h3>
+          </li>
+          @if(showMore) {
+            <li>
+              <p>Own Damage</p>
+              <h3>EGP {{ plan?.ownDamage }}</h3>
+            </li>
+            <li>
+              <p>Legal Expenses</p>
+              <h3>EGP {{ plan?.legalExpenses }}</h3>
+            </li>
+          }
+        }
+
+        <!-- Toggle link -->
+        <li>
+          <h3 class="more" (click)="toggleMore()">
+            {{ showMore ? "See Less" : "See More" }}
+          </h3>
+        </li>
+      </div>
+
+      <!-- Action Button -->
+      <button class="btn w-100" (click)="createRequest()">Choose Insurance Plan</button>
+    </div>
+  </div>
+ 
+</div>
+

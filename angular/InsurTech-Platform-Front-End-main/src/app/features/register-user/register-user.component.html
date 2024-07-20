@@ -1,0 +1,142 @@
+<app-header></app-header>
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-lg">
+        <div class="card-body p-5">
+          <div class="text-center mb-4">
+            <img src="assets/images/logo.png" alt="Logo" class="logo mb-3">
+            <h1 class="h3 mb-3 font-weight-normal">Register</h1>
+          </div>
+          <p-toast></p-toast>
+          <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+            <!-- Name Field -->
+            <div class="form-group mb-3">
+              <label for="name">Name:</label>
+              <input id="name" type="text" pInputText formControlName="name" class="form-control" required
+                autocomplete="name">
+              <div *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched"
+                class="text-danger error-message">
+                Name is required.
+              </div>
+            </div>
+
+            <!-- Username Field -->
+            <div class="form-group mb-3">
+              <label for="userName">Username:</label>
+              <input id="userName" type="text" pInputText formControlName="userName" class="form-control" required
+                autocomplete="username">
+              <div *ngIf="registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched"
+                class="text-danger error-message">
+                <div *ngIf="registerForm.get('userName')?.errors?.['required']">
+                  Username is required.
+                </div>
+                <div *ngIf="registerForm.get('userName')?.errors?.['usernameTaken']">
+                  Username must be unique.
+                </div>
+                <div *ngIf="registerForm.get('userName')?.errors?.['invalidUsername']">
+                  Username must not contain special characters or spaces.
+                </div>
+              </div>
+            </div>
+
+
+            <!-- Email Address Field -->
+            <div class="form-group mb-3">
+              <label for="emailAddress">Email Address:</label>
+              <input id="emailAddress" type="email" pInputText formControlName="emailAddress" class="form-control"
+                required autocomplete="email">
+              <div *ngIf="registerForm.get('emailAddress')?.invalid && registerForm.get('emailAddress')?.touched"
+                class="text-danger error-message">
+                <div *ngIf="registerForm.get('emailAddress')?.errors?.['required']">
+                  Valid Email Address is required.
+                </div>
+                <div *ngIf="registerForm.get('emailAddress')?.errors?.['email']">
+                  Email Address is invalid.
+                </div>
+                <div *ngIf="registerForm.get('emailAddress')?.errors?.['emailTaken']">
+                  Email Address must be unique.
+                </div>
+              </div>
+            </div>
+
+            <!-- National ID Field -->
+            <div class="form-group mb-3">
+              <label for="nationalId">National ID:</label>
+              <p-inputMask id="nationalId" formControlName="nationalId" mask="99999999999999"
+                [ngStyle]="{ 'display': 'flex' }" required></p-inputMask>
+              <div *ngIf="registerForm.get('nationalId')?.invalid && registerForm.get('nationalId')?.touched"
+                class="text-danger error-message">
+                <div *ngIf="registerForm.get('nationalId')?.errors?.['required']">
+                  National ID is required.
+                </div>
+                <div *ngIf="registerForm.get('nationalId')?.errors?.['pattern']">
+                  National ID must be exactly 14 digits.
+                </div>
+                <div *ngIf="registerForm.get('nationalId')?.errors?.['nationalIdTaken']">
+                  National ID must be unique.
+                </div>
+              </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group mb-3">
+              <label for="password">Password:</label>
+              <p-password id="password" formControlName="password" [toggleMask]="true" [ngStyle]="{ 'display': 'flex' }"
+                required></p-password>
+              <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+                class="text-danger error-message">
+                <div *ngIf="registerForm.get('password')?.errors?.['required']">
+                  Password is required.
+                </div>
+                <div *ngIf="registerForm.get('password')?.errors?.['minlength']">
+                  Password must be at least 8 characters.
+                </div>
+                <div *ngIf="registerForm.get('password')?.errors?.['passwordStrength']">
+                  Password must contain an uppercase letter, a number, and a special character.
+                </div>
+              </div>
+            </div>
+
+            <!-- Birth Date Field -->
+            <div class="form-group mb-3">
+              <label for="birthDate">Birth Date:</label>
+              <p-calendar id="birthDate" formControlName="birthDate" [showIcon]="true" dateFormat="yy-mm-dd"
+                [ngStyle]="{ 'display': 'flex' }"></p-calendar>
+              <div *ngIf="registerForm.get('birthDate')?.invalid && registerForm.get('birthDate')?.touched"
+                class="text-danger error-message">
+                <div *ngIf="registerForm.get('birthDate')?.errors?.['required']">
+                  Birth Date is required.
+                </div>
+                <div *ngIf="registerForm.get('birthDate')?.errors?.['invalidBirthDate']">
+                  {{ registerForm.get('birthDate')?.errors?.['invalidBirthDate'] }}
+                </div>
+              </div>
+            </div>
+
+            <!-- Phone Number Field -->
+            <div class="form-group mb-3">
+              <label for="phoneNumber">Phone Number:</label>
+              <p-inputMask id="phoneNumber" formControlName="phoneNumber" mask="99999999999"
+                [ngStyle]="{ 'display': 'flex' }" required autocomplete="tel"></p-inputMask>
+              <div *ngIf="registerForm.get('phoneNumber')?.invalid && registerForm.get('phoneNumber')?.touched"
+                class="text-danger error-message">
+                <div *ngIf="registerForm.get('phoneNumber')?.errors?.['required']">
+                  Phone Number is required.
+                </div>
+                <div *ngIf="registerForm.get('phoneNumber')?.errors?.['pattern']">
+                  Phone Number must start with 011, 012, 010, or 015 and be exactly 11 digits.
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" pButton label="Register" class="p-button-success btn btn-success btn-block"
+              [disabled]="registerForm.invalid"></button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

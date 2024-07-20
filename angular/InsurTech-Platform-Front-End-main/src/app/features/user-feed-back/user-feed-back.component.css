@@ -1,0 +1,181 @@
+/* Service section */
+.about {
+  padding: 100px 0;
+  text-align: center;
+  width: 78%;
+  margin: 0 auto;
+}
+
+.about h2 {
+  font-size: 2.5em;
+}
+
+.services {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.services .service-card {
+  position: relative;
+  width: 350px;
+  padding: 40px;
+  background: #fff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  margin: 20px;
+  text-align: center;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.services .service-card::before {
+  content: "";
+  width: 50%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.2);
+  z-index: 2;
+  pointer-events: none; /* Ensure the overlay does not interfere with interactions */
+}
+
+.service-card .number {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  background: #7ae1dc;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  font-size: 40px;
+  font-weight: 700;
+}
+
+.service-card:nth-child(1) a,
+.service-card:nth-child(1) .number {
+  background: #82f8d1;
+}
+
+.service-card:nth-child(2) a,
+.service-card:nth-child(2) .number {
+  background: #33b98d;
+}
+
+.service-card:nth-child(3) a,
+.service-card:nth-child(3) .number {
+  background: #0d6447;
+}
+
+.service-card .service-text {
+  position: relative;
+}
+
+.service-text h3 {
+  margin: 20px 0;
+}
+
+.service-text h4 {
+  margin: 10px 0;
+}
+
+.service-text p {
+  margin: 5px 0;
+}
+
+.service-text a {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #000;
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+.feedback-form .form-group {
+  margin: 10px 0;
+}
+
+.service-card .ngb-rating .star {
+  font-size: 32px; /* Increase the size of the stars */
+  color: #ddd; /* Default color of the stars */
+  cursor: pointer; /* Make the stars clickable */
+  transition: color 0.2s; /* Smooth transition for color change */
+}
+
+.service-card .ngb-rating .star.filled,
+.service-card .ngb-rating .star:hover,
+.service-card .ngb-rating .star:hover ~ .star {
+  color: #ffca28; /* Gold color for filled or hovered stars */
+}
+.form-group {
+  color: #ffca28;
+  font-size: 20px;
+}
+.premium-plan {
+  color: #ffff;
+  background-color: gold;
+  padding: 8px 10px;
+  border-radius: 10px;
+  width: 70%;
+  margin: 0px auto !important;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.standard-plan {
+  color: #ffff;
+  background-color: green;
+  padding: 8px 10px;
+  border-radius: 10px;
+  width: 70%;
+  margin: 0px auto !important;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.basic-plan {
+  color: #ffff;
+  background-color: blue;
+  padding: 8px 10px;
+  border-radius: 10px;
+  width: 70%;
+  margin: 0px auto !important;
+  font-size: 20px;
+  font-weight: 700;
+}
+.Approved {
+  color: #04f043;
+  padding: 6px 8px;
+  border-radius: 10px;
+  width: 50%;
+  margin: 0px auto !important;
+  font-size: 15px;
+  font-weight: 700;
+  margin-top: 5px;
+}
+.Rejected {
+  color: #ff0000;
+  padding: 6px 8px;
+  border-radius: 10px;
+  width: 50%;
+  margin: 0px auto !important;
+  font-size: 15px;
+  font-weight: 700;
+  margin-top: 5px;
+}
+.Pending {
+  color: #0762ff;
+  padding: 6px 8px;
+  border-radius: 10px;
+  width: 50%;
+  margin: 0px auto !important;
+  font-size: 15px;
+  font-weight: 700;
+  margin-top: 5px;
+}

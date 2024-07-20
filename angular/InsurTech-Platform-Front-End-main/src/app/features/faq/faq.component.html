@@ -1,0 +1,42 @@
+<app-header/>
+<h3 >FREQUENTLY ASKED QUESTIONS</h3>
+<div class="center-container">
+    <div class="row justify-content-center">
+      <div class="col-md-12 custom-container">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="card" *ngIf="faqs.length > 0">
+          <div class="flex mb-3 gap-2 justify-content-end">
+            <p-button 
+              *ngFor="let faq of faqs; let i = index"
+              (click)="setActiveIndex(i)" 
+              rounded="true" 
+              [label]="(i + 1).toString()" 
+              [outlined]="activeIndex !== i"
+              styleClass="w-2rem h-2rem p-0">
+            </p-button>
+          </div>
+          <p-accordion [activeIndex]="activeIndex" (activeIndexChange)="setActiveIndex($event)">
+            <p-accordionTab *ngFor="let faq of faqs; let i = index" [header]="'Question ' + (i + 1)">
+              <div>{{ faq.body }}</div>
+              <div>Answer: {{ faq.answer }}</div>
+            </p-accordionTab>
+          </p-accordion>
+        </div>
+        <div class="card" *ngIf="faqs.length === 0">
+          <h5 class="card-header">No FAQs found</h5>
+          <div class="card-body">
+            <p>No frequently asked questions available.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="image-container">
+          <img src="assets/demo/images/landing/FAQs.svg" class="img-fluid mx-auto d-block image" alt="FAQs"/> 
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- </div> -->
+

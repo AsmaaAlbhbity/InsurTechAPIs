@@ -1,0 +1,34 @@
+<app-header />
+<div class="container text-center mt-5">
+  <div class="p-card">
+    <div class="m-auto my-3">
+      <div class="info my-4">
+        <div class="user-img">
+          <img
+            src="https://qe.amenli.com/static/media/small_avatar.1bf811675332c1b9ebc014035438c83b.svg"
+            alt="user"
+          />
+        </div>
+        <div class="greeting">
+          <p>Nice job! Welcome to your trusty website</p>
+        </div>
+      </div>
+      <div class="d-flex">
+        @for (item of this.questionArr; track $index) {
+
+        <div
+          class="stepper"
+          [ngClass]="{ ' active': $index <= this.QuestionService.questIndex }"
+        ></div>
+
+        }
+      </div>
+    </div>
+
+    <app-question-card
+      [question]="questionArr[QuestionService.questIndex]"
+      [totalQuestions]="questionArr.length"
+      [currentIndex]="QuestionService.questIndex"
+    ></app-question-card>
+  </div>
+</div>

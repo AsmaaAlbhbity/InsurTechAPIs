@@ -28,17 +28,18 @@ namespace InsurTech.Repository.Data
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<UserRequest> Requests { get; set; }
-        public DbSet<RequestQuestion> RequestQuestions { get; set; }
+        public DbSet<RequestQuestion> RequestQuestions { get; set;}
         public DbSet<UserInquire> UserInquires { get; set; }
+
+        public DbSet<HealthPlanRequest> HealthPlanRequests { get; set; }
+        public DbSet<HomePlanRequest> HomePlanRequests { get; set; }
+        public DbSet<MotorPlanRequest> MotorPlanRequests { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
             builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-
-            builder.Entity<Customer>().HasMany(c => c.Feedbacks).WithOne(f => f.Customer).HasForeignKey(f => f.CustomerId);
-            builder.Entity<Company>().HasMany(c => c.InsurancePlans).WithOne(i => i.Company).HasForeignKey(i => i.CompanyId);
-
         }
     }
 }

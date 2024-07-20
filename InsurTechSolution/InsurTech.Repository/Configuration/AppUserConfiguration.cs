@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace InsurTech.Repository.Configuration
 {
@@ -20,7 +21,32 @@ namespace InsurTech.Repository.Configuration
             builder.HasIndex(a => a.Email).IsUnique();
             builder.UseTphMappingStrategy();
 
+            builder
+             .HasDiscriminator<string>("Discriminator").HasValue<AppUser>("AppUser")
+             .HasValue<Customer>("Customer")
+             .HasValue<Company>("Company");
 
+
+
+
+            var hasher = new PasswordHasher<AppUser>();
+
+            builder.HasData(
+                               new AppUser
+                               {
+                                   Id = "1",
+                                   EmailConfirmed = true,
+                                   NormalizedEmail = "ASMAA_ASH@GMAIL.COM",
+                                   NormalizedUserName = "ADMIN",
+                                   UserName = "Admin",
+                                   Email = "asmaa_ash@gmail.com",
+                                   PhoneNumber = "01211236779",
+                                   Name = "Asmaa Ashraf",
+                                   UserType = UserType.Admin,
+                                   IsApprove = IsApprove.approved,
+                                   PasswordHash = hasher.HashPassword(null, "Ash@1234")
+                                   
+                               });
         }
     }
 }

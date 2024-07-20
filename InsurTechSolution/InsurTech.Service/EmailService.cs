@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using MailKit.Security;
 using Microsoft.Extensions.Logging;
+using InsurTech.Service.Assets.Emails_Layout;
 
 namespace InsurTech.Service
 {
@@ -28,24 +29,36 @@ namespace InsurTech.Service
                 message.From.Add(new MailboxAddress("InsurTech", _configuration["EmailSettings:FromEmail"]));
                 message.To.Add(new MailboxAddress("", toEmail));
                 message.Subject = subject;
-                message.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = messageContent };
+
+                var bodyBuilder = new BodyBuilder
+                {
+                    HtmlBody = messageContent,
+                    TextBody = "Please view this email in an HTML-compatible email client."
+                };
+                message.Body = bodyBuilder.ToMessageBody();
 
                 using (var client = new SmtpClient())
                 {
+                   
                     await client.ConnectAsync(_configuration["EmailSettings:SmtpServer"],
                                              int.Parse(_configuration["EmailSettings:Port"]),
                                              SecureSocketOptions.StartTls);
 
+                    
                     await client.AuthenticateAsync(_configuration["EmailSettings:Username"],
                                                    _configuration["EmailSettings:Password"]);
 
+                   
                     await client.SendAsync(message);
+                    
+
                     await client.DisconnectAsync(true);
                 }
             }
+           
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error sending email");
+                _logger.LogError(ex, "Unexpected error while sending email.");
                 throw;
             }
         }
@@ -53,7 +66,16 @@ namespace InsurTech.Service
         public async Task SendPasswordResetEmail(string toEmail, string resetUrl)
         {
             var subject = "Reset your password";
-            var message = resetUrl;
+            var message = TemplateManager.GetPasswordResetEmailTemplate(resetUrl);
+
+            await SendEmailAsync(toEmail, subject, message);
+        }
+
+        public async Task SendConfirmationEmail(string toEmail, string confirmationUrl)
+        {
+            var subject = "Confirm your email";
+            var message = TemplateManager.GetConfirmationEmailTemplate(confirmationUrl);
+
             await SendEmailAsync(toEmail, subject, message);
         }
     }

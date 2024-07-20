@@ -1,0 +1,39 @@
+<h1 class="heading"> <span>Comapnies</span> </h1>
+
+<div class="card p-3">
+    <p-carousel 
+      [value]="companies" 
+      [numVisible]="3" 
+      [numScroll]="1" 
+      [responsiveOptions]="responsiveOptions" 
+      autoplayInterval="3000">
+      <ng-template let-company pTemplate="item">
+        <div 
+          class="card-content border-2 surface-border border-round m-2 p-3 shadow-2 companyCard">
+          <div class="mb-3">
+            <div class="relative mx-auto image-container">
+                <i class="fa-regular fa-building" style="color: #2acaac; font-size: 4rem;"></i>
+             
+            </div>
+            <p-tag 
+            [value]="company.insurancePlansCount + ' Plans'" 
+            [severity]="getSeverity(company.insurancePlansCount)" 
+            class="absolute" 
+            [ngStyle]="{ 'left.px': 5, 'top.px': 5 }" />
+          </div>
+          <div class="mb-3 font-medium text-center company-name">
+            {{ company.userName }}
+          </div>
+          <div class="flex flex-column justify-content-between align-items-center text-center">
+            <div class="mt-0 font-semibold text-xl">
+              {{ company.phoneNumber }}
+            </div>
+            <div class="mt-0 font-semibold text-md text-secondary">
+              {{ company.location }}
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </p-carousel>
+  </div>
+  

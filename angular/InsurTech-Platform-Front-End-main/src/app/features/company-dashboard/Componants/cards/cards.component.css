@@ -1,0 +1,86 @@
+/* Container Styling */
+.containerr {
+    margin: auto;
+    width: 90vw;
+    padding: 20px; /* Added padding for better spacing */
+}
+
+/* Card Styling */
+.col {
+    background-color: #ffffff !important;
+    border-bottom-left-radius: 20px !important;
+    border-top-left-radius: 20px !important;
+    height: 16vh !important;
+    width: 20vw;
+    font-size: 1.7rem !important;
+    font-weight: 400;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+    margin-left: 1.5%;
+    padding: 10px; /* Added padding for inner content spacing */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Specific Card Colors */
+#nrequest {
+    border-left: 4px solid #0a3b1d;
+    color: #0a3b1d;
+}
+
+#nmotor {
+    border-left: 4px solid #187c3e;
+    color: #187c3e;
+}
+
+#nhome {
+    border-left: 4px solid #2cd46d;
+    color: #2cd46d;
+}
+
+#nhealth {
+    border-left: 4px solid #27c263;
+    color: #27c263;
+}
+
+@media (max-width: 992px) {
+    .align-content-center {
+        text-align: center;
+        font-size: 1.7rem !important;
+        font-weight: 400;
+    }
+    
+    .col {
+        width: 20vw;
+        margin-left: 2%; 
+        height: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .align-content-center {
+        text-align: center;
+        font-size: 1.7rem !important;
+        font-weight: 400;
+    }
+    
+    .col {
+        width: 90vw; 
+        margin-left: 0; 
+        margin-bottom: 1rem; 
+        height: auto; 
+    }
+}
+
+@media (max-width: 576px) {
+    .mb-3 {
+        margin: 0rem 1rem 1rem 0rem;
+        font-size: 1.7rem !important;
+    }
+    
+    .col {
+        width: 100%; 
+        margin: 0.5rem 0; 
+        height: auto; 
+    }
+}

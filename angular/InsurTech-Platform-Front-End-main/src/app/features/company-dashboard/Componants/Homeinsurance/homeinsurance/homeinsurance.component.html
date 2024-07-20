@@ -1,0 +1,156 @@
+
+<section class="p-4 rounded my-3 w-100 mx-auto ">
+
+    <section class="sign-in">
+        <div class="container">
+            <div class="signin-content " style="display: flex;">
+                <div class="signin-image ">
+                    <figure style=" width:100%;">
+                        <img src="../../../../../../assets/images/Company/home.jpeg"
+                            alt="sing up image"></figure>
+                </div>
+
+                <form  [formGroup]="addhomeinsurance" (ngSubmit)="addhome()">
+                    <div class="mb-2">
+                        <label for="yearlyCoverage">Yearly Coverage</label>
+                        <input min="0" id="yearlyCoverage" formControlName="yearlyCoverage" type="number"
+                            class="form-control">
+                        <div
+                            *ngIf="addhomeinsurance.get('yearlyCoverage')?.errors&& addhomeinsurance.get('yearlyCoverage')?.touched">
+                            <span style="color: red;"
+                                *ngIf="addhomeinsurance.get('yearlyCoverage')?.getError('required')">Yearly Coverage is
+                                required</span>
+                            <span style="color: red;"
+                                *ngIf="addhomeinsurance.get('yearlyCoverage')?.getError('min')">Minimun Value is
+                                Zero</span>
+                            <span style="color: red;"
+                                *ngIf="addhomeinsurance.get('yearlyCoverage')?.getError('max')">Maximum Value is
+                                1.7976931348623157e+308</span>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+
+
+
+                        <label>Insurance Level</label>
+                        <select formControlName="level" class="form-control">
+                            <option [value]="InsurancePlanLevel.Basic">Basic</option>
+                            <option [value]="InsurancePlanLevel.Standard">Standard</option>
+                            <option [value]="InsurancePlanLevel.Premium">Premium</option>
+                        </select>
+                        <div
+                            *ngIf="addhomeinsurance.get('level')?.errors&& addhomeinsurance.get('level')?.touched">
+                            <span style="color: red;"
+                                *ngIf="addhomeinsurance.get('level')?.getError('required')">Insurance
+                                Level</span>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label>Quotation</label>
+                        <input min="0" formControlName="quotation" type="number" class="form-control">
+                        <div
+                            *ngIf="addhomeinsurance.get('quotation')?.errors&& addhomeinsurance.get('quotation')?.touched">
+                            <span style="color: red;"
+                                *ngIf="addhomeinsurance.get('quotation')?.getError('required')">Quotation is
+                                required</span>
+                            <span style="color: red;" *ngIf="addhomeinsurance.get('quotation')?.getError('min')">Minimun
+                                Value is Zero</span>
+                            <span style="color: red;" *ngIf="addhomeinsurance.get('quotation')?.getError('max')">Maximum
+                                Value is 1.7976931348623157e+308</span>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label>Water Damage</label>
+                        <input min="0" formControlName="waterDamage" type="number" class="form-control">
+                        <div
+                            *ngIf="addhomeinsurance.get('waterDamage')?.errors&& addhomeinsurance.get('waterDamage')?.touched">
+                            <span style="color: red;"
+                                *ngIf="addhomeinsurance.get('waterDamage')?.getError('required')">Water Damage is
+                                required</span>
+                            <span style="color: red;"
+                                *ngIf="addhomeinsurance.get('waterDamage')?.getError('min')">Minimun Value is
+                                Zero</span>
+                            <span style="color: red;"
+                                *ngIf="addhomeinsurance.get('waterDamage')?.getError('max')">Maximum Value is
+                                1.7976931348623157e+308</span>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label>Glass Breakage</label>
+                        <input min="0" formControlName="glassBreakage" type="number" class="form-control">
+                        <div
+                            *ngIf="addhomeinsurance.get('glassBreakage')?.errors&& addhomeinsurance.get('glassBreakage')?.touched">
+                            <span style="color: red;"
+                                *ngIf="addhomeinsurance.get('glassBreakage')?.getError('required')">Glass Breakage is
+                                required</span>
+                            <span style="color: red;"
+                                *ngIf="addhomeinsurance.get('glassBreakage')?.getError('min')">Minimun Value is
+                                Zero</span>
+                            <span style="color: red;"
+                                *ngIf="addhomeinsurance.get('glassBreakage')?.getError('max')">Maximum Value is
+                                1.7976931348623157e+308</span>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label>Natural Hazard</label>
+                        <input min="0" formControlName="naturalHazard" type="number" class="form-control">
+                        <div
+                            *ngIf="addhomeinsurance.get('naturalHazard')?.errors&& addhomeinsurance.get('glassBreakage')?.touched">
+                            <span style="color: red;"
+                                *ngIf="addhomeinsurance.get('naturalHazard')?.getError('required')">Natural Hazard is
+                                required</span>
+                            <span style="color: red;"
+                                *ngIf="addhomeinsurance.get('naturalHazard')?.getError('min')">Minimun Value is
+                                Zero</span>
+                            <span style="color: red;"
+                                *ngIf="addhomeinsurance.get('naturalHazard')?.getError('max')">Maximum Value is
+                                1.7976931348623157e+308</span>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label>Attempted Theft</label>
+                        <input min="0" formControlName="attemptedTheft" type="number" class="form-control">
+                        <div
+                            *ngIf="addhomeinsurance.get('attemptedTheft')?.errors&& addhomeinsurance.get('attemptedTheft')?.touched">
+                            <span style="color: red;"
+                                *ngIf="addhomeinsurance.get('attemptedTheft')?.getError('required')">Attempted Theft is
+                                required</span>
+                            <span style="color: red;"
+                                *ngIf="addhomeinsurance.get('attemptedTheft')?.getError('min')">Minimun Value is
+                                Zero</span>
+                            <span style="color: red;"
+                                *ngIf="addhomeinsurance.get('attemptedTheft')?.getError('max')">Maximum Value is
+                                1.7976931348623157e+308</span>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label>Fires And Explosion</label>
+                        <input min="0" formControlName="firesAndExplosion" type="number" class="form-control">
+                        <div
+                            *ngIf="addhomeinsurance.get('firesAndExplosion')?.errors&& addhomeinsurance.get('firesAndExplosion')?.touched">
+                            <span style="color: red;"
+                                *ngIf="addhomeinsurance.get('firesAndExplosion')?.getError('required')">Fires And
+                                Explosion is required</span>
+                            <span style="color: red;"
+                                *ngIf="addhomeinsurance.get('firesAndExplosion')?.getError('min')">Minimun Value is
+                                Zero</span>
+                            <span style="color: red;"
+                                *ngIf="addhomeinsurance.get('firesAndExplosion')?.getError('max')">Maximum Value is
+                                1.7976931348623157e+308</span>
+                        </div>
+                    </div>
+
+          
+                    <div [ngStyle]="addhomeinsurance.invalid? {'cursor':' not-allowed'} :  {'cursor':'pointer'} ">
+
+                     <button [disabled]="addhomeinsurance.invalid" type="submit"
+                        style="background-color: #17bd82 ; color:white ;font: bold;"
+                        class="btn d-block ms-auto w-25 btn-Add mt-4" >Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <p-toast/>
+    <p-confirmDialog />
+</section>

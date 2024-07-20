@@ -1,0 +1,222 @@
+/*======================
+    Success page
+=======================*/
+
+.page_success {
+  padding: 20px 0;
+  background: #fff;
+  font-family: "Arvo", serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.page_success #bgImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  object-fit: cover;
+  height: 450px; /* Adjusted to match the blob height */
+  margin-right: 20px; /* Add margin between image and blob */
+}
+
+.success_bg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.blob {
+  width: 450px;
+  height: 450px;
+  background-size: cover;
+  -webkit-background-position: center;
+  background-position: center center;
+  box-shadow: 0 5px 5px 5px rgba(14, 250, 104, 0.384);
+  animation: animate 5s ease-in-out infinite;
+  transition: all 1s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes animate {
+  0%,
+  100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+  50% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+  }
+}
+
+.rating_prompt {
+  padding: 1rem;
+  font-weight: bold;
+  color: #000;
+  text-align: center;
+}
+
+.rating_prompt h2 {
+  color: green;
+  font-weight: bold;
+  opacity: 0;
+  animation: fadeInScale 3s forwards, slideIn 3s forwards;
+}
+
+.rating_prompt h1 {
+  animation-delay: 0s, 0s;
+}
+
+.rating_prompt h3 {
+  animation-delay: 1s, 1s;
+}
+
+.success_rating_box {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.rating_prompt {
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+.rating_prompt h2 {
+  margin-bottom: 0.5rem;
+  color: green; /* Make the text green */
+  font-weight: bold; /* Make the text bold */
+}
+
+.rating_prompt rating {
+  color: gold;
+  font-size: 3rem; /* Adjust the size of the stars here */
+  margin-top: 0.5rem;
+}
+
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateY(-50px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.link_success {
+  color: #fff !important;
+  padding: 10px 20px;
+  background: #39ac31;
+  margin: 20px 0;
+  display: inline-block;
+}
+
+/*=================================================================*/
+.SocialShareButtons *,
+:before,
+:after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.SocialShareButtons {
+  height: 20vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+button {
+  width: 270px;
+  height: 60px;
+  border: none;
+  background:white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+ button::before,
+button::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 3px;
+  background-color: green;
+  transition: width 1s ease-in-out;
+}
+
+button:before {
+  
+  top: 0;
+  left: 0;
+}
+
+button:after {
+  
+  bottom: 0;
+  right: 0;
+}
+
+button:hover:before,
+button:hover:after {
+  width: 100%;
+}
+
+.letters {
+  width: 50px;
+  height: 50px;
+  perspective: 600px;
+}
+
+.card {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transition: transform 1s ease-in-out;
+  transform-style: preserve-3d;
+}
+
+.card_face {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  backface-visibility: hidden;
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.back {
+  transform: rotateY(180deg);
+}
+
+button:hover .card {
+  transform: rotateY(180deg);
+}

@@ -1,0 +1,43 @@
+<div class="users-list-container h-100 xl:flex xl:justify-content-center" style="text-align: center; background-color: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+  <h2 style="color: #333;">Users List</h2>
+  
+  <!-- Search Bar -->
+  <div class="search-bar" style="margin-bottom: 20px; width: 100%;">
+    <input type="text" [(ngModel)]="searchQuery" (input)="filterUsers()" placeholder="Search users..." class="search-input">
+  </div>
+  
+  <div *ngIf="filteredUsersList && filteredUsersList.length > 0; else noUsers" class="overflow-auto card" style="max-height: 400px; overflow: overlay;
+    width: 100%; ">
+    <div *ngFor="let user of filteredUsersList" class="user-item border-bottom  w-100" style="padding: 10px; margin-bottom: 10px; background-color: #f9f9f9; align-items: center !important;">
+    
+        <div class="w-100 d-flex align-items-center justify-content-between">
+          <div class="user-avatar rounded-circle text-white d-flex justify-content-center align-items-center" style="width: 40px; height: 40px; background-color: #00ffc8;">
+            {{ user.name.charAt(0).toUpperCase() }}
+          </div>
+         <div>
+          <div class="font-bold" style="color: #333;">{{ user.name }}</div>
+          <div class="d-flex align-items-center gap-2" style="color: #666;">
+            <i class="pi pi-tag text-sm"></i>
+            <span>{{ user.email }}</span>
+          </div>
+          <div class="font-bold text-900" style="color: #333;">{{ user.phone }}</div>
+         </div>
+         
+          <div class=" d-flex align-items-center ">
+            <i class="pi pi-file-pdf" style="font-size: 1.5rem; color: green;" (click)="PrintUserData(user.id)"></i>
+  
+            <i class="pi pi-download" style="font-size: 1.5rem; color: green;margin-left: 10px;" (click)="DownloadUserData(user.id)"></i>
+          </div>
+        
+
+       
+      </div>
+    </div>
+  </div>
+  
+  <ng-template #noUsers>
+    <div class="no-users flex justify-content-center align-items-center">
+      <img src="../../../../../assets/images/Company/Empty.gif" alt="No Users" />
+    </div>
+  </ng-template>
+</div>

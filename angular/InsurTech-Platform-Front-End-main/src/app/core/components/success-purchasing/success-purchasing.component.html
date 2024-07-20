@@ -1,0 +1,94 @@
+<app-header></app-header>
+<!-- <section class="page_success">
+  <div class="container d-flex flex-column align-items-center">
+    <div class="row justify-content-center">
+      <div class="col-sm-12 d-flex justify-content-center align-items-center">
+        <div class="success_bg">
+          <img src="../../../../assets/images/successvideo-ezgif.com-effects.gif" alt="Success Animation" id="bgImage">
+        </div>
+        <div class="blob">
+          <div class="col-12 text-center success_rating_box">
+            <div class="rating_prompt">
+              <h2>Can you rate the process?</h2>
+
+            </div>
+            <div class="content_box_success">
+              <button pButton type="button" label="Go to Home" (click)="navigateToHome()"></button>
+            </div> -->
+
+<section class="page_success">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="col-sm-12 text-center">
+          <div class="success_bg">
+            <img src="../../../../assets/images/successvideo-ezgif.com-effects.gif" alt="Success Animation"
+              id="bgImage">
+          </div>
+          <!-- <div class="animated_text">
+            <h1>Congratulations</h1>
+            <h3>Your operation was successful</h3>
+          </div> -->
+          <div class="content_box_success">
+            <p-button routerLink="/">Go to Home</p-button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Social Share Buttons -->
+    <div class="SocialShareButtons">
+
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+      <button>
+        <div class="letters" (click)="shareOnTwitter()">
+          <div class="card">
+            <div class="card_face front">S</div>
+            <div class="card_face back">
+              <i class="fab fa-twitter"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="letters" (click)="shareOnWhatsApp()">
+          <div class="card">
+            <div class="card_face front">H</div>
+            <div class="card_face back"><i class="fab fa-whatsapp-square"></i></div>
+          </div>
+        </div>
+
+        <div class="letters" (click)="shareOnFacebook()">
+          <div class="card">
+            <div class="card_face front">A</div>
+            <div class="card_face back">
+              <i class="fab fa-facebook-square"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="letters" (click)="shareOnLinkedIn()">
+          <div class="card">
+            <div class="card_face front">R</div>
+            <div class="card_face back">
+              <i class="fab fa-linkedin"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="letters" (click)="shareOnTelegram()">
+          <div class="card">
+            <div class="card_face front">T</div>
+            <div class="card_face back">
+              <i class="fab fa-telegram"></i>
+            </div>
+          </div>
+        </div>
+      </button>
+
+    </div>
+  </div>
+</section>

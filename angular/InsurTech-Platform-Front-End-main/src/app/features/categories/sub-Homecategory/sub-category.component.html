@@ -1,0 +1,67 @@
+<app-header></app-header>
+
+<div class="container">
+	<div class="row">
+	  <div class="col-12">
+		
+		<div class="card">
+			<div class="d-flex justify-content-between align-items-center mb-3">
+				<button type="button" class="btn btn-link" (click)="goBack()" style="color: #103e13;">
+				  <i class="pi pi-times"></i>
+				</button>
+				
+			  </div>
+		  <div class="card-header">
+			<h5>Home</h5>
+		  </div>
+		  <div class="card-body">
+			<table class="table table-hover">
+			  <thead>
+				<tr>
+				  <th scope="col">Company</th>
+				  <th scope="col">Yearly Coverage</th>
+				  <th scope="col">Level</th>
+				  <th scope="col">Quotation</th>
+				  <th scope="col" class="text-center">Water Damage</th>
+				  <th scope="col" class="text-center">Glass Breakage</th>
+				  <th scope="col" class="text-center">Natural Hazard</th>
+				  <th scope="col" class="text-center">Attempted Theft</th>
+				  <th scope="col" class="text-center">Fires And Explosion</th>
+				</tr>
+			  </thead>
+			  <tbody>
+				<tr *ngFor="let insurance of data">
+				  <td>{{ insurance.company }}</td>
+				  <td>{{ insurance.yearlyCoverage }}</td>
+				  <td>{{ insurance.level }}</td>
+				  <td>{{ insurance.quotation }}</td>
+				  <td class="text-center">
+					<i class="pi" [ngClass]="{'pi-check-circle text-success': insurance.waterDamage, 'pi-times-circle text-danger': !insurance.waterDamage}"></i>
+				  </td>
+				  <td class="text-center">
+					<i class="pi" [ngClass]="{'pi-check-circle text-success': insurance.glassBreakage, 'pi-times-circle text-danger': !insurance.glassBreakage}"></i>
+				  </td>
+				  <td class="text-center">
+					<i class="pi" [ngClass]="{'pi-check-circle text-success': insurance.naturalHazard, 'pi-times-circle text-danger': !insurance.naturalHazard}"></i>
+				  </td>
+				  <td class="text-center">
+					<i class="pi" [ngClass]="{'pi-check-circle text-success': insurance.attemptedTheft, 'pi-times-circle text-danger': !insurance.attemptedTheft}"></i>
+				  </td>
+				  <td class="text-center">
+					<i class="pi" [ngClass]="{'pi-check-circle text-success': insurance.firesAndExplosion, 'pi-times-circle text-danger': !insurance.firesAndExplosion}"></i>
+				  </td>
+				</tr>
+				<tr *ngIf="data.length === 0">
+				  <td colspan="9" class="text-center">No Plans found.</td>
+				</tr>
+				<tr *ngIf="loading">
+				  <td colspan="9" class="text-center">Loading Plans data. Please wait.</td>
+				</tr>
+			  </tbody>
+			</table>
+		  </div>
+		</div>
+	  </div>
+	</div>
+  </div>
+  

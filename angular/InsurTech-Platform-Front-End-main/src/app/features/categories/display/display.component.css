@@ -1,0 +1,43 @@
+/* .buttonColor{
+background-color: #1b5e1f;
+} */
+
+.pricing-card {
+    transition: all 0.3s ease-in-out;
+    border-width: 1px;
+    border-style: solid;
+  }
+  
+  .pricing-card:hover {
+    transform: scale(1.05); 
+    border-color: #1b5e1f; 
+    border-width: 2px; 
+  }
+  
+  .pricing-card:hover h3 {
+    color: #1b5e1f; 
+  }
+  
+  .pricing-card:hover .btn {
+    background-color: #1b5e1f; 
+    color: white; 
+  }
+  
+  .pricing-card img {
+    transition: opacity 0.3s ease-in-out;
+  }
+  
+  .pricing-card:hover img {
+    opacity: 1; 
+  }
+
+  .pricing-card-container:hover .pricing-card:not(:hover) {
+    filter: blur(5px); 
+    transition: filter 0.3s ease-in-out;
+  }
+  
+  .pricing-card-container .pricing-card {
+    filter: none; 
+    transition: filter 0.3s ease-in-out;
+  }
+  

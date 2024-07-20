@@ -1,0 +1,116 @@
+
+.card{
+    background-color:  #f8f9fa;
+  }
+  .card .p-carousel {
+    padding: 1rem;
+  }
+  
+  .card .border-round {
+    border-radius: 12px;
+  }
+  
+  .card .shadow-2 {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card .text-secondary {
+    color: #6c757d;
+  }
+  
+  .image-container {
+    width: 150px; /* Adjust width as needed */
+    height: 150px; /* Adjust height as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%; /* Optional: makes the image circular */
+  }
+  
+  .image {
+    width: 100%; /* Adjust width to fit container */
+    height: 100%; /* Adjust height to fit container */
+    object-fit: cover; /* Ensures the image covers the container without distortion */
+  }
+  
+  .company-name {
+    color: #2acaac; /* Green color */
+    font-size: 1.5rem; /* Larger font size */
+    font-weight: bold;
+  }
+  .companyCard{
+    background-color: #fff;
+  }
+  
+  .card-content {
+    transition: border-color 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    border: 1px solid transparent; /* Ensure there is an initial border to see the transition */
+  }
+  
+  .card-content:hover {
+    border-color: #2acaac; /* Green border on hover */
+    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2); /* Optional: shadow effect on hover */
+  }
+  .containerr {
+    height: auto; /* Full viewport height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.title-container {
+    color: #1ba88e;
+    display: flex;
+    align-items: center;
+    font-size: 40px;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif ; /* Adjust the font size as needed */
+}
+
+.dot {
+    margin: 0 30px; /* Adjust the spacing as needed */
+}
+
+.title {
+    font-weight: bold; /* Adjust the font weight as needed */
+}
+.heading {
+  font-size: 4rem;
+  color: var(--navyBlue);
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bolder;
+  margin: auto;
+  width: fit-content;
+  margin-bottom: 6rem;
+  font-family: "Nunito", sans-serif;
+}
+
+.heading span {
+  text-transform: uppercase;
+  font-family: "Nunito", sans-serif;
+}
+.heading::before{
+  content: '';
+  display: block;
+  width: 100%;
+  height: 25px;
+  background-color: #10B981;
+  position: relative;
+  top: 50px;
+  z-index: -1;
+  animation:widthanimation 5050ms infinite linear ;
+  animation-delay: 2s;
+  border-radius: 10px;
+  -webkit-animation:widthanimation 9050ms infinite linear ;
+}
+@keyframes widthanimation {
+  0%{
+    width: 0;
+  }
+  25%{
+    width: 100%;
+  }
+}

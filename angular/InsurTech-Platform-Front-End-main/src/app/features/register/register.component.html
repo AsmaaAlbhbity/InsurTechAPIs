@@ -1,0 +1,139 @@
+<app-header></app-header>
+<div class="container mt-5">
+  <div class="card">
+    <div class="card-body p-5">
+      <div class="text-center mb-4">
+        <img src="assets/images/logo.png" alt="Logo" class="logo">
+      </div>
+      <h1 class="mb-4 text-center">Register Form</h1>
+      <p-toast></p-toast>
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="name" class="form-label">Name:</label>
+            <input id="name" type="text" pInputText formControlName="name" class="form-control" required
+              autocomplete="name">
+            <div *ngIf="registerForm.get('name')?.invalid && registerForm.get('name')?.touched" class="text-danger">
+              Name is required.
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="userName" class="form-label">User Name:</label>
+            <input id="userName" type="text" pInputText formControlName="userName" class="form-control" required
+              autocomplete="username">
+            <div *ngIf="registerForm.get('userName')?.invalid && registerForm.get('userName')?.touched"
+              class="text-danger">
+              <div *ngIf="registerForm.get('userName')?.errors?.['required']">
+                User Name is required.
+              </div>
+              <div *ngIf="registerForm.get('userName')?.errors?.['usernameTaken']">
+                User Name must be unique.
+              </div>
+              <div *ngIf="registerForm.get('userName')?.errors?.['invalidUsername']">
+                Username must contain only letters and numbers with no spaces.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="emailAddress" class="form-label">Email Address:</label>
+            <input id="emailAddress" type="email" pInputText formControlName="emailAddress" class="form-control"
+              required autocomplete="email">
+            <div *ngIf="registerForm.get('emailAddress')?.invalid && registerForm.get('emailAddress')?.touched"
+              class="text-danger">
+              <div *ngIf="registerForm.get('emailAddress')?.errors?.['required']">
+                Valid Email Address is required.
+              </div>
+              <div *ngIf="registerForm.get('emailAddress')?.errors?.['email']">
+                Email Address is invalid.
+              </div>
+              <div *ngIf="registerForm.get('emailAddress')?.errors?.['emailTaken']">
+                Email Address must be unique.
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label for="location" class="form-label">Location:</label>
+            <input id="location" type="text" pInputText formControlName="location" class="form-control" required
+              autocomplete="address-level2">
+            <div *ngIf="registerForm.get('location')?.invalid && registerForm.get('location')?.touched"
+              class="text-danger">
+              Location is required.
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="password" class="form-label">
+              <i class="pi pi-lock"></i> Password:
+            </label>
+            <p-password id="password" formControlName="password" [toggleMask]="true" style="display: flex; ;" required
+              autocomplete="new-password"></p-password>
+            <div *ngIf="registerForm.get('password')?.invalid && registerForm.get('password')?.touched"
+              class="text-danger">
+              <div *ngIf="registerForm.get('password')?.errors?.['required']">
+                Password is required.
+              </div>
+              <div *ngIf="registerForm.get('password')?.errors?.['minlength']">
+                Password must be at least 8 characters.
+              </div>
+              <div *ngIf="registerForm.get('password')?.errors?.['passwordStrength']">
+                Password must contain an uppercase letter, a number, and a special character.
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="taxNumber" class="form-label">
+              <i class="pi pi-id-card"></i> Tax Number:
+            </label>
+            <p-inputMask id="taxNumber" formControlName="taxNumber" mask="999999999" style="display: flex;" required
+              autocomplete="off"></p-inputMask>
+            <div *ngIf="registerForm.get('taxNumber')?.invalid && registerForm.get('taxNumber')?.touched"
+              class="text-danger">
+              <div *ngIf="registerForm.get('taxNumber')?.errors?.['required']">
+                Tax Number is required.
+              </div>
+              <div *ngIf="registerForm.get('taxNumber')?.errors?.['pattern']">
+                Tax Number must be exactly 9 digits.
+              </div>
+              <div *ngIf="registerForm.get('taxNumber')?.errors?.['taxNumberTaken']">
+                Tax Number must be unique.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="phoneNumber" class="form-label">
+              <i class="pi pi-phone"></i> Phone Number:
+            </label>
+            <p-inputMask id="phoneNumber" formControlName="phoneNumber" mask="99999999999" style="display: flex;"
+              required autocomplete="tel"></p-inputMask>
+            <div *ngIf="registerForm.get('phoneNumber')?.invalid && registerForm.get('phoneNumber')?.touched"
+              class="text-danger">
+              <div *ngIf="registerForm.get('phoneNumber')?.errors?.['required']">
+                Phone Number is required.
+              </div>
+              <div *ngIf="registerForm.get('phoneNumber')?.errors?.['pattern']">
+                Phone Number must start with 011, 012, or 010 and be exactly 11 digits.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center">
+          <button type="submit" pButton label="Register" class="btn btn-success btn-lg"
+            [disabled]="registerForm.invalid"></button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

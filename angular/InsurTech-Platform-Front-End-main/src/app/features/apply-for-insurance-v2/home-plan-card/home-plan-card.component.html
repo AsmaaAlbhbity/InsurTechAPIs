@@ -1,0 +1,67 @@
+<div class="pricing-card">
+      <div class="parent-card">
+        <div class="card">
+          <!-- Plan Title and Basic Details -->
+          <div class="title">
+            <h2>{{ data?.category || 'Insurance Plan' }}</h2>
+          </div>
+          <div class="title">
+            <h3>{{ data?.level == 0 ? 'Basic' : data?.level == 1 ? "standard": "premium" }}</h3> 
+          </div>
+          <div class="price">
+            <h5>EGP {{ data?.yearlyCoverage  }} <span>/year</span></h5>
+            <span>EGP {{ data?.quotation  }} /month</span>
+          </div>
+    
+          <!-- Coverage Options -->
+          <div class="options">
+            <!-- Always visible items -->
+            <li>
+              <p>Fires and Explosions</p>
+              <h3>EGP {{ data?.firesAndExplosion  }}</h3>
+            </li>
+            <li>
+              <p>
+                Burglary or Attempted Theft
+                <i class="fa-solid fa-circle-question helpIcon"></i>
+              </p>
+              <h3>EGP {{ data?.attemptedTheft  }}</h3>
+            </li>
+            <li>
+              <p>
+                Water Damage
+                <i class="fa-solid fa-circle-question helpIcon"></i>
+              </p>
+              <h3>EGP {{ data?.waterDamage  }}</h3>
+            </li>
+    
+            <!-- Additional items controlled by "See More" -->
+            @if (showMore) {
+              <li>
+                <p>
+                  Natural Hazard
+                  <i class="fa-solid fa-circle-question helpIcon"></i>
+                </p>
+                <h3>EGP {{ data?.naturalHazard  }}</h3>
+              </li>
+              <li>
+                <p>Glass Breakage</p>
+                <h3>EGP {{ data?.glassBreakage  }}</h3>
+              </li>
+              <!-- You can add more fields here if needed -->
+            }
+    
+            <!-- Toggle link -->
+            <li>
+              <h3 class="more" (click)="toggleMore()">
+                {{ showMore ? "See Less" : "See More" }}
+              </h3>
+            </li>
+          </div>
+    
+          <!-- Action Button -->
+          <button class="btn w-100" (click)="createRequest()">Choose Insurance Plan</button>
+        </div>
+      </div>
+    </div>
+    

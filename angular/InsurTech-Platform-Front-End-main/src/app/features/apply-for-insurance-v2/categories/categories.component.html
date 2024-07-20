@@ -1,0 +1,53 @@
+<div class="mx-auto over">
+  <div>
+    <div id="pricing" class=" px-4 px-lg-8 my-2 my-md-4">
+      <div class="text-center">
+        <span class="text-muted h5" style="font-size: 3vw;">Which insurance are you looking for ?</span>
+      </div>
+      <div class="row justify-content-between mt-8 mt-md-0">
+        <div class="col-12 col-lg-4 p-4">
+          <div class=" p-0 bg-white effect">
+            <a [routerLink]="['/questions-list/2']">
+              <div class="p-3 d-flex flex-column pricing-card border-5">
+                <span class="fancy">Home Insurance</span>
+                <!-- <img src="assets/demo/images/landing/Home.svg" class="w-100 h-100 mx-auto" alt="Home" /> -->
+                <ng-lottie [options]="HomeOptions" style="scale: 1.2;"/>
+                <div class="my-5 text-center">
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-4 p-4">
+          <div class="p-0 bg-white effect">
+            <a [routerLink]="['/questions-list/1']">
+              <div class="p-3 d-flex flex-column pricing-card border-5"
+                style="border-radius: 10px">
+                <span class="fancy">Health Insurance</span>
+                <!-- <img src="assets/demo/images/landing/Health.svg" class="w-100 h-100 mx-auto" alt="Health" /> -->
+                <ng-lottie [options]="HealthOptions" style="scale: 1.1;"/>
+                <div class="my-5 text-center">
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-4 p-4">
+          <div class="p-0 bg-white effect">
+            <a [routerLink]="['/questions-list/3']">
+              <div class="p-3 d-flex flex-column pricing-card border-5">
+                <span class="fancy">Motor Insurance</span>
+                <!-- <img src="assets/demo/images/landing/Motor.svg" class="w-100 h-100 mx-auto" alt="Motor" /> -->
+                <ng-lottie [options]="MotorOptions" style="scale: 1.2;"/>
+                <div class="my-5 text-center">
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

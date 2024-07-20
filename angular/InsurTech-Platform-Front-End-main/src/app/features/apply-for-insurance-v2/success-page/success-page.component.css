@@ -1,0 +1,152 @@
+:root {
+  --txt-color: #fff;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  color: var(--txt-color);
+  font-family: 'Poppins', sans-serif;
+}
+
+.payment-success-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f8ff;
+  position: relative;
+  overflow: hidden;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://www.example.com/your-background-image.jpg') no-repeat center center;
+  background-size: cover;
+  z-index: -1;
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.success-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  position: relative;
+  text-align: center;
+}
+
+.success-container {
+  opacity: 0;
+  animation: fadeIn 2s ease-in-out forwards;
+}
+
+.success-container.fade {
+  animation: fadeInOut 6s infinite;
+}
+
+.success-container svg {
+  width: 100px;
+  height: 100px;
+  transform-origin: center;
+  animation: drawCheckmark 1s ease-in-out forwards;
+}
+
+.success-container h2 {
+  color: #5cb85c;
+  font-size: 24px;
+  margin-top: 20px;
+  font-weight: 600;
+}
+
+.info-section {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.info-section p {
+  margin: 10px 0;
+}
+
+.button-section {
+  text-align: center;
+}
+
+.btn-wrapper.static a button {
+  padding: 10px 20px;
+  background-color: #5cb85c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.btn-wrapper.static a button:hover {
+  background-color: #4cae4c;
+}
+
+.fireworks-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeInOut {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes drawCheckmark {
+  0% {
+    stroke-dasharray: 0, 200;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 200, 200;
+    stroke-dashoffset: -100;
+  }
+  100% {
+    transform: scale(1.1);
+  }
+}
+

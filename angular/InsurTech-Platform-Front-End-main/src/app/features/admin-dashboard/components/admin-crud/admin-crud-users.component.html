@@ -1,0 +1,133 @@
+<div class="container">
+  <p-toast></p-toast>
+  <p-confirmDialog></p-confirmDialog>
+  <div class="row flex-lg-nowrap">
+    <div class="col">
+      <div class="mb-3 px-3">
+        <div class="d-flex justify-content-start">
+          <button pButton type="button" label="Customers" icon="pi pi-users" class="p-button-outlined me-3"
+            [class.p-button-primary]="activeTab === 'customers'" (click)="setActiveTab('customers')"></button>
+          <button pButton type="button" label="Companies" icon="pi pi-building" class="p-button-outlined ms-2"
+            [class.p-button-primary]="activeTab === 'companies'" (click)="setActiveTab('companies')"></button>
+        </div>
+      </div>
+
+      <div class="row flex-lg-nowrap">
+        <div class="col mb-3">
+          <div class="e-panel card">
+            <div class="card-body">
+              <div class="card-title">
+                <h6 class="mr-2"><span>{{ activeTab | titlecase }}</span><small class="px-1">Be a wise leader</small>
+                </h6>
+              </div>
+              <div class="mb-3">
+                <input pInputText type="text" class="form-control"
+                  placeholder="Search by name, username, email, or phone number" [(ngModel)]="searchTerm"
+                  (input)="filterUsers()" />
+              </div>
+              <div class="e-table">
+                <p-table [value]="filteredUsers" [paginator]="true" [rows]="5" [responsiveLayout]="'scroll'">
+                  <ng-template pTemplate="header">
+                    <tr>
+                      <th>Name</th>
+                      <th>Username</th>
+                      <th>Email</th>
+                      <th *ngIf="activeTab === 'companies'">Tax Number</th>
+                      <th *ngIf="activeTab === 'companies'">Location</th>
+                      <th>Phone Number</th>
+                      <th>User Type</th>
+                      <th>Actions</th>
+                    </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-user>
+                    <tr *ngIf="user.userType === (activeTab === 'customers' ? 0 : 1)">
+                      <td>{{ user.name }}</td>
+                      <td style="max-width: 20px;">{{ user.userName }}</td>
+                      <td>{{ user.email }}</td>
+                      <td *ngIf="activeTab === 'companies'">{{ user.taxNumber }}</td>
+                      <td *ngIf="activeTab === 'companies'">{{ user.location }}</td>
+                      <td>{{ user.phoneNumber }}</td>
+                      <td>{{ getUserType(user.userType) }}</td>
+                      <td>
+                        <a type="button" class="p-button-text p-button-sm m-1" (click)="editUser(user)">
+                          <i class="pi pi-pencil" style="color: green;"></i>
+                        </a>
+                        <a type="button" class="p-button-text p-button-sm m-1" (click)="deleteUser(user)">
+                          <i class="pi pi-trash" style="color: red;"></i>
+                        </a>
+                        <a type="button" class="p-button-rounded p-button-text p-button-sm m-1"
+                          (click)="viewUser(user)">
+                          <i class="pi pi-eye" style="color: blue;"></i>
+                        </a>
+                      </td>
+
+
+                    </tr>
+                  </ng-template>
+                </p-table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit User Dialog -->
+  <p-dialog header="Edit User" [(visible)]="displayEditDialog" [modal]="true" [closable]="false"
+    [style]="{width: '50vw'}">
+    <div *ngIf="editUserModel">
+      <div class="p-fluid">
+        <div class="p-field">
+          <label for="name">Name</label>
+          <input id="name" type="text" pInputText [(ngModel)]="editUserModel.name">
+        </div>
+        <div class="p-field">
+          <label for="username">Username</label>
+          <input id="username" type="text" pInputText [(ngModel)]="editUserModel.userName">
+        </div>
+        <div class="p-field">
+          <label for="email">Email</label>
+          <input id="email" type="text" pInputText [(ngModel)]="editUserModel.email">
+        </div>
+        <div *ngIf="editUserModel.userType === 1">
+          <div class="p-field">
+            <label for="taxNumber">Tax Number</label>
+            <input id="taxNumber" type="text" pInputText [(ngModel)]="editUserTaxNumber">
+          </div>
+          <div class="p-field">
+            <label for="location">Location</label>
+            <input id="location" type="text" pInputText [(ngModel)]="editUserLocation">
+          </div>
+        </div>
+        <div class="p-field">
+          <label for="phoneNumber">Phone Number</label>
+          <input id="phoneNumber" type="text" pInputText [(ngModel)]="editUserModel.phoneNumber">
+        </div>
+      </div>
+    </div>
+    <p-footer>
+      <button pButton type="button" label="Save" icon="pi pi-check" (click)="saveUser()"></button>
+      <button pButton type="button" label="Cancel" icon="pi pi-times" (click)="displayEditDialog = false"></button>
+    </p-footer>
+  </p-dialog>
+
+  <!-- View User Dialog -->
+  <p-dialog header="User Details" [(visible)]="displayViewDialog" [modal]="true" [closable]="true"
+    [style]="{width: '50vw'}">
+    <div *ngIf="selectedUser">
+      <div><strong>Name:</strong> {{selectedUser.name}}</div>
+      <div><strong>Username:</strong> {{selectedUser.userName}}</div>
+      <div><strong>Email:</strong> {{selectedUser.email}}</div>
+      <div><strong>Phone Number:</strong> {{selectedUser.phoneNumber}}</div>
+      <div><strong>User Type:</strong> {{getUserType(selectedUser.userType)}}</div>
+      <div *ngIf="selectedUser.userType === 1">
+        <div><strong>Tax Number:</strong> {{selectedUser.taxNumber}}</div>
+        <div><strong>Location:</strong> {{selectedUser.location}}</div>
+      </div>
+    </div>
+    <p-footer>
+      <button pButton type="button" label="Close" icon="pi pi-times" (click)="displayViewDialog = false"></button>
+    </p-footer>
+  </p-dialog>
+</div>

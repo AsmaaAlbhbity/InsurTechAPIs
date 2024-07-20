@@ -616,17 +616,17 @@ namespace InsurTech.APIs.Controllers
         #endregion
 
         #region GetCustomer
-        [HttpGet("GetCustomer")]
-        public async Task<ActionResult> GetCustomer()
-        {
-			var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-			var user = await _userManager.FindByIdAsync(customerId);
-			if (user is null) return NotFound(new ApiResponse(404, "User not found"));
-			if (user.UserType != UserType.Customer) return BadRequest(new ApiResponse(400, "User is not a Customer"));
-			if (user.IsDeleted == true) return BadRequest(new ApiResponse(400, "User is deleted"));
-			var customer = _mapper.Map<GetCustomerDTO>(user);
-			return Ok(customer);
-		}
+  //      [HttpGet("GetCustomer")]
+  //      public async Task<ActionResult> GetCustomer()
+  //      {
+		//	var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+		//	var user = await _userManager.FindByIdAsync(customerId);
+		//	if (user is null) return NotFound(new ApiResponse(404, "User not found"));
+		//	if (user.UserType != UserType.Customer) return BadRequest(new ApiResponse(400, "User is not a Customer"));
+		//	if (user.IsDeleted == true) return BadRequest(new ApiResponse(400, "User is deleted"));
+		//	var customer = _mapper.Map<GetCustomerDTO>(user);
+		//	return Ok(customer);
+		//}
         #endregion
 
 

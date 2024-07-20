@@ -1,0 +1,77 @@
+.stepper {
+    background-color: #cfcfcf;
+    height: 4px;
+    margin: 5px;
+    width: 50px
+}
+.active {
+    background-color: #26f7fd
+}
+
+ .info {
+    display: flex
+}
+
+ .info .user-img {
+    border-radius: 100%;
+    height: 30px;
+    width: 30px
+}
+
+ .info .user-img img {
+    height: 100%;
+    width: 100%
+}
+
+ .info .greeting {
+    margin-left: 16px
+}
+
+ .info .greeting p, .info .greeting span {
+    color: #373334;
+    font-size: 1.1rem;
+    font-weight: 500
+}
+/* Ensure that the .container and .p-card classes take up the full width */
+.container {
+  width: 100%;
+  max-width: 100%; /* Prevents any maximum width restrictions */
+}
+
+.p-card {
+  width: 100%;
+  box-sizing: border-box; /* Includes padding and border in the width */
+}
+
+/* Make sure that .full-width-container and other relevant classes take full width */
+.full-width-container {
+  width: 100%;
+  display: flex;
+  justify-content: center; /* Center content horizontally */
+}
+
+.full-width-selectbutton {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Optional: Ensure the stepper and other UI elements do not restrict width */
+
+
+
+
+@media only screen and (min-width: 280px)and (max-width:360px) {
+     .info .greeting p, .info .greeting span {
+        font-size:12px
+    }
+}
+
+ .info .greeting p {
+    color: #373334
+}
+
+@media only screen and (max-width: 767px) {
+     .info .greeting p {
+        color:#373334
+    }
+}

@@ -1,0 +1,154 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap');
+
+
+/* hero section */
+.hero-container{
+    display: flex;
+    gap: -1px;
+    justify-content: space-between;
+    align-items: center;
+    height: 80vh;
+    padding-top: 20px;
+}
+
+.content{
+    width: 50%;
+    padding-left: 10%;
+    padding-top: 2%;
+
+}
+
+.content h2{
+    font-size: 3.8em;
+    color: #365954;
+
+}
+.content p{
+    margin: 20px 0;
+    font-size: 1.3rem;
+    color: #365954;
+    line-height: 2.18rem;
+}
+
+button{
+    padding: 0.75rem 1.2rem ;
+    border-radius: 20px;
+    font-size: 1.25em;
+    cursor: pointer;
+    transition: all ease-in-out .15s;
+    align-items: center;
+}
+.diff
+{
+    color: #10B981;
+}
+.btn{
+    background: #10B981;
+    color: #fff;
+    border: none;
+}
+
+.btn:hover{
+    background: #0b835b;
+}
+
+.btn-outline{
+    border: 1px solid #10B981;
+    background: transparent;
+    color: #10B981;
+    margin-left: 5px;
+}
+
+button i{
+    font-size: 0.78em;
+}
+
+/* blob */
+.blob{
+    background-image: url('../../../../assets/images/HomeInsuranceHomePage.jpg');
+    width: 450px;
+    height: 450px;
+    background-size: cover;
+    -webkit-background-position: center;
+    background-position: center center;
+    margin: 20px;
+    box-shadow: 0 5px 5px 5px rgba(14, 250, 104, 0.384);
+    animation: animate 5s ease-in-out infinite;
+    transition: all 1s ease-in-out;
+}
+.blobback
+{
+    width: 200px;
+    height: 150px;
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    border: 2px solid #10B981;
+    z-index: -1;
+    position: absolute;
+    top: 8rem;
+    left:-6rem;
+    background-color:#10B981 ;
+}
+@keyframes animate {
+    0%, 100%{
+        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    }
+    50%{
+        border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+    }
+}
+
+
+/* Media Quary */
+@media screen and (max-width: 576px) {
+    .hero-container{
+        flex-direction: column-reverse;
+        height: 100%;
+    }
+    .content{
+        width: 100%;
+    }
+    .content h2{
+        font-size: 2.4em;
+    }
+    .blob{
+        width: 280px;
+        height: 280px;
+    }
+    .container{
+        flex-direction: column;
+    }
+    .left-side, .right-side{
+        width: 100%;
+    }
+}
+
+.heading {
+    font-size: 4rem;
+    color: var(--navyBlue);
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bolder;
+    margin: auto;
+    width: fit-content;
+    margin-bottom: 6rem;
+    font-family: "Nunito", sans-serif;
+  }
+  
+  .heading span {
+    text-transform: uppercase;
+    font-family: "Nunito", sans-serif;
+  }
+  .heading::before{
+    content: '';
+    display: block;
+    width: 100%;
+    height: 25px;
+    background-color: var(--bluemain);
+    position: relative;
+    top: 50px;
+    z-index: -1;
+    animation:widthanimation 5050ms infinite linear ;
+    animation-delay: 2s;
+    border-radius: 10px;
+    -webkit-animation:widthanimation 9050ms infinite linear ;
+  }

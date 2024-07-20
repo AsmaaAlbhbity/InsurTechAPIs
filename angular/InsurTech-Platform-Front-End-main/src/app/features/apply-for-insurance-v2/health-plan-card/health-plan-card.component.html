@@ -1,0 +1,101 @@
+<div class="pricing-card">
+      <div class="parent-card">
+        <div class="card">
+          <div class="title">
+            <div class="title">
+                  <h3>{{ data?.level == 0 ? 'Basic' : data?.level == 1 ? "standard": "premium" }}</h3> 
+                </div>
+          </div>
+    
+          <div class="price">
+            <h5>EGP {{ data?.yearlyCoverage }} <span>/year</span></h5>
+            <span>EGP {{ data?.quotation }} /month</span>
+          </div>
+    
+          <!-- Coverage Options -->
+          <div class="options">
+            <li>
+              <p>Hospitalization and Surgery</p>
+              <h3>EGP {{ data?.hospitalizationAndSurgery }}</h3>
+            </li>
+            <li>
+              <p>
+                Clinics Coverage
+                <i class="fa-solid fa-circle-question helpIcon"></i>
+              </p>
+              <h3>EGP {{ data?.clinicsCoverage }}</h3>
+            </li>
+            <li>
+              <p>
+                Optical Coverage
+                <i class="fa-solid fa-circle-question helpIcon"></i>
+              </p>
+              <h3>EGP {{ data?.opticalCoverage }}</h3>
+            </li>
+            <li>
+              <p>
+                Dental Coverage
+                <i class="fa-solid fa-circle-question helpIcon"></i>
+              </p>
+              <h3>EGP {{ data?.dentalCoverage }}</h3>
+            </li>
+    
+            <!-- Additional items controlled by "See More" -->
+            @if (showMore) {
+              <li>
+                <p>
+                  Fires and Explosions
+                  <i class="fa-solid fa-circle-question helpIcon"></i>
+                </p>
+                <h3>EGP 12,000,000</h3>
+              </li>
+              <li>
+                <p>
+                  Burglary or Attempted Theft
+                  <i class="fa-solid fa-circle-question helpIcon"></i>
+                </p>
+                <h3>EGP 3,000,000</h3>
+              </li>
+              <li>
+                <p>
+                  Water Damage
+                  <i class="fa-solid fa-circle-question helpIcon"></i>
+                </p>
+                <h3>EGP 12,000,000</h3>
+              </li>
+              <li>
+                <p>
+                  Contents Temporary Removal
+                  <i class="fa-solid fa-circle-question helpIcon"></i>
+                </p>
+                <h3>EGP 300,000</h3>
+              </li>
+              <li>
+                <p>
+                  Debris Removal
+                  <i class="fa-solid fa-circle-question helpIcon"></i>
+                </p>
+                <h3>EGP 600,000</h3>
+              </li>
+              <li>
+                <p>
+                  Professional Interior Designer Fees
+                  <i class="fa-solid fa-circle-question helpIcon"></i>
+                </p>
+                <h3>EGP 400,000</h3>
+              </li>
+            }
+            <!-- Toggle link -->
+            <li>
+              <h3 class="more" (click)="toggleMore()">
+                {{ showMore ? "See Less" : "See More" }}
+              </h3>
+            </li>
+          </div>
+    
+          <!-- Action Button -->
+          <button class="btn w-100" (click)="createRequest()">Choose Insurance Plan</button>
+        </div>
+      </div>
+    </div>
+    

@@ -1,0 +1,191 @@
+.container {
+  background: linear-gradient(to right, rgb(243, 243, 243), rgb(255, 255, 255));
+  border-radius: 15px;
+  padding: 30px;
+  width: 100%;
+}
+
+.card {
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(121, 228, 137, 0.2);
+}
+
+.card-body {
+  padding: 40px;
+}
+
+.logo {
+  width: 100px;
+  height: auto;
+}
+
+.error-message {
+  font-size: 0.875rem;
+}
+/* Animated background */
+body {
+  background: linear-gradient(
+    to right,
+    #e0ffe0,
+    #ffffff
+  ); /* Light gradient background */
+  font-family: "Arial", sans-serif; /* Apply a clean sans-serif font */
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+.p-inputMask,
+p-password,
+p-calendar {
+  display: flex;
+}
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0, 255, 0, 0.2), rgba(0, 255, 0, 0));
+  animation: animate 5s linear infinite;
+  z-index: -1;
+  opacity: 0.5;
+}
+
+/* Animation keyframes */
+@keyframes animate {
+  0% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-50%, -50%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+/* Card styles */
+.card {
+  border: 1px solid #98ff98; /* Mint green border */
+  box-shadow: 0px 0px 15px rgba(152, 255, 152, 0.5); /* Mint green shadow */
+  border-radius: 15px;
+  background: linear-gradient(
+    to bottom,
+    #98ff98,
+    #ffffff
+  ); /* Linear gradient from mint green to white */
+  padding: 20px; /* Add some padding inside the card */
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 1s forwards;
+  z-index: 1; /* Ensure the card is above the animated background */
+}
+
+/* Container styles */
+.container {
+  max-width: 800px; /* Adjust the maximum width of the container */
+  margin: auto; /* Center the container */
+}
+
+/* Logo styles */
+.logo {
+  width: 100px; /* Adjust the size of the logo */
+  height: auto; /* Maintain aspect ratio */
+  margin-bottom: 20px; /* Add some space below the logo */
+  animation: bounceIn 1s;
+}
+
+/* Heading styles */
+h1.text-center {
+  margin-bottom: 20px; /* Add some margin below the heading */
+  font-family: "Arial", sans-serif; /* Apply a clean sans-serif font */
+  font-size: 2em;
+  color: #005500; /* Dark green color */
+}
+
+/* Input styles */
+input.form-control {
+  transition: box-shadow 0.3s, border-color 0.3s;
+  font-family: "Arial", sans-serif; /* Apply the same clean sans-serif font */
+  font-size: 1em; /* Ensure input text size is readable */
+}
+
+input.form-control:hover,
+input.form-control:focus {
+  border-color: #85e085; /* Slightly darker mint green */
+  box-shadow: 0 0 10px rgba(152, 255, 152, 0.5); /* Mint green shadow */
+}
+
+/* Button styles */
+button.btn-lg {
+  font-size: 1.2em; /* Increase the font size of the button */
+  padding: 10px 20px; /* Add some padding to the button */
+  transition: background-color 0.3s, transform 0.3s;
+  font-family: "Arial", sans-serif; /* Apply the same clean sans-serif font */
+}
+
+button.btn-lg:hover {
+  background-color: #85e085; /* Slightly darker mint green */
+  transform: scale(1.05); /* Slightly enlarge the button */
+}
+
+/* Error message styles */
+.text-danger {
+  font-size: 0.9em; /* Decrease the font size of the error messages */
+  margin-top: 5px; /* Add some space above the error messages */
+}
+
+/* Fade-in animation */
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Bounce-in animation */
+@keyframes bounceIn {
+  from,
+  20%,
+  40%,
+  60%,
+  80%,
+  to {
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+
+  from,
+  60%,
+  75%,
+  90%,
+  to {
+    opacity: 1;
+  }
+
+  from {
+    opacity: 0;
+    transform: translate3d(0, 3000px, 0);
+  }
+
+  60% {
+    transform: translate3d(0, -20px, 0);
+  }
+
+  75% {
+    transform: translate3d(0, 10px, 0);
+  }
+
+  90% {
+    transform: translate3d(0, -5px, 0);
+  }
+
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}

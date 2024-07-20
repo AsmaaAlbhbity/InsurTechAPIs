@@ -1,0 +1,69 @@
+<div class="pricing-card">
+      <div class="parent-card">
+        <div class="card">
+          <!-- Plan Title -->
+          <div class="title">
+            <h2>Motor Insurance Plan</h2>
+          </div>
+          <div class="title">
+            <h3>{{ data?.level == 0 ? 'Basic' : data?.level == 1 ? "standard": "premium" }}</h3> 
+          </div>
+    
+          <!-- Pricing Information -->
+          <div class="price">
+            <h5>EGP {{ data?.yearlyCoverage }} <span>/year</span></h5>
+            <span>EGP {{ data?.quotation }} /month</span>
+          </div>
+    
+          <!-- Coverage Options -->
+          <div class="options">
+            <li>
+              <p>Personal Accident</p>
+              <h3>EGP {{ data?.personalAccident }}</h3>
+            </li>
+            <li>
+              <p>
+                Theft
+                <i class="fa-solid fa-circle-question helpIcon"></i>
+              </p>
+              <h3>EGP {{ data?.theft }}</h3>
+            </li>
+            <li>
+              <p>
+                Third Party Liability
+                <i class="fa-solid fa-circle-question helpIcon"></i>
+              </p>
+              <h3>EGP {{ data?.thirdPartyLiability }}</h3>
+            </li>
+           
+    
+            @if (showMore) {
+                  <li>
+                        <p>
+                          Own Damage
+                          <i class="fa-solid fa-circle-question helpIcon"></i>
+                        </p>
+                        <h3>EGP {{ data?.ownDamage }}</h3>
+                      </li>
+                      <li>
+                        <p>
+                          Legal Expenses
+                          <i class="fa-solid fa-circle-question helpIcon"></i>
+                        </p>
+                        <h3>EGP {{ data?.legalExpenses }}</h3>
+                      </li>
+            }
+            <!-- Toggle link -->
+            <li>
+              <h3 class="more" (click)="toggleMore()">
+                {{ showMore ? "See Less" : "See More" }}
+              </h3>
+            </li>
+          </div>
+    
+          <!-- Action Button -->
+          <button class="btn w-100" (click)="createRequest()">Choose Insurance Plan</button>
+        </div>
+      </div>
+    </div>
+    

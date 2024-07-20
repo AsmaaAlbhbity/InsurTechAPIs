@@ -1,0 +1,27 @@
+<form [formGroup]="form" (ngSubmit)="Submit()">
+    <p-tabView [(activeIndex)]="activeIndex">
+        @for (question of questions; track $index) {
+        <p-tabPanel [header]="'Question '+ ($index + 1)">
+            <mat-form-field class="example-full-width">
+                <mat-label>{{ question.body }}</mat-label>
+                <input type="text" matInput [formControlName]="question.id">
+                @if (form.controls[question.id].invalid && (form.controls[question.id].touched || form.controls[question.id].dirty)) {
+                <mat-error>This question is <strong>required</strong></mat-error>
+                }
+            </mat-form-field>
+        </p-tabPanel>
+        }
+        <div class="row">
+            <div class="col">
+                <div class="d-flex justify-content-between p-3 pb-0">
+                    <p-button (click)="Previous()" label="PREVIOUS" />
+                    @if (activeIndex
+                    < questions.length -1) { <p-button (click)="Next()" label="NEXT" />
+                    }@else {
+                    <p-button (click)="Submit()" label="SUBMIT" />
+                    }
+                </div>
+            </div>
+        </div>
+    </p-tabView>
+</form>

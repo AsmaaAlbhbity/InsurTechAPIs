@@ -1,0 +1,55 @@
+<app-header></app-header>
+<div class="container-fluid d-flex justify-content-center">
+  <div id="home" class="landing-wrapper overflow-hidden">
+    <div
+      class="py-4 px-4 mx-0 mx-md-6 mx-lg-8 px-lg-8 d-flex align-items-center justify-content-between position-relative mb-3">
+      <div id="pricing" class="py-4 px-4 px-lg-8 my-2 my-md-4">
+        <div class="text-center">
+          <h2 class="text-dark font-normal mb-2">Insurance Plans</h2>
+          <span class="text-muted h5">Insurance Is The Foundation For Building a Secure Future</span>
+        </div>
+
+        <div class="row justify-content-between mt-8 mt-md-0"(click)="showHomeInsurance()">
+          <div class="col-12 col-lg-4 p-0 p-md-3">
+            <div
+              class="p-3 d-flex flex-column border border-secondary pricing-card cursor-pointer border-2 hover-border-primary transition-duration-300 transition-all"
+              style="border-radius: 10px;">
+              <h3 class="text-dark text-center my-5">Home Insurance</h3>
+              <img src="assets/demo/images/landing/Home.svg" class="w-100 h-100 mx-auto" alt="Home" />
+              <div class="my-5 text-center">
+
+              </div>
+            </div>
+          </div>
+
+
+          <div class="col-12 col-lg-4 p-0 p-md-3 mt-4 mt-md-0"(click)="showHealthInsurance()">
+            <div class="p-3 d-flex flex-column border border-secondary pricing-card cursor-pointer border-2 hover-border-primary transition-duration-300 transition-all"
+
+              style="border-radius: 10px;">
+              <h3 class="text-dark text-center my-5">Health Insurance</h3>
+              <img src="assets/demo/images/landing/Health.svg" class="w-100 h-100 mx-auto" alt="Health" />
+              <div class="my-5 text-center">
+
+              </div>
+            </div>
+          </div>
+
+
+          <div class="col-12 col-lg-4 p-0 p-md-3 mt-4 mt-md-0" (click)="showMotorInsurance()">
+            <div class="p-3 d-flex flex-column border border-secondary pricing-card cursor-pointer border-2 hover-border-primary transition-duration-300 transition-all"
+
+              style="border-radius: 10px;">
+              <h3 class="text-dark text-center my-5">Motor Insurance</h3>
+              <img src="assets/demo/images/landing/Motor.svg" class="w-100 h-100 mx-auto" alt="Motor" />
+              <div class="my-5 text-center">
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-about></app-about>

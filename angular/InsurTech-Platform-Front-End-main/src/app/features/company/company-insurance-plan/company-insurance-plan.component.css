@@ -1,0 +1,27 @@
+*{
+   box-sizing: border-box;
+}
+
+.blur-background {
+    filter: blur(3px); 
+  }
+
+  .pricing-card {
+    transition: all 0.3s ease-in-out;
+}
+
+.hovered {
+    transform: scale(1.05); 
+    z-index: 2; 
+    border-color: #1b5e1f; 
+}
+
+.blurred {
+    filter: blur(1.5px); 
+    opacity: 0.5; 
+}
+
+.pricing-card img {
+    transition: opacity 0.3s ease-in-out;
+}
+

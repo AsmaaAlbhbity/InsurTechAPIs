@@ -77,12 +77,19 @@ namespace InsurTech.APIs
 			#region CORS
 			builder.Services.AddCors(options =>
 			{
-				options.AddPolicy("AllowSpecificOrigin", policyBuilder =>
+				options.AddPolicy(
+					// all origin policy
+					"AllowSpecificOrigin"
+					, policyBuilder =>
 				{
-					policyBuilder.WithOrigins("http://localhost:4200")
-						.AllowAnyMethod()
-						.AllowAnyHeader()
-						.AllowCredentials();
+					// all origins
+					policyBuilder.AllowAnyOrigin()
+
+
+					   //policyBuilder.WithOrigins("http://localhost:4200")
+					   .AllowAnyMethod()
+						.AllowAnyHeader();
+						//.AllowCredentials();
 				});
 			});
 			#endregion

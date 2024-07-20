@@ -46,7 +46,7 @@ namespace InsurTech.APIs.Controllers
         }
 
         [HttpPost]
-       // [Authorize(Roles = Roles.Admin)]
+        //[Authorize(Roles = Roles.Admin)]
         public async Task<IActionResult> CreateQuestion([FromBody] CreateQuestionInput questionInput)
         {
             var question = _mapper.Map<Question>(questionInput);

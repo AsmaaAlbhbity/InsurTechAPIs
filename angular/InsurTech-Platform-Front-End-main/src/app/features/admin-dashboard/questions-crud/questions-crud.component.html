@@ -1,0 +1,144 @@
+<!-- Button to Open the Modal -->
+<p-button label="Add New Question" icon="pi pi-plus" (click)="openDialog()"></p-button>
+
+<!-- Modal Dialog for Adding New Question -->
+  <!-- Modal Dialog for Adding New Question -->
+<p-dialog header="Add New Question" [(visible)]="displayDialog" modal="modal" [style]="{'width': '50vw'}">
+  <form (ngSubmit)="addQuestion()" class="question-form">
+    <div class="form-group">
+      <label for="body">Body</label>
+      <input id="body" type="text" [(ngModel)]="newQuestion.body" name="body" required placeholder="Enter question body">
+    </div>
+
+    <div class="form-group">
+      <label for="categoryId">Category ID</label>
+      <input id="categoryId" type="number" [(ngModel)]="newQuestion.categoryId" name="categoryId" required placeholder="Enter category ID">
+    </div>
+
+    <div class="form-group">
+      <label for="type">Type</label>
+      <input id="type" type="number" [(ngModel)]="newQuestion.questiontype" name="type" required placeholder="Enter question type">
+    </div>
+
+    <div class="form-group">
+      <label for="options">Options (comma separated)</label>
+      <input id="options" type="text" [(ngModel)]="newQuestion.options" name="options" placeholder="Enter options separated by commas">
+    </div>
+
+    <div class="form-group">
+      <label for="placeholder">Placeholder</label>
+      <input id="placeholder" type="text" [(ngModel)]="newQuestion.Placeholder" name="placeholder" placeholder="Enter placeholder text">
+    </div>
+
+    <button type="submit" pButton label="Add Question" icon="pi pi-plus"></button>
+  </form>
+</p-dialog>
+
+
+<!-- Health Questions Table -->
+<h3>Health Questions</h3>
+<p-table [value]="questions_health" [paginator]="true" [rows]="10" dataKey="id" [rowsPerPageOptions]="[5, 10, 20]">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>ID</th>
+      <th>Body</th>
+      <th>Category ID</th>
+      <th>Type</th>
+      <th>Options</th>
+      <th>Placeholder</th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-question>
+    <tr>
+      <td>{{ question.id }}</td>
+      <td>{{ question.body }}</td>
+      <td>{{ question.categoryId }}</td>
+      <td>{{ question.type }}</td>
+      <td>
+        <div class="options-container">
+          <div *ngFor="let option of question.optionsArray" class="option-card">
+            {{ option }}
+          </div>
+        </div>
+      </td>
+      <td>{{ question.placeholder }}</td>
+      <td>
+        <p-button icon="pi pi-pencil" (click)="editQuestion(question)"></p-button>
+        <p-button icon="pi pi-trash" (click)="deleteQuestion(question.id)"></p-button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<!-- Car Questions Table -->
+<h3>Car Questions</h3>
+<p-table [value]="questions_car" [paginator]="true" [rows]="10" dataKey="id" [rowsPerPageOptions]="[5, 10, 20]">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>ID</th>
+      <th>Body</th>
+      <th>Category ID</th>
+      <th>Type</th>
+      <th>Options</th>
+      <th>Placeholder</th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-question>
+    <tr>
+      <td>{{ question.id }}</td>
+      <td>{{ question.body }}</td>
+      <td>{{ question.categoryId }}</td>
+      <td>{{ question.type }}</td>
+      <td>
+        <div class="options-container">
+          <div *ngFor="let option of question.optionsArray" class="option-card">
+            {{ option }}
+          </div>
+        </div>
+      </td>
+      <td>{{ question.placeholder }}</td>
+      <td>
+        <p-button icon="pi pi-pencil" (click)="editQuestion(question)"></p-button>
+        <p-button icon="pi pi-trash" (click)="deleteQuestion(question.id)"></p-button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<!-- Real Estate Questions Table -->
+<h3>Real Estate Questions</h3>
+<p-table [value]="questions_real" [paginator]="true" [rows]="10" dataKey="id" [rowsPerPageOptions]="[5, 10, 20]">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>ID</th>
+      <th>Body</th>
+      <th>Category ID</th>
+      <th>Type</th>
+      <th>Options</th>
+      <th>Placeholder</th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-question>
+    <tr>
+      <td>{{ question.id }}</td>
+      <td>{{ question.body }}</td>
+      <td>{{ question.categoryId }}</td>
+      <td>{{ question.type }}</td>
+      <td>
+        <div class="options-container">
+          <div *ngFor="let option of question.optionsArray" class="option-card">
+            {{ option }}
+          </div>
+        </div>
+      </td>
+      <td>{{ question.placeholder }}</td>
+      <td>
+        <p-button icon="pi pi-pencil" (click)="editQuestion(question)"></p-button>
+        <p-button icon="pi pi-trash" (click)="deleteQuestion(question.id)"></p-button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

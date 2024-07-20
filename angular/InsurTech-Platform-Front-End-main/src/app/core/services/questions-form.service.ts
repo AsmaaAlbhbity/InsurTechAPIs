@@ -2,7 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { BASE_URL } from '../base-url';
 import { Question } from '../models/question';
+
 import { Answer } from '../types/Answer';
+import { Observable } from 'rxjs';
+import { Adminquestions } from '../models/AdminQuestions';
 
 @Injectable({
   providedIn: 'root',
@@ -61,5 +64,14 @@ export class QuestionsFormService {
   }
   GetAnswers() {
     return this.answers;
+  }
+  getallquestionsArray(): Observable<Adminquestions[]> {
+    return this.http.get<Adminquestions[]>(`${BASE_URL}/questions`);
+  }
+  DeleteQuestions(id: number) {
+    return this.http.delete(`http://localhost:5028/api/questions/ ${id}`);
+  }
+  addQuestion(question: Adminquestions): Observable<Adminquestions> {
+    return this.http.post<Adminquestions>(`${BASE_URL}/questions`, question);
   }
 }

@@ -7,13 +7,22 @@ import { Adminquestions } from '../../../core/models/AdminQuestions';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { QuestionType } from '../../../core/models/Home_Page/question-type.enum';
 
 @Component({
   selector: 'app-questions-crud',
   standalone: true,
-  imports: [FormsModule, TableModule, CommonModule, ButtonModule, DialogModule],
+  imports: [
+    FormsModule,
+    TableModule,
+    CommonModule,
+    ButtonModule,
+    DialogModule,
+    DropdownModule,
+  ],
   templateUrl: './questions-crud.component.html',
-  styleUrl: './questions-crud.component.css',
+  styleUrls: ['./questions-crud.component.css'],
 })
 export class QuestionsCrudComponent implements OnInit {
   questions: Adminquestions[] = [];
@@ -26,68 +35,61 @@ export class QuestionsCrudComponent implements OnInit {
     body: '',
     categoryId: 1, // Default category
     options: '',
-    Placeholder: '',
-    questiontype: '',
+    placeholder: '',
+    questiontype: QuestionType.Text,
   };
   displayDialog: boolean = false;
+  questionTypes: { label: string; value: QuestionType }[] = [];
 
   constructor(public question: QuestionsFormService) {}
+
   ngOnInit(): void {
     this.question.getallquestionsArray().subscribe((data) => {
-      this.questions = data;
+      this.questions = data.map((question) => ({
+        ...question,
+        type: QuestionType[question.questiontype as unknown as keyof typeof QuestionType], // Convert number to enum
+        optionsArray: question.options
+          ? question.options.split(',').map((option) => option.trim())
+          : [],
+      }));
       console.log(this.questions);
-      // // this.questions.forEach((q) => {
-      // //   q.optionsArray = q.Options.split(',').map((option) => option.trim());
-      // //   console.log(q.optionsArray);
 
-      // });
-      for (let index = 0; index < this.questions.length; index++) {
-        console.log(this.questions[index].options);
-
-        // Check if Options is defined and is a string
-        console.log(this.questions[index].options);
-        if (typeof this.questions[index].options === 'string') {
-          this.questions[index].optionsArray = this.questions[index].options
-            .split(',')
-            .map((option) => option.trim());
-
-          console.log(this.questions[index].optionsArray);
-        } else {
-          console.error(
-            'Options is not defined or not a string:',
-            this.questions[index].options
-          );
-        }
-      }
-
-      this.questions_health = this.questions.filter((data) => {
-        return data.categoryId == 1;
-      });
-      this.questions_car = this.questions.filter((data) => {
-        return data.categoryId == 2;
-      });
-
-      this.questions_real = this.questions.filter((data) => {
-        return data.categoryId == 3;
-      });
+      this.questions_health = this.questions.filter(
+        (data) => data.categoryId == 1
+      );
+      this.questions_car = this.questions.filter(
+        (data) => data.categoryId == 2
+      );
+      this.questions_real = this.questions.filter(
+        (data) => data.categoryId == 3
+      );
     });
+
+    this.questionTypes = Object.keys(QuestionType).map((key) => ({
+      label: key,
+      value: QuestionType[key as keyof typeof QuestionType],
+    }));
   }
+
   updateCategoryQuestions(): void {
     this.questions_health = this.questions.filter((q) => q.categoryId === 1);
     this.questions_car = this.questions.filter((q) => q.categoryId === 2);
     this.questions_real = this.questions.filter((q) => q.categoryId === 3);
   }
+
   getDropdownOptions(question: Adminquestions) {
     return question.optionsArray?.map((option) => ({
       label: option,
       value: option,
     }));
   }
+
   deleteQuestion(id: number) {
     this.question.DeleteQuestions(id).subscribe((data) => {
       this.ngOnInit();
     });
   }
+
   addQuestion(): void {
     this.question.addQuestion(this.newQuestion).subscribe((addedQuestion) => {
       console.log(addedQuestion);
@@ -98,17 +100,19 @@ export class QuestionsCrudComponent implements OnInit {
       this.displayDialog = false; // Close the dialog
     });
   }
+
   openDialog(): void {
     this.displayDialog = true;
   }
+
   resetNewQuestion(): void {
     this.newQuestion = {
       id: 0,
       body: '',
       categoryId: 1,
-      questiontype: '',
+      questiontype: QuestionType.Text,
       options: '',
-      Placeholder: '',
+      placeholder: '',
     };
   }
 }

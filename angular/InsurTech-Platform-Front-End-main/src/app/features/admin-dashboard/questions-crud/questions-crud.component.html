@@ -2,7 +2,6 @@
 <p-button label="Add New Question" icon="pi pi-plus" (click)="openDialog()"></p-button>
 
 <!-- Modal Dialog for Adding New Question -->
-  <!-- Modal Dialog for Adding New Question -->
 <p-dialog header="Add New Question" [(visible)]="displayDialog" modal="modal" [style]="{'width': '50vw'}">
   <form (ngSubmit)="addQuestion()" class="question-form">
     <div class="form-group">
@@ -17,7 +16,7 @@
 
     <div class="form-group">
       <label for="type">Type</label>
-      <input id="type" type="number" [(ngModel)]="newQuestion.questiontype" name="type" required placeholder="Enter question type">
+      <p-dropdown id="type" [options]="questionTypes" [(ngModel)]="newQuestion.questiontype" name="type" placeholder="Select question type"></p-dropdown>
     </div>
 
     <div class="form-group">
@@ -27,13 +26,12 @@
 
     <div class="form-group">
       <label for="placeholder">Placeholder</label>
-      <input id="placeholder" type="text" [(ngModel)]="newQuestion.Placeholder" name="placeholder" placeholder="Enter placeholder text">
+      <input id="placeholder" type="text" [(ngModel)]="newQuestion.placeholder" name="placeholder" placeholder="Enter placeholder text">
     </div>
 
     <button type="submit" pButton label="Add Question" icon="pi pi-plus"></button>
   </form>
 </p-dialog>
-
 
 <!-- Health Questions Table -->
 <h3>Health Questions</h3>
@@ -72,7 +70,8 @@
 </p-table>
 
 <!-- Car Questions Table -->
-<h3>Car Questions</h3>
+<h3>Home Insurance Questions</h3>
+
 <p-table [value]="questions_car" [paginator]="true" [rows]="10" dataKey="id" [rowsPerPageOptions]="[5, 10, 20]">
   <ng-template pTemplate="header">
     <tr>
@@ -107,8 +106,9 @@
   </ng-template>
 </p-table>
 
-<!-- Real Estate Questions Table -->
-<h3>Real Estate Questions</h3>
+
+<!-- Home Insurance Questions Table -->
+<h3>Car Questions</h3>
 <p-table [value]="questions_real" [paginator]="true" [rows]="10" dataKey="id" [rowsPerPageOptions]="[5, 10, 20]">
   <ng-template pTemplate="header">
     <tr>

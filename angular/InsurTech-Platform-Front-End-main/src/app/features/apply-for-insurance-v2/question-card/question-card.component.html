@@ -1,10 +1,10 @@
+<!-- question-card.component.html -->
 <div class="p-card-body">
   <div *ngIf="question">
     <h1>{{ question?.body }}</h1>
 
-    <!-- Conditionally render based on the question index -->
-    <div *ngIf="currentIndex === 0" class="full-width-container">
-      <!-- Container div with class for full width -->
+    <!-- Conditionally render input based on the question type -->
+    <div *ngIf="question.questiontype === questionTypes.Radio" class="full-width-container">
       <p-selectButton
         [options]="stateOptions"
         [(ngModel)]="selectedValue"
@@ -14,8 +14,7 @@
       ></p-selectButton>
     </div>
 
-    <div *ngIf="currentIndex === 1" class="full-width-container">
-      <!-- Listbox for the second question -->
+    <div *ngIf="question.questiontype === questionTypes.List" class="full-width-container">
       <p-listbox
         [options]="cities"
         [(ngModel)]="selectedCity"
@@ -26,28 +25,26 @@
       ></p-listbox>
     </div>
 
-    <div *ngIf="currentIndex === 2" class="full-width-container">
-      <!-- Text input for the third question -->
+    <div *ngIf="question.questiontype === questionTypes.Text" class="full-width-container">
       <div class="p-field">
         <input
           id="answer"
           type="text"
           [(ngModel)]="answer"
           class="p-inputtext w-100 inpAsh"
-          placeholder="{{ question?.body }}"
+          placeholder="{{ question?.Placeholder }}"
         />
       </div>
     </div>
 
-    <div *ngIf="currentIndex === totalQuestions - 1" class="full-width-container">
-      <!-- Numeric input for the last question -->
+    <div *ngIf="question.questiontype === questionTypes.Number" class="full-width-container">
       <div class="p-field">
         <input
           id="answer"
           type="number"
           [(ngModel)]="answer"
           class="p-inputtext w-100 inpAsh"
-          placeholder="{{ question?.body }}"
+          placeholder="{{ question?.Placeholder }}"
         />
       </div>
     </div>

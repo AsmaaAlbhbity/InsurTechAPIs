@@ -89,3 +89,27 @@
         color:#373334
     }
 }
+.full-width-container {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.full-width-selectbutton {
+  width: 100%;
+}
+
+.horizontal-listbox {
+  width: 100%;
+}
+
+.p-field {
+  margin-bottom: 1rem;
+}
+
+.p-inputtext.w-100 {
+  width: 100%;
+}
+
+.btnAsh {
+  width: 100%;
+}

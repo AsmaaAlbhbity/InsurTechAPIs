@@ -11,6 +11,7 @@ using InsurTech.Core.Repositories;
 using InsurTech.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using InsurTech.Core.Service;
 
 namespace InsurTech.APIs.Controllers
 {
@@ -20,11 +21,12 @@ namespace InsurTech.APIs.Controllers
 	{
 		private readonly IUnitOfWork unitOfWork;
 		private readonly IMapper _mapper;
-
-		public UserInquireController(IUnitOfWork unitOfWork, IMapper mapper)
+		private readonly IEmailService _emailService;
+		public UserInquireController(IUnitOfWork unitOfWork, IMapper mapper, IEmailService _emailService)
 		{
 			this.unitOfWork = unitOfWork;
 			_mapper = mapper;
+			this._emailService = _emailService;
 		}
 
 		[HttpGet("GetUserInquery")]
@@ -56,7 +58,31 @@ namespace InsurTech.APIs.Controllers
 				return BadRequest();
 			}
 		}
+
+		[HttpPost("SendUserEmail")]
+		public async Task<IActionResult> SendUserEmail([FromBody] EmailRequest emailRequest)
+		{
+			if (string.IsNullOrEmpty(emailRequest.ToEmail) || string.IsNullOrEmpty(emailRequest.Subject) || string.IsNullOrEmpty(emailRequest.Content))
+			{
+				return BadRequest("Invalid email details provided.");
+			}
+
+			try
+			{
+				await _emailService.SendEmailAsync(emailRequest.ToEmail, emailRequest.Subject, emailRequest.Content);
+				return Ok("Email sent successfully.");
+			}
+			catch (Exception ex)
+			{
+				return StatusCode(500, $"Internal server error: {ex.Message}");
+			}
+		}
 	}
 
+	public class EmailRequest
+	{
+		public string ToEmail { get; set; }
+		public string Subject { get; set; }
+		public string Content { get; set; }
+	}
 }
-

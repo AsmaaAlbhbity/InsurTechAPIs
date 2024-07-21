@@ -11,16 +11,7 @@ namespace InsurTech.Core.Entities
         public string Body { get; set; }
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }
-
-        public QuestionType Type { get; set; }
-        public string Options { get; set; } 
-        public string Placeholder { get; set; } 
         public virtual ICollection<RequestQuestion> RequestQuestions { get; set; } = new List<RequestQuestion>();
     }
-    public enum QuestionType
-    {
-        Text,
-        List,
-        RadioButton
-    }
+    
 }
